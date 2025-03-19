@@ -1,6 +1,7 @@
 package com.example.gastrolab.ui.theme
 
 import android.app.Activity
+import android.hardware.lights.Light
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -12,15 +13,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+    primary = DarkModeBrown,
+    secondary = Coral100,
+    tertiary = Bluesky,
+    background = DarkModeBrown,
+    surface = Bittersweet200,
+    onPrimary = Bittersweet100
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
+    primary = TexasRose200,
+    secondary = DarkModeBrown,
+    tertiary = TexasRose100,
+    background = DarkModeBrown,
+    surface = Bittersweet100,
+    onPrimary = Bluesky
+
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
@@ -41,11 +49,6 @@ fun GastroLabTheme(
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
-
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
