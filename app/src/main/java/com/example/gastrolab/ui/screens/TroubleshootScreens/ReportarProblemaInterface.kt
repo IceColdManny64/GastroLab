@@ -1,4 +1,4 @@
-package com.example.gastrolab.ui.screens
+package com.example.gastrolab.ui.screens.TroubleshootScreens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -11,18 +11,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
-
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
+import com.example.gastrolab.ui.theme.GastroLabTheme
 
-@Preview(showBackground = true)
 @Composable
-fun ReportarProblemaInterface() {
+fun ReportarProblemaInterface(navController: NavHostController) {
+
+
 
     var shortDescription by remember { mutableStateOf("") }
     var detailedDescription by remember { mutableStateOf("") }
-
     val scrollState = rememberScrollState()
 
     Column(
@@ -99,6 +99,14 @@ fun ReportarProblemaInterface() {
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("Enviar")
+        }
+
+        Button(
+            onClick = {navController.navigate("mainScreen")}
+        )
+        {
+            Text("Return to Main Menu")
+
         }
     }
 }

@@ -13,17 +13,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Coral200,
-    secondary = WildWate200,
-    tertiary = TexasRose200,
+    primary = DarkModeBrown,
+    secondary = Coral100,
+    tertiary = Bluesky,
     background = DarkModeBrown,
+    surface = Bittersweet200,
+    onPrimary = Bittersweet100
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Coral100,
-    secondary = WildWate100,
+    primary = TexasRose200,
+    secondary = DarkModeBrown,
     tertiary = TexasRose100,
-    background = LightModeBrown,
+    background = DarkModeBrown,
+    surface = Bittersweet100,
+    onPrimary = Bluesky
 
 
     /* Other default colors to override
@@ -45,11 +49,6 @@ fun GastroLabTheme(
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
-
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
