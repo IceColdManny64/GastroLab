@@ -5,8 +5,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Home
+import com.example.gastrolab.R.string
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.ui.res.stringResource
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
@@ -22,8 +25,14 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.gastrolab.R
 
 @Composable
 fun MainScreen(navController: NavHostController){
@@ -56,18 +65,21 @@ fun Bars(navController: NavHostController) {
         //can use MediumTopAppBar and other similar components to change the top bar size.
         TopAppBar(
             colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = MaterialTheme.colorScheme.primary,
-                titleContentColor = MaterialTheme.colorScheme.secondary
+                containerColor = MaterialTheme.colorScheme.primary
             ),
-            title = { Text("Screen Title") },
+            title = {
+                Text(
+                    text = stringResource(R.string.app_name),
+                    color = MaterialTheme.colorScheme.secondary,
+                    fontStyle = FontStyle.Italic,
+                    fontWeight = FontWeight.ExtraBold,
+                    fontSize = 20.sp
+                )},
             actions = {
                 IconButton(onClick = {}) {
-                    Icon(imageVector = Icons.Filled.Search, contentDescription = "Search Button")
-                }
-                IconButton(onClick = {}) {
                     Icon(
-                        imageVector = Icons.Filled.Settings,
-                        contentDescription = "Settings Button"
+                        imageVector = Icons.Filled.AccountCircle,
+                        contentDescription = "Account icon"
                     )
                 }
             }
