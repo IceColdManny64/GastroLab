@@ -6,6 +6,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.displayCutoutPadding
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -24,6 +25,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
@@ -103,7 +105,7 @@ fun MainViewExCard(id:Int, title:String, text:String, image:Int){
         Image(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(130.dp),
+                .height(110.dp),
             painter = painterResource(image),
             contentDescription = "Food",
             contentScale = ContentScale.Crop
@@ -134,7 +136,6 @@ fun MainViewExCard(id:Int, title:String, text:String, image:Int){
 
         ) {
             Text(
-                //text = stringResource(R.string.lorem),
                 text = text,
                 textAlign = TextAlign.Justify,
                 lineHeight = 17.sp,
@@ -147,42 +148,54 @@ fun MainViewExCard(id:Int, title:String, text:String, image:Int){
     }
 }
 @Composable
-fun CompactMainView(id:Int, title:String, text:String, image:Int) {
+fun MainViewSideCard(id:Int, title:String, text:String, image:Int) {
     Card(
         modifier = Modifier
-            .background(Color.Blue)
             .fillMaxWidth()
             .padding(5.dp)
+            .border(shape = RoundedCornerShape(10.dp),  width = 2.dp, color = MaterialTheme.colorScheme.onTertiary)
     ) {
-        Row() {
+        Row(modifier = Modifier
+            .fillMaxSize()
+            .border(shape = RoundedCornerShape(10.dp),  width = 5.dp, color = MaterialTheme.colorScheme.secondaryContainer)) {
             Image(
                 modifier = Modifier
                     .fillMaxHeight()
-                    .width(80.dp)
+                    .padding(horizontal = 2.dp)
+                    .width(100.dp)
                     .size(100.dp)
+                    .border(shape = RectangleShape,  width = 3.dp, color = MaterialTheme.colorScheme.onTertiary)
                     .height(200.dp),
                 painter = painterResource(image),
-                contentDescription = "Audi TTS",
+                contentDescription = "Food",
                 contentScale = ContentScale.Crop,
 
                 )
 
-            Column() {
+            Column(
+                modifier = Modifier
+                .background(MaterialTheme.colorScheme.tertiary)
+                .fillMaxSize()
+                .border(shape = RectangleShape,  width = 1.dp, color = MaterialTheme.colorScheme.onPrimary)
+            ) {
                 Text(
                     text = title,
-                    fontSize = 12.sp,
-                    textAlign = TextAlign.Left,
+                    fontSize = 18.sp,
+                    textAlign = TextAlign.Justify,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier
                         .padding(5.dp)
+
                 )
                 Text(
                     text = text,
-                    textAlign = TextAlign.Left,
-                    lineHeight = 14.sp,
-                    fontSize = 10.sp,
-                    modifier = Modifier.padding(10.dp)
+                    textAlign = TextAlign.Justify,
+                    lineHeight = 12.sp,
+                    fontSize = 15.sp,
+                    modifier = Modifier
+                        .padding(5.dp)
                 )
+
             }
         }
     }
