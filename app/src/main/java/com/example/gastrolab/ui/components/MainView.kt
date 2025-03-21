@@ -200,3 +200,4 @@ fun MainViewSideCard(id:Int, title:String, text:String, image:Int) {
         }
     }
 }
+

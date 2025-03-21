@@ -175,9 +175,9 @@ fun Bars(navController: NavHostController) {
                                     label = { Text(label) },
                                     colors = SegmentedButtonDefaults.colors(
                                         activeContainerColor = MaterialTheme.colorScheme.secondary, // Color del botón activo
-                                        activeContentColor = MaterialTheme.colorScheme.primary, // Texto en blanco cuando está activo
-                                        inactiveContainerColor = Color.LightGray, // Color cuando no está seleccionado
-                                        inactiveContentColor = Color.Black // Texto negro cuando está inactivo
+                                        activeContentColor = MaterialTheme.colorScheme.secondaryContainer, // Texto en blanco cuando está activo
+                                        inactiveContainerColor = MaterialTheme.colorScheme.background, // Color cuando no está seleccionado
+                                        inactiveContentColor = MaterialTheme.colorScheme.surface // Texto negro cuando está inactivo
                                     )
                                 )
                             }
@@ -255,11 +255,10 @@ fun Adaptive(){
             MenuModel(2, "Mole poblano", "Un manjar de muchos ingredientes", R.drawable.mole)
         )
         val arraySide = arrayOf(
-            MenuModel(1, "Enchiladas verdes", "Disfruta la pura tradición mexicana!", R.drawable.enchis),
-            MenuModel(1, "Enchiladas verdes", "Disfruta la pura tradición mexicana!", R.drawable.enchis),
-            MenuModel(1, "Enchiladas verdes", "Disfruta la pura tradición mexicana!", R.drawable.enchis),
-            MenuModel(1, "Enchiladas verdes", "Disfruta la pura tradición mexicana!", R.drawable.enchis)
-
+            MenuModel(1, "Tamales oaxaqueños", "Llega el sabor de Oaxaca a tu mesa!", R.drawable.tamal),
+            MenuModel(2, "Tacos al pastor", "Un manjar galardonado globalmente", R.drawable.pastor),
+            MenuModel(3, "Hamburguesas de pollo", "¿Sin res en casa? ¿Y si las pruebas?", R.drawable.hamburg),
+            MenuModel(4, "Sincronizadas", "¿Traes prisa? Lo simple nunca falla!", R.drawable.sincro)
         )
 
         if(width == WindowWidthSizeClass.COMPACT) {
@@ -284,7 +283,7 @@ fun Adaptive(){
                 }
             }
             LazyHorizontalGrid(
-                rows = GridCells.Adaptive(minSize = 120.dp),
+                rows = GridCells.Adaptive(minSize = 80.dp),
                 modifier = Modifier
                     .fillMaxSize()
                     .weight(1f)
@@ -293,8 +292,6 @@ fun Adaptive(){
                     MainViewSideCard(item.id, item.title, item.text, item.image)
                 }
             }
-
-
         } else if (height == WindowHeightSizeClass.COMPACT) {
             LazyColumn {
                 items(arrayView) { item -> MainView(item.id, item.title, item.text, item.image) }
