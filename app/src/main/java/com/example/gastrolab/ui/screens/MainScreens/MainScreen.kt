@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
@@ -41,6 +42,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -53,6 +58,7 @@ import com.example.clasetrabajo.data.model.MenuModel
 import com.example.gastrolab.R
 import com.example.gastrolab.ui.components.CompactMainView
 import com.example.gastrolab.ui.components.MainView
+import com.example.gastrolab.ui.components.MainViewExCard
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -60,22 +66,7 @@ import kotlinx.coroutines.launch
 fun MainScreen(navController: NavHostController){
 
     Bars(navController)
-    Column(
-        modifier = Modifier
-            .padding(10.dp)
-            .fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceEvenly
-    ){
 
-        Button(
-            onClick = {navController.navigate("reportProblem")}
-        )
-        {
-            Text("Go to Report Screen")
-        }
-
-    }
 }
 @OptIn(ExperimentalMaterial3Api::class)
 //@Preview
@@ -89,7 +80,8 @@ fun Bars(navController: NavHostController) {
         //can use MediumTopAppBar and other similar components to change the top bar size.
         TopAppBar(
             colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = MaterialTheme.colorScheme.primary
+                containerColor = MaterialTheme.colorScheme.primary,
+                titleContentColor = MaterialTheme.colorScheme.secondary
             ),
             title = {
                 Text(
@@ -113,11 +105,15 @@ fun Bars(navController: NavHostController) {
             modifier = Modifier
                 .weight(1f)
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.onSecondary)
+                .background(MaterialTheme.colorScheme.background)
+
         ) {
             Adaptive()
         }
         BottomAppBar(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.primary),
             containerColor = MaterialTheme.colorScheme.primary,
             contentColor = MaterialTheme.colorScheme.secondary
 
@@ -166,28 +162,46 @@ fun Adaptive(){
     //Compact Height < 480dp Phone Landscape
     //Medium Height >= 480dp < 900dp Tablet Landscape Phone Portrait
     // Expanded Height >= 900dp Tablet Portrait
-    Column {
-        val arrayPost = arrayOf(
-            MenuModel(1, "Title 1", "Text 1", R.drawable.enchis),
-            MenuModel(2, "Title 2", "Text 2", R.drawable.enchis),
-            MenuModel(3, "Title 3", "Text 3", R.drawable.enchis),
-            MenuModel(4, "Title 1", "Text 1", R.drawable.enchis)
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+    ) {
+        val arrayCard = arrayOf(
+        MenuModel(1, "Pizza tradicional", "El sabor de italia en tu horno \uD83C\uDDEE\uD83C\uDDF9! ", R.drawable.pizza),
         )
+        val arrayView = arrayOf(
+            MenuModel(1, "Enchiladas verdes", "Disfruta la pura tradición mexicana! \uD83C\uDDF2\uD83C\uDDFD", R.drawable.enchis),
+            MenuModel(2, "Mole poblano", "Un manjar de muchos ingredientes", R.drawable.mole)
+        )
+
+
         if(width == WindowWidthSizeClass.COMPACT) {
             LazyVerticalGrid(
-                columns = GridCells.Adaptive(minSize = 100.dp),
+                columns = GridCells.Adaptive(minSize = 200.dp),
                 modifier = Modifier
                     .fillMaxSize()
                     .weight(1f)
+
             ) {
-                items(arrayPost){
+                items(arrayCard) { item ->
+                    MainViewExCard(item.id, item.title, item.text, item.image)
+                }
+            }
+            LazyVerticalGrid(
+                columns = GridCells.Adaptive(minSize = 160.dp),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(1.8f)
+
+            ) {
+                items(arrayView){
                         item -> MainView(item.id, item.title, item.text, item.image)
                 }
             }
-
         } else if (height == WindowHeightSizeClass.COMPACT) {
             LazyColumn {
-                items(arrayPost) { item -> MainView(item.id, item.title, item.text, item.image) }
+                items(arrayView) { item -> MainView(item.id, item.title, item.text, item.image) }
             }
         }
     }
