@@ -56,6 +56,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -123,7 +124,7 @@ fun Bars(navController: NavHostController) {
                     fontSize = 25.sp
                 )},
             actions = {
-                IconButton(onClick = {}) {
+                IconButton(onClick = {navController.navigate("accountScreen")}) {
                     Icon(
                         imageVector = Icons.Filled.AccountCircle,
                         contentDescription = "Account icon"
@@ -152,13 +153,18 @@ fun Bars(navController: NavHostController) {
                     fontSize = 25.sp
                 )},
             actions = {
-                    var selectedIndex by remember { mutableIntStateOf(0) }
+                    var selectedIndex by rememberSaveable { mutableIntStateOf(0) }
+
+                    // Opciones de botones y los Composables que deben mostrarse
                     val sOptions = listOf("Explorar", "Recomendados")
-                    val destinations = listOf("mainScreen", "recommendedScreen") // Rutas de navegación
+                    val composables = listOf<@Composable () -> Unit>(
+                        { Adaptive() },
+                        { Adaptive2() }
+                    )
 
                     Column(
                         modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.Center,
+                        verticalArrangement = Arrangement.Top,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         SingleChoiceSegmentedButtonRow(
@@ -167,20 +173,22 @@ fun Bars(navController: NavHostController) {
                             sOptions.forEachIndexed { index, label ->
                                 SegmentedButton(
                                     shape = SegmentedButtonDefaults.itemShape(index, sOptions.size),
-                                    onClick = {
-                                        selectedIndex = index
-                                        navController.navigate(destinations[index]) // Navega a la vista seleccionada
-                                    },
+                                    onClick = { selectedIndex = index },
                                     selected = index == selectedIndex,
                                     label = { Text(label) },
                                     colors = SegmentedButtonDefaults.colors(
-                                        activeContainerColor = MaterialTheme.colorScheme.secondary, // Color del botón activo
-                                        activeContentColor = MaterialTheme.colorScheme.secondaryContainer, // Texto en blanco cuando está activo
-                                        inactiveContainerColor = MaterialTheme.colorScheme.background, // Color cuando no está seleccionado
-                                        inactiveContentColor = MaterialTheme.colorScheme.surface // Texto negro cuando está inactivo
+                                        activeContainerColor = MaterialTheme.colorScheme.secondary,
+                                        activeContentColor = MaterialTheme.colorScheme.secondaryContainer,
+                                        inactiveContainerColor = MaterialTheme.colorScheme.background,
+                                        inactiveContentColor = MaterialTheme.colorScheme.surface
                                     )
                                 )
                             }
+                        }
+
+                        // Cargar dinámicamente el Composable seleccionado
+                        Box(modifier = Modifier.fillMaxSize()) {
+                            composables[selectedIndex]()
                         }
                     }
             }
@@ -306,4 +314,74 @@ fun Adaptive(){
     }
 }
 
+@Composable
+fun Adaptive2(){
+    var windowSize = currentWindowAdaptiveInfo().windowSizeClass
+    var height = currentWindowAdaptiveInfo().windowSizeClass.windowHeightSizeClass
+    var width = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+    ) {
+        val arrayCard = arrayOf(
+            MenuModel(1, "Pizza tradicional", "El sabor de italia en tu horno 🇮🇹! ", R.drawable.pizza),
+            MenuModel(1, "Pizza tradicional", "Esta es la pantalla de recomendados! ", R.drawable.pizza),
+        )
+        val arrayView = arrayOf(
+            MenuModel(1, "Enchiladas verdes", "Disfruta la pura tradición mexicana! 🇲🇽", R.drawable.enchis),
+            MenuModel(2, "Mole poblano", "Un manjar de muchos ingredientes", R.drawable.mole)
+        )
+        val arraySide = arrayOf(
+            MenuModel(1, "Tamales oaxaqueños", "Llega el sabor de Oaxaca a tu mesa!", R.drawable.tamal),
+            MenuModel(2, "Tacos al pastor", "Un manjar galardonado globalmente", R.drawable.pastor),
+            MenuModel(3, "Hamburguesas de pollo", "¿Sin res en casa? ¿Y si las pruebas?", R.drawable.hamburg),
+            MenuModel(4, "Sincronizadas", "¿Traes prisa? Lo simple nunca falla!", R.drawable.sincro)
+        )
+
+        if(width == WindowWidthSizeClass.COMPACT) {
+            LazyVerticalGrid(
+                columns = GridCells.Adaptive(minSize = 200.dp),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(1f)
+            ) {
+                items(arrayCard) { item ->
+                    MainViewExCard(item.id, item.title, item.text, item.image)
+                }
+            }
+            LazyVerticalGrid(
+                columns = GridCells.Adaptive(minSize = 160.dp),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(1f)
+            ) {
+                items(arrayView) { item ->
+                    MainView(item.id, item.title, item.text, item.image)
+                }
+            }
+            LazyHorizontalGrid(
+                rows = GridCells.Adaptive(minSize = 80.dp),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(1f)
+            ) {
+                items(arraySide) { item ->
+                    MainViewSideCard(item.id, item.title, item.text, item.image)
+                }
+            }
+        } else if (height == WindowHeightSizeClass.COMPACT) {
+            LazyColumn {
+                items(arrayView) { item -> MainView(item.id, item.title, item.text, item.image) }
+            }
+            LazyColumn {
+                items(arrayCard) { item -> MainViewExCard(item.id, item.title, item.text, item.image) }
+            }
+            LazyColumn {
+                items(arraySide) { item -> MainViewSideCard(item.id, item.title, item.text, item.image) }
+            }
+        }
+    }
+}
 
