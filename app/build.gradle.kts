@@ -49,6 +49,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.navigation.runtime.android)
     implementation(libs.androidx.material.icons.core)
     testImplementation(libs.junit)
     implementation("androidx.navigation:navigation-compose:2.8.9")
