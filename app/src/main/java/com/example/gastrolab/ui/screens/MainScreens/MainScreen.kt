@@ -42,10 +42,13 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.MultiChoiceSegmentedButtonRow
+import androidx.compose.material3.SecondaryTabRow
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.ShapeDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -88,164 +91,307 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
-fun MainScreen(navController: NavHostController){
+fun MainScreen(navController: NavHostController) {
     Bars(navController)
 
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
+
 //@Preview
+
 @Composable
+
 fun Bars(navController: NavHostController) {
 
+
     Column(
+
         modifier = Modifier
+
             .fillMaxSize()
 
+
     ) {
-        //can use MediumTopAppBar and other similar components to change the top bar size.
+
+//can use MediumTopAppBar and other similar components to change the top bar size.
+
         TopAppBar(
+
             modifier = Modifier
+
                 .height(50.dp),
+
             colors = TopAppBarDefaults.topAppBarColors(
+
                 containerColor = MaterialTheme.colorScheme.primary,
+
                 titleContentColor = MaterialTheme.colorScheme.secondary
+
             ),
+
             title = {
-                val gastroGradient= listOf(MaterialTheme.colorScheme.surface
-                    , MaterialTheme.colorScheme.surface,
-                    MaterialTheme.colorScheme.onTertiary,
-                    MaterialTheme.colorScheme.onTertiary)
+
+                val gastroGradient = listOf(
+                    MaterialTheme.colorScheme.surface, MaterialTheme.colorScheme.tertiary,
+
+                    MaterialTheme.colorScheme.onSurface,
+
+                    MaterialTheme.colorScheme.onTertiary
+                )
+
                 Text(
+
                     text = stringResource(R.string.app_name),
+
                     style = TextStyle(brush = Brush.linearGradient(colors = gastroGradient)),
+
                     color = MaterialTheme.colorScheme.secondary,
+
                     fontStyle = FontStyle.Italic,
+
                     fontWeight = FontWeight.ExtraBold,
+
                     fontSize = 25.sp
-                )},
+
+                )
+            },
+
             actions = {
-                IconButton(onClick = {navController.navigate("accountScreen")}) {
+
+                IconButton(onClick = { navController.navigate("accountScreen") }) {
+
                     Icon(
+
                         imageVector = Icons.Filled.AccountCircle,
+
                         contentDescription = "Account icon"
+
                     )
+
                 }
+
             }
+
         )
+
         TopAppBar(
+
             modifier = Modifier
+
                 .height(50.dp),
+
             colors = TopAppBarDefaults.topAppBarColors(
+
                 containerColor = MaterialTheme.colorScheme.primary,
-                titleContentColor = MaterialTheme.colorScheme.secondary
+
+                titleContentColor = MaterialTheme.colorScheme.onPrimary
+
             ),
+
             title = {
-                val gastroGradient= listOf(MaterialTheme.colorScheme.surface
-                    , MaterialTheme.colorScheme.surface,
-                    MaterialTheme.colorScheme.onTertiary,
-                    MaterialTheme.colorScheme.onTertiary)
+
+                val gastroGradient = listOf(
+                    MaterialTheme.colorScheme.surface,
+
+                    MaterialTheme.colorScheme.onSurface
+                )
+
                 Text(
+
                     text = stringResource(R.string.app_name),
+
                     style = TextStyle(brush = Brush.linearGradient(colors = gastroGradient)),
-                    color = MaterialTheme.colorScheme.secondary,
+
                     fontStyle = FontStyle.Italic,
+
                     fontWeight = FontWeight.ExtraBold,
+
                     fontSize = 25.sp
-                )},
+
+                )
+            },
+
             actions = {
-                    var selectedIndex by rememberSaveable { mutableIntStateOf(0) }
 
-                    // Opciones de botones y los Composables que deben mostrarse
-                    val sOptions = listOf("Explorar", "Recomendados")
-                    val composables = listOf<@Composable () -> Unit>(
-                        { Adaptive() },
-                        { Adaptive2() }
-                    )
+                var selectedIndex by rememberSaveable { mutableIntStateOf(0) }
 
-                    Column(
-                        modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.Top,
-                        horizontalAlignment = Alignment.CenterHorizontally
+
+// Opciones de botones y los Composables que deben mostrarse
+
+                val sOptions = listOf("Explorar", "Recomendados")
+
+                val composables = listOf<@Composable () -> Unit>(
+
+                    { Adaptive() },
+
+                    { Adaptive2() }
+
+                )
+
+
+
+                Column(
+
+                    modifier = Modifier.fillMaxSize(),
+
+                    verticalArrangement = Arrangement.Top,
+
+                    horizontalAlignment = Alignment.CenterHorizontally
+
+                ) {
+
+                    SingleChoiceSegmentedButtonRow(
+
+                        modifier = Modifier.clip(ShapeDefaults.ExtraSmall)
+
                     ) {
-                        SingleChoiceSegmentedButtonRow(
-                            modifier = Modifier.clip(ShapeDefaults.ExtraSmall)
-                        ) {
-                            sOptions.forEachIndexed { index, label ->
-                                SegmentedButton(
-                                    shape = SegmentedButtonDefaults.itemShape(index, sOptions.size),
-                                    onClick = { selectedIndex = index },
-                                    selected = index == selectedIndex,
-                                    label = { Text(label) },
-                                    colors = SegmentedButtonDefaults.colors(
-                                        activeContainerColor = MaterialTheme.colorScheme.secondary,
-                                        activeContentColor = MaterialTheme.colorScheme.secondaryContainer,
-                                        inactiveContainerColor = MaterialTheme.colorScheme.background,
-                                        inactiveContentColor = MaterialTheme.colorScheme.surface
-                                    )
+
+                        sOptions.forEachIndexed { index, label ->
+
+                            SegmentedButton(
+
+                                shape = SegmentedButtonDefaults.itemShape(index, sOptions.size),
+
+                                onClick = { selectedIndex = index },
+
+                                selected = index == selectedIndex,
+
+                                label = { Text(label) },
+
+                                colors = SegmentedButtonDefaults.colors(
+
+                                    activeContainerColor = MaterialTheme.colorScheme.tertiary,
+
+                                    activeContentColor = MaterialTheme.colorScheme.onTertiary,
+
+                                    inactiveContainerColor = MaterialTheme.colorScheme.primary,
+
+                                    inactiveContentColor = MaterialTheme.colorScheme.onPrimary
+
                                 )
-                            }
+
+                            )
+
                         }
 
-                        // Cargar dinámicamente el Composable seleccionado
-                        Box(modifier = Modifier.fillMaxSize()) {
-                            composables[selectedIndex]()
-                        }
                     }
+
+
+// Cargar dinámicamente el Composable seleccionado
+
+                    Box(modifier = Modifier.fillMaxSize()) {
+
+                        composables[selectedIndex]()
+
+                    }
+
+                }
+
             }
+
         )
+
+
 
         Column(
+
             modifier = Modifier
+
                 .weight(1f)
+
                 .fillMaxSize()
+
                 .background(MaterialTheme.colorScheme.background)
 
-        ) {
-            Adaptive()
-        }
-        BottomAppBar(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(50.dp)
-                .background(MaterialTheme.colorScheme.primary),
-            containerColor = MaterialTheme.colorScheme.primary,
-            contentColor = MaterialTheme.colorScheme.secondary
 
         ) {
-            IconButton(
-                modifier = Modifier
-                    .weight(1f),
-                onClick = {navController.navigate("mainScreen")},
-            ) {
-                Icon(imageVector = Icons.Filled.Home, contentDescription = "")
-            }
-            IconButton(
-                modifier = Modifier
-                    .weight(1f),
-                onClick = {navController.navigate("searchScreen")},
-            ) {
-                Icon(imageVector = Icons.Filled.Search, contentDescription = "")
-            }
-            IconButton(
-                modifier = Modifier
-                    .weight(1f),
-                onClick = {navController.navigate("notifScreen")},
-            ) {
-                Icon(imageVector = Icons.Filled.Notifications, contentDescription = "")
-            }
-            IconButton(
-                modifier = Modifier
-                    .weight(1f),
-                onClick = {navController.navigate("settingsScreen")},
-            ) {
-                Icon(imageVector = Icons.Filled.Menu, contentDescription = "")
-            }
-            }
+
+            Adaptive()
+
         }
+
+        BottomAppBar(
+
+            modifier = Modifier
+
+                .fillMaxWidth()
+
+                .height(50.dp)
+
+                .background(MaterialTheme.colorScheme.primary),
+
+            containerColor = MaterialTheme.colorScheme.primary,
+
+            contentColor = MaterialTheme.colorScheme.onPrimary
+
+
+        ) {
+
+            IconButton(
+
+                modifier = Modifier
+
+                    .weight(1f),
+
+                onClick = { navController.navigate("mainScreen") },
+
+                ) {
+
+                Icon(imageVector = Icons.Filled.Home, contentDescription = "")
+
+            }
+
+            IconButton(
+
+                modifier = Modifier
+
+                    .weight(1f),
+
+                onClick = { navController.navigate("searchScreen") },
+
+                ) {
+
+                Icon(imageVector = Icons.Filled.Search, contentDescription = "")
+
+            }
+
+            IconButton(
+
+                modifier = Modifier
+
+                    .weight(1f),
+
+                onClick = { navController.navigate("notifScreen") },
+
+                ) {
+
+                Icon(imageVector = Icons.Filled.Notifications, contentDescription = "")
+
+            }
+
+            IconButton(
+
+                modifier = Modifier
+
+                    .weight(1f),
+
+                onClick = { navController.navigate("settingsScreen") },
+
+                ) {
+
+                Icon(imageVector = Icons.Filled.Menu, contentDescription = "")
+
+            }
+
+        }
+
     }
 
+}
+
 @Composable
-fun Adaptive(){
+fun Adaptive() {
     var windowSize = currentWindowAdaptiveInfo().windowSizeClass
     var height = currentWindowAdaptiveInfo().windowSizeClass.windowHeightSizeClass
     var width = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass
@@ -256,20 +402,40 @@ fun Adaptive(){
             .background(MaterialTheme.colorScheme.background)
     ) {
         val arrayCard = arrayOf(
-            MenuModel(1, "Pizza tradicional", "El sabor de italia en tu horno 🇮🇹! ", R.drawable.pizza)
+            MenuModel(
+                1,
+                "Pizza tradicional",
+                "El sabor de italia en tu horno 🇮🇹! ",
+                R.drawable.pizza
+            )
         )
         val arrayView = arrayOf(
-            MenuModel(1, "Enchiladas verdes", "Disfruta la pura tradición mexicana! 🇲🇽", R.drawable.enchis),
+            MenuModel(
+                1,
+                "Enchiladas verdes",
+                "Disfruta la pura tradición mexicana! 🇲🇽",
+                R.drawable.enchis
+            ),
             MenuModel(2, "Mole poblano", "Un manjar de muchos ingredientes", R.drawable.mole)
         )
         val arraySide = arrayOf(
-            MenuModel(1, "Tamales oaxaqueños", "Llega el sabor de Oaxaca a tu mesa!", R.drawable.tamal),
+            MenuModel(
+                1,
+                "Tamales oaxaqueños",
+                "Llega el sabor de Oaxaca a tu mesa!",
+                R.drawable.tamal
+            ),
             MenuModel(2, "Tacos al pastor", "Un manjar galardonado globalmente", R.drawable.pastor),
-            MenuModel(3, "Hamburguesas de pollo", "¿Sin res en casa? ¿Y si las pruebas?", R.drawable.hamburg),
+            MenuModel(
+                3,
+                "Hamburguesas de pollo",
+                "¿Sin res en casa? ¿Y si las pruebas?",
+                R.drawable.hamburg
+            ),
             MenuModel(4, "Sincronizadas", "¿Traes prisa? Lo simple nunca falla!", R.drawable.sincro)
         )
 
-        if(width == WindowWidthSizeClass.COMPACT) {
+        if (width == WindowWidthSizeClass.COMPACT) {
             LazyVerticalGrid(
                 columns = GridCells.Adaptive(minSize = 200.dp),
                 modifier = Modifier
@@ -305,17 +471,31 @@ fun Adaptive(){
                 items(arrayView) { item -> MainView(item.id, item.title, item.text, item.image) }
             }
             LazyColumn {
-                items(arrayCard) { item -> MainViewExCard(item.id, item.title, item.text, item.image) }
+                items(arrayCard) { item ->
+                    MainViewExCard(
+                        item.id,
+                        item.title,
+                        item.text,
+                        item.image
+                    )
+                }
             }
             LazyColumn {
-                items(arraySide) { item -> MainViewSideCard(item.id, item.title, item.text, item.image) }
+                items(arraySide) { item ->
+                    MainViewSideCard(
+                        item.id,
+                        item.title,
+                        item.text,
+                        item.image
+                    )
+                }
             }
         }
     }
 }
 
 @Composable
-fun Adaptive2(){
+fun Adaptive2() {
     var windowSize = currentWindowAdaptiveInfo().windowSizeClass
     var height = currentWindowAdaptiveInfo().windowSizeClass.windowHeightSizeClass
     var width = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass
@@ -326,21 +506,46 @@ fun Adaptive2(){
             .background(MaterialTheme.colorScheme.background)
     ) {
         val arrayCard = arrayOf(
-            MenuModel(1, "Pizza tradicional", "El sabor de italia en tu horno 🇮🇹! ", R.drawable.pizza),
-            MenuModel(1, "Pizza tradicional", "Esta es la pantalla de recomendados! ", R.drawable.pizza),
+            MenuModel(
+                1,
+                "Pizza tradicional",
+                "El sabor de italia en tu horno 🇮🇹! ",
+                R.drawable.pizza
+            ),
+            MenuModel(
+                1,
+                "Pizza tradicional",
+                "Esta es la pantalla de recomendados! ",
+                R.drawable.pizza
+            ),
         )
         val arrayView = arrayOf(
-            MenuModel(1, "Enchiladas verdes", "Disfruta la pura tradición mexicana! 🇲🇽", R.drawable.enchis),
+            MenuModel(
+                1,
+                "Enchiladas verdes",
+                "Disfruta la pura tradición mexicana! 🇲🇽",
+                R.drawable.enchis
+            ),
             MenuModel(2, "Mole poblano", "Un manjar de muchos ingredientes", R.drawable.mole)
         )
         val arraySide = arrayOf(
-            MenuModel(1, "Tamales oaxaqueños", "Llega el sabor de Oaxaca a tu mesa!", R.drawable.tamal),
+            MenuModel(
+                1,
+                "Tamales oaxaqueños",
+                "Llega el sabor de Oaxaca a tu mesa!",
+                R.drawable.tamal
+            ),
             MenuModel(2, "Tacos al pastor", "Un manjar galardonado globalmente", R.drawable.pastor),
-            MenuModel(3, "Hamburguesas de pollo", "¿Sin res en casa? ¿Y si las pruebas?", R.drawable.hamburg),
+            MenuModel(
+                3,
+                "Hamburguesas de pollo",
+                "¿Sin res en casa? ¿Y si las pruebas?",
+                R.drawable.hamburg
+            ),
             MenuModel(4, "Sincronizadas", "¿Traes prisa? Lo simple nunca falla!", R.drawable.sincro)
         )
 
-        if(width == WindowWidthSizeClass.COMPACT) {
+        if (width == WindowWidthSizeClass.COMPACT) {
             LazyVerticalGrid(
                 columns = GridCells.Adaptive(minSize = 200.dp),
                 modifier = Modifier
@@ -376,10 +581,24 @@ fun Adaptive2(){
                 items(arrayView) { item -> MainView(item.id, item.title, item.text, item.image) }
             }
             LazyColumn {
-                items(arrayCard) { item -> MainViewExCard(item.id, item.title, item.text, item.image) }
+                items(arrayCard) { item ->
+                    MainViewExCard(
+                        item.id,
+                        item.title,
+                        item.text,
+                        item.image
+                    )
+                }
             }
             LazyColumn {
-                items(arraySide) { item -> MainViewSideCard(item.id, item.title, item.text, item.image) }
+                items(arraySide) { item ->
+                    MainViewSideCard(
+                        item.id,
+                        item.title,
+                        item.text,
+                        item.image
+                    )
+                }
             }
         }
     }

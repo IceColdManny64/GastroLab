@@ -44,7 +44,7 @@ fun MainView(id:Int, title:String, text:String, image:Int){
         modifier = Modifier
             .fillMaxWidth()
             .padding(5.dp)
-            .border(shape = RoundedCornerShape(10.dp),  width = 3.dp, color = MaterialTheme.colorScheme.onSurface)
+            .border(shape = RoundedCornerShape(10.dp),  width = 3.dp, color = MaterialTheme.colorScheme.onBackground)
 
     ) {
         Image(
@@ -57,9 +57,9 @@ fun MainView(id:Int, title:String, text:String, image:Int){
         )
         Column(
             modifier = Modifier
-                .background(MaterialTheme.colorScheme.tertiary)
+                .background(MaterialTheme.colorScheme.secondary)
                 .fillMaxSize()
-                .border(shape = RectangleShape,  width = 1.dp, color = MaterialTheme.colorScheme.onSurface)
+                .border(shape = RectangleShape,  width = 1.dp, color = MaterialTheme.colorScheme.onSecondary)
 
         ) {
             Text(
@@ -68,6 +68,7 @@ fun MainView(id:Int, title:String, text:String, image:Int){
                 fontWeight = FontWeight.Medium,
                 textAlign = TextAlign.Left,
                 lineHeight = 12.sp,
+                color = MaterialTheme.colorScheme.onSecondary,
                 modifier = Modifier
                     .padding(10.dp)
                     .fillMaxSize()
@@ -75,9 +76,9 @@ fun MainView(id:Int, title:String, text:String, image:Int){
         }
         Column(
             modifier = Modifier
-                .background(MaterialTheme.colorScheme.onPrimary)
+                .background(MaterialTheme.colorScheme.background)
                 .fillMaxSize()
-                .border(shape = RectangleShape,  width = 1.dp, color = MaterialTheme.colorScheme.onSurface)
+                .border(shape = RectangleShape,  width = 1.dp, color = MaterialTheme.colorScheme.onBackground)
 
         ) {
             Text(
@@ -99,7 +100,7 @@ fun MainViewExCard(id:Int, title:String, text:String, image:Int){
         modifier = Modifier
             .fillMaxWidth()
             .padding(5.dp)
-            .border(shape = RoundedCornerShape(10.dp),  width = 3.dp, color = MaterialTheme.colorScheme.onSurface)
+            .border(shape = RoundedCornerShape(10.dp),  width = 3.dp, color = MaterialTheme.colorScheme.onBackground)
 
     ) {
         Image(
@@ -114,7 +115,7 @@ fun MainViewExCard(id:Int, title:String, text:String, image:Int){
             modifier = Modifier
                 .background(MaterialTheme.colorScheme.tertiary)
                 .fillMaxSize()
-                .border(shape = RectangleShape,  width = 1.dp, color = MaterialTheme.colorScheme.onSurface)
+                .border(shape = RectangleShape,  width = 1.dp, color = MaterialTheme.colorScheme.onTertiary)
 
         ) {
             Text(
@@ -123,6 +124,7 @@ fun MainViewExCard(id:Int, title:String, text:String, image:Int){
                 fontWeight = FontWeight.Medium,
                 textAlign = TextAlign.Left,
                 lineHeight = 12.sp,
+                color = MaterialTheme.colorScheme.onTertiary,
                 modifier = Modifier
                     .padding(10.dp)
                     .fillMaxSize()
@@ -130,9 +132,9 @@ fun MainViewExCard(id:Int, title:String, text:String, image:Int){
         }
         Column(
             modifier = Modifier
-                .background(MaterialTheme.colorScheme.onPrimary)
+                .background(MaterialTheme.colorScheme.background)
                 .fillMaxSize()
-                .border(shape = RectangleShape,  width = 1.dp, color = MaterialTheme.colorScheme.onSurface)
+                .border(shape = RectangleShape,  width = 1.dp, color = MaterialTheme.colorScheme.onBackground)
 
         ) {
             Text(
@@ -153,18 +155,18 @@ fun MainViewSideCard(id:Int, title:String, text:String, image:Int) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(5.dp)
-            .border(shape = RoundedCornerShape(10.dp),  width = 2.dp, color = MaterialTheme.colorScheme.onTertiary)
+            .border(shape = RoundedCornerShape(10.dp),  width = 3.dp, color = MaterialTheme.colorScheme.onBackground)
     ) {
         Row(modifier = Modifier
             .fillMaxSize()
-            .border(shape = RoundedCornerShape(10.dp),  width = 5.dp, color = MaterialTheme.colorScheme.secondaryContainer)) {
+        ) {
             Image(
                 modifier = Modifier
                     .fillMaxHeight()
                     .padding(horizontal = 2.dp)
                     .width(100.dp)
                     .size(100.dp)
-                    .border(shape = RectangleShape,  width = 3.dp, color = MaterialTheme.colorScheme.onTertiary)
+                    .border(shape = RectangleShape,  width = 1.dp, color = MaterialTheme.colorScheme.onBackground)
                     .height(200.dp),
                 painter = painterResource(image),
                 contentDescription = "Food",
@@ -174,15 +176,16 @@ fun MainViewSideCard(id:Int, title:String, text:String, image:Int) {
 
             Column(
                 modifier = Modifier
-                .background(MaterialTheme.colorScheme.tertiary)
+                .background(MaterialTheme.colorScheme.onSecondary)
                 .fillMaxSize()
-                .border(shape = RectangleShape,  width = 1.dp, color = MaterialTheme.colorScheme.onPrimary)
+                .border(shape = RectangleShape,  width = 1.dp, color = MaterialTheme.colorScheme.onSecondary)
             ) {
                 Text(
                     text = title,
                     fontSize = 18.sp,
                     textAlign = TextAlign.Justify,
                     fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.secondary,
                     modifier = Modifier
                         .padding(5.dp)
 
@@ -192,6 +195,7 @@ fun MainViewSideCard(id:Int, title:String, text:String, image:Int) {
                     textAlign = TextAlign.Justify,
                     lineHeight = 12.sp,
                     fontSize = 15.sp,
+                    color = MaterialTheme.colorScheme.secondary,
                     modifier = Modifier
                         .padding(5.dp)
                 )
