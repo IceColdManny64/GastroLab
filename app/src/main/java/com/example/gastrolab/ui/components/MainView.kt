@@ -1,10 +1,12 @@
 package com.example.gastrolab.ui.components
 
+import android.R
 import android.graphics.drawable.shapes.RoundRectShape
 import android.view.RoundedCorner
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.foundation.layout.Row
@@ -87,6 +89,7 @@ fun MainView(id:Int, title:String, text:String, image:Int){
                 textAlign = TextAlign.Justify,
                 lineHeight = 17.sp,
                 fontWeight = FontWeight.Light,
+                color = MaterialTheme.colorScheme.onBackground,
                 modifier = Modifier.padding(10.dp)
                     .fillMaxSize()
 
@@ -142,6 +145,7 @@ fun MainViewExCard(id:Int, title:String, text:String, image:Int){
                 textAlign = TextAlign.Justify,
                 lineHeight = 17.sp,
                 fontWeight = FontWeight.Light,
+                color = MaterialTheme.colorScheme.onBackground,
                 modifier = Modifier.padding(10.dp)
                     .fillMaxSize()
 
@@ -176,16 +180,16 @@ fun MainViewSideCard(id:Int, title:String, text:String, image:Int) {
 
             Column(
                 modifier = Modifier
-                .background(MaterialTheme.colorScheme.onSecondary)
+                .background(MaterialTheme.colorScheme.background)
                 .fillMaxSize()
-                .border(shape = RectangleShape,  width = 1.dp, color = MaterialTheme.colorScheme.onSecondary)
+                .border(shape = RectangleShape,  width = 1.dp, color = MaterialTheme.colorScheme.onBackground)
             ) {
                 Text(
                     text = title,
                     fontSize = 18.sp,
                     textAlign = TextAlign.Justify,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.secondary,
+                    color = MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier
                         .padding(5.dp)
 
@@ -195,7 +199,7 @@ fun MainViewSideCard(id:Int, title:String, text:String, image:Int) {
                     textAlign = TextAlign.Justify,
                     lineHeight = 12.sp,
                     fontSize = 15.sp,
-                    color = MaterialTheme.colorScheme.secondary,
+                    color = MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier
                         .padding(5.dp)
                 )
@@ -205,3 +209,57 @@ fun MainViewSideCard(id:Int, title:String, text:String, image:Int) {
     }
 }
 
+@Composable
+fun MainViewSideCardCompact(id:Int, title:String, text:String, image:Int) {
+    Card(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(5.dp)
+            .border(shape = RoundedCornerShape(10.dp),  width = 3.dp, color = MaterialTheme.colorScheme.onBackground)
+    ) {
+        Row(modifier = Modifier
+            .fillMaxSize()
+        ) {
+            Image(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .padding(horizontal = 2.dp)
+                    .width(120.dp)
+                    .size(100.dp)
+                    .border(shape = RectangleShape,  width = 1.dp, color = MaterialTheme.colorScheme.onBackground)
+                    .height(200.dp),
+                painter = painterResource(image),
+                contentDescription = "Food",
+                contentScale = ContentScale.Crop,
+
+                )
+
+            Column(
+                modifier = Modifier
+                    .background(MaterialTheme.colorScheme.background)
+                    .fillMaxSize()
+                    .border(shape = RectangleShape,  width = 1.dp, color = MaterialTheme.colorScheme.onBackground)
+            ) {
+                Text(
+                    text = title,
+                    fontSize = 18.sp,
+                    textAlign = TextAlign.Justify,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onBackground,
+                    modifier = Modifier
+                        .padding(5.dp)
+
+                )
+                Text(
+                    text = text,
+                    textAlign = TextAlign.Justify,
+                    lineHeight = 12.sp,
+                    fontSize = 15.sp,
+                    color = MaterialTheme.colorScheme.onBackground,
+                    modifier = Modifier
+                        .padding(5.dp)
+                )
+            }
+        }
+    }
+}
