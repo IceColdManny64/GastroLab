@@ -144,153 +144,292 @@ fun Report(navController: NavHostController){
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
+
 //@Preview
+
 @Composable
+
 fun BarsReportarProblema(navController: NavHostController) {
 
+
     Column(
+
         modifier = Modifier
+
             .fillMaxSize()
 
-    ) {
-        //can use MediumTopAppBar and other similar components to change the top bar size.
-        TopAppBar(
-            modifier = Modifier
-                .height(50.dp),
-            colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = MaterialTheme.colorScheme.primary,
-                titleContentColor = MaterialTheme.colorScheme.secondary
-            ),
-            title = {
-                val gastroGradient= listOf(MaterialTheme.colorScheme.surface
-                    , MaterialTheme.colorScheme.surface,
-                    MaterialTheme.colorScheme.onTertiary,
-                    MaterialTheme.colorScheme.onTertiary)
-                Text(
-                    text = stringResource(R.string.app_name),
-                    style = TextStyle(brush = Brush.linearGradient(colors = gastroGradient)),
-                    color = MaterialTheme.colorScheme.secondary,
-                    fontStyle = FontStyle.Italic,
-                    fontWeight = FontWeight.ExtraBold,
-                    fontSize = 25.sp
-                )},
-            actions = {
-                IconButton(onClick = {navController.navigate("accountScreen")}) {
-                    Icon(
-                        imageVector = Icons.Filled.AccountCircle,
-                        contentDescription = "Account icon"
-                    )
-                }
-            }
-        )
-        TopAppBar(
-            modifier = Modifier
-                .height(50.dp),
-            colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = MaterialTheme.colorScheme.primary,
-                titleContentColor = MaterialTheme.colorScheme.secondary
-            ),
-            title = {
-                val gastroGradient= listOf(MaterialTheme.colorScheme.surface
-                    , MaterialTheme.colorScheme.surface,
-                    MaterialTheme.colorScheme.onTertiary,
-                    MaterialTheme.colorScheme.onTertiary)
-                Text(
-                    text = stringResource(R.string.app_name),
-                    style = TextStyle(brush = Brush.linearGradient(colors = gastroGradient)),
-                    color = MaterialTheme.colorScheme.secondary,
-                    fontStyle = FontStyle.Italic,
-                    fontWeight = FontWeight.ExtraBold,
-                    fontSize = 25.sp
-                )},
-            actions = {
-                var selectedIndex by rememberSaveable { mutableIntStateOf(0) }
 
-                // Opciones de botones y los Composables que deben mostrarse
-                val sOptions = listOf("Explorar", "Recomendados")
-                val composables = listOf<@Composable () -> Unit>(
-                    { Adaptive() },
-                    { Adaptive2() }
+    ) {
+
+//can use MediumTopAppBar and other similar components to change the top bar size.
+
+        TopAppBar(
+
+            modifier = Modifier
+
+                .height(50.dp),
+
+            colors = TopAppBarDefaults.topAppBarColors(
+
+                containerColor = MaterialTheme.colorScheme.primary,
+
+                titleContentColor = MaterialTheme.colorScheme.secondary
+
+            ),
+
+            title = {
+
+                val gastroGradient = listOf(
+                    MaterialTheme.colorScheme.surface, MaterialTheme.colorScheme.tertiary,
+
+                    MaterialTheme.colorScheme.onSurface,
+
+                    MaterialTheme.colorScheme.onTertiary
                 )
 
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.Top,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    SingleChoiceSegmentedButtonRow(
-                        modifier = Modifier.clip(ShapeDefaults.ExtraSmall)
-                    ) {
-                        sOptions.forEachIndexed { index, label ->
-                            SegmentedButton(
-                                shape = SegmentedButtonDefaults.itemShape(index, sOptions.size),
-                                onClick = { selectedIndex = index },
-                                selected = index == selectedIndex,
-                                label = { Text(label) },
-                                colors = SegmentedButtonDefaults.colors(
-                                    activeContainerColor = MaterialTheme.colorScheme.secondary,
-                                    activeContentColor = MaterialTheme.colorScheme.secondaryContainer,
-                                    inactiveContainerColor = MaterialTheme.colorScheme.background,
-                                    inactiveContentColor = MaterialTheme.colorScheme.surface
-                                )
-                            )
-                        }
-                    }
+                Text(
 
-                    // Cargar dinámicamente el Composable seleccionado
-                    Box(modifier = Modifier.fillMaxSize()) {
-                        composables[selectedIndex]()
-                    }
+                    text = stringResource(R.string.app_name),
+
+                    style = TextStyle(brush = Brush.linearGradient(colors = gastroGradient)),
+
+                    color = MaterialTheme.colorScheme.secondary,
+
+                    fontStyle = FontStyle.Italic,
+
+                    fontWeight = FontWeight.ExtraBold,
+
+                    fontSize = 25.sp
+
+                )
+            },
+
+            actions = {
+
+                IconButton(onClick = { navController.navigate("accountScreen") }) {
+
+                    Icon(
+
+                        imageVector = Icons.Filled.AccountCircle,
+
+                        contentDescription = "Account icon"
+
+                    )
+
                 }
+
             }
+
         )
 
-        Column(
+        TopAppBar(
+
             modifier = Modifier
+
+                .height(50.dp),
+
+            colors = TopAppBarDefaults.topAppBarColors(
+
+                containerColor = MaterialTheme.colorScheme.primary,
+
+                titleContentColor = MaterialTheme.colorScheme.onPrimary
+
+            ),
+
+            title = {
+
+                val gastroGradient = listOf(
+                    MaterialTheme.colorScheme.surface,
+
+                    MaterialTheme.colorScheme.onSurface
+                )
+
+                Text(
+
+                    text = stringResource(R.string.app_name),
+
+                    style = TextStyle(brush = Brush.linearGradient(colors = gastroGradient)),
+
+                    fontStyle = FontStyle.Italic,
+
+                    fontWeight = FontWeight.ExtraBold,
+
+                    fontSize = 25.sp
+
+                )
+            },
+
+            actions = {
+
+                var selectedIndex by rememberSaveable { mutableIntStateOf(0) }
+
+
+// Opciones de botones y los Composables que deben mostrarse
+
+                val sOptions = listOf("Explorar", "Recomendados")
+
+                val composables = listOf<@Composable () -> Unit>(
+
+                    { Adaptive() },
+
+                    { Adaptive2() }
+
+                )
+
+
+
+                Column(
+
+                    modifier = Modifier.fillMaxSize(),
+
+                    verticalArrangement = Arrangement.Top,
+
+                    horizontalAlignment = Alignment.CenterHorizontally
+
+                ) {
+
+                    SingleChoiceSegmentedButtonRow(
+
+                        modifier = Modifier.clip(ShapeDefaults.ExtraSmall)
+
+                    ) {
+
+                        sOptions.forEachIndexed { index, label ->
+
+                            SegmentedButton(
+
+                                shape = SegmentedButtonDefaults.itemShape(index, sOptions.size),
+
+                                onClick = { selectedIndex = index },
+
+                                selected = index == selectedIndex,
+
+                                label = { Text(label) },
+
+                                colors = SegmentedButtonDefaults.colors(
+
+                                    activeContainerColor = MaterialTheme.colorScheme.tertiary,
+
+                                    activeContentColor = MaterialTheme.colorScheme.onTertiary,
+
+                                    inactiveContainerColor = MaterialTheme.colorScheme.primary,
+
+                                    inactiveContentColor = MaterialTheme.colorScheme.onPrimary
+
+                                )
+
+                            )
+
+                        }
+
+                    }
+
+
+// Cargar dinámicamente el Composable seleccionado
+
+                    Box(modifier = Modifier.fillMaxSize()) {
+
+                        composables[selectedIndex]()
+
+                    }
+
+                }
+
+            }
+
+        )
+
+
+
+        Column(
+
+            modifier = Modifier
+
                 .weight(1f)
+
                 .fillMaxSize()
+
                 .background(MaterialTheme.colorScheme.background)
 
-        ) {
-            Report(navController)
-        }
-        BottomAppBar(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(50.dp)
-                .background(MaterialTheme.colorScheme.primary),
-            containerColor = MaterialTheme.colorScheme.primary,
-            contentColor = MaterialTheme.colorScheme.secondary
 
         ) {
-            IconButton(
-                modifier = Modifier
-                    .weight(1f),
-                onClick = {navController.navigate("mainScreen")},
-            ) {
-                Icon(imageVector = Icons.Filled.Home, contentDescription = "")
-            }
-            IconButton(
-                modifier = Modifier
-                    .weight(1f),
-                onClick = {navController.navigate("searchScreen")},
-            ) {
-                Icon(imageVector = Icons.Filled.Search, contentDescription = "")
-            }
-            IconButton(
-                modifier = Modifier
-                    .weight(1f),
-                onClick = {navController.navigate("notifScreen")},
-            ) {
-                Icon(imageVector = Icons.Filled.Notifications, contentDescription = "")
-            }
-            IconButton(
-                modifier = Modifier
-                    .weight(1f),
-                onClick = {navController.navigate("settingsScreen")},
-            ) {
-                Icon(imageVector = Icons.Filled.Menu, contentDescription = "")
-            }
         }
+
+        BottomAppBar(
+
+            modifier = Modifier
+
+                .fillMaxWidth()
+
+                .height(50.dp)
+
+                .background(MaterialTheme.colorScheme.primary),
+
+            containerColor = MaterialTheme.colorScheme.primary,
+
+            contentColor = MaterialTheme.colorScheme.onPrimary
+
+
+        ) {
+
+            IconButton(
+
+                modifier = Modifier
+
+                    .weight(1f),
+
+                onClick = { navController.navigate("mainScreen") },
+
+                ) {
+
+                Icon(imageVector = Icons.Filled.Home, contentDescription = "")
+
+            }
+
+            IconButton(
+
+                modifier = Modifier
+
+                    .weight(1f),
+
+                onClick = { navController.navigate("searchScreen") },
+
+                ) {
+
+                Icon(imageVector = Icons.Filled.Search, contentDescription = "")
+
+            }
+
+            IconButton(
+
+                modifier = Modifier
+
+                    .weight(1f),
+
+                onClick = { navController.navigate("notifScreen") },
+
+                ) {
+
+                Icon(imageVector = Icons.Filled.Notifications, contentDescription = "")
+
+            }
+
+            IconButton(
+
+                modifier = Modifier
+
+                    .weight(1f),
+
+                onClick = { navController.navigate("settingsScreen") },
+
+                ) {
+
+                Icon(imageVector = Icons.Filled.Menu, contentDescription = "")
+
+            }
+
+        }
+
     }
+
 }
