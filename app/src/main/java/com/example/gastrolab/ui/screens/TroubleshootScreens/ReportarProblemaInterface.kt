@@ -205,142 +205,14 @@ fun BarsReportarProblema(navController: NavHostController) {
             },
 
             actions = {
-
-                IconButton(onClick = { navController.navigate("accountScreen") }) {
-
+                IconButton(onClick = {}) {
                     Icon(
-
                         imageVector = Icons.Filled.AccountCircle,
-
                         contentDescription = "Account icon"
-
                     )
-
                 }
-
             }
-
         )
-
-        TopAppBar(
-
-            modifier = Modifier
-
-                .height(50.dp),
-
-            colors = TopAppBarDefaults.topAppBarColors(
-
-                containerColor = MaterialTheme.colorScheme.primary,
-
-                titleContentColor = MaterialTheme.colorScheme.onPrimary
-
-            ),
-
-            title = {
-
-                val gastroGradient = listOf(
-                    MaterialTheme.colorScheme.surface,
-
-                    MaterialTheme.colorScheme.onSurface
-                )
-
-                Text(
-
-                    text = stringResource(R.string.app_name),
-
-                    style = TextStyle(brush = Brush.linearGradient(colors = gastroGradient)),
-
-                    fontStyle = FontStyle.Italic,
-
-                    fontWeight = FontWeight.ExtraBold,
-
-                    fontSize = 25.sp
-
-                )
-            },
-
-            actions = {
-
-                var selectedIndex by rememberSaveable { mutableIntStateOf(0) }
-
-
-// Opciones de botones y los Composables que deben mostrarse
-
-                val sOptions = listOf("Explorar", "Recomendados")
-
-                val composables = listOf<@Composable () -> Unit>(
-
-                    { Adaptive() },
-
-                    { Adaptive2() }
-
-                )
-
-
-
-                Column(
-
-                    modifier = Modifier.fillMaxSize(),
-
-                    verticalArrangement = Arrangement.Top,
-
-                    horizontalAlignment = Alignment.CenterHorizontally
-
-                ) {
-
-                    SingleChoiceSegmentedButtonRow(
-
-                        modifier = Modifier.clip(ShapeDefaults.ExtraSmall)
-
-                    ) {
-
-                        sOptions.forEachIndexed { index, label ->
-
-                            SegmentedButton(
-
-                                shape = SegmentedButtonDefaults.itemShape(index, sOptions.size),
-
-                                onClick = { selectedIndex = index },
-
-                                selected = index == selectedIndex,
-
-                                label = { Text(label) },
-
-                                colors = SegmentedButtonDefaults.colors(
-
-                                    activeContainerColor = MaterialTheme.colorScheme.tertiary,
-
-                                    activeContentColor = MaterialTheme.colorScheme.onTertiary,
-
-                                    inactiveContainerColor = MaterialTheme.colorScheme.primary,
-
-                                    inactiveContentColor = MaterialTheme.colorScheme.onPrimary
-
-                                )
-
-                            )
-
-                        }
-
-                    }
-
-
-// Cargar dinámicamente el Composable seleccionado
-
-                    Box(modifier = Modifier.fillMaxSize()) {
-
-                        composables[selectedIndex]()
-
-                    }
-
-                }
-
-            }
-
-        )
-
-
-
         Column(
 
             modifier = Modifier
@@ -353,6 +225,7 @@ fun BarsReportarProblema(navController: NavHostController) {
 
 
         ) {
+            Report(navController)
         }
 
         BottomAppBar(
@@ -427,9 +300,8 @@ fun BarsReportarProblema(navController: NavHostController) {
                 Icon(imageVector = Icons.Filled.Menu, contentDescription = "")
 
             }
-
         }
-
     }
-
 }
+
+
