@@ -164,52 +164,28 @@ fun BarsReportarProblema(navController: NavHostController) {
 //can use MediumTopAppBar and other similar components to change the top bar size.
 
         TopAppBar(
-
-            modifier = Modifier
-
-                .height(50.dp),
-
+            modifier = Modifier.height(50.dp),
             colors = TopAppBarDefaults.topAppBarColors(
-
                 containerColor = MaterialTheme.colorScheme.primary,
-
                 titleContentColor = MaterialTheme.colorScheme.secondary
-
             ),
-
             title = {
-
                 val gastroGradient = listOf(
-                    MaterialTheme.colorScheme.surface, MaterialTheme.colorScheme.tertiary,
-
-                    MaterialTheme.colorScheme.onSurface,
-
-                    MaterialTheme.colorScheme.onTertiary
+                    MaterialTheme.colorScheme.tertiary,
+                    MaterialTheme.colorScheme.surface,
+                    MaterialTheme.colorScheme.tertiary
                 )
-
                 Text(
-
                     text = stringResource(R.string.app_name),
-
-                    style = TextStyle(brush = Brush.linearGradient(colors = gastroGradient)),
-
-                    color = MaterialTheme.colorScheme.secondary,
-
+                    style = TextStyle(brush = Brush.verticalGradient(colors = gastroGradient)),
                     fontStyle = FontStyle.Italic,
-
                     fontWeight = FontWeight.ExtraBold,
-
                     fontSize = 25.sp
-
                 )
             },
-
             actions = {
-                IconButton(onClick = {}) {
-                    Icon(
-                        imageVector = Icons.Filled.AccountCircle,
-                        contentDescription = "Account icon"
-                    )
+                IconButton(onClick = { navController.navigate("accountScreen") }) {
+                    Icon(imageVector = Icons.Filled.AccountCircle, contentDescription = "Account icon")
                 }
             }
         )
@@ -229,76 +205,23 @@ fun BarsReportarProblema(navController: NavHostController) {
         }
 
         BottomAppBar(
-
             modifier = Modifier
-
                 .fillMaxWidth()
-
-                .height(50.dp)
-
-                .background(MaterialTheme.colorScheme.primary),
-
+                .height(50.dp),
             containerColor = MaterialTheme.colorScheme.primary,
-
             contentColor = MaterialTheme.colorScheme.onPrimary
-
-
         ) {
-
-            IconButton(
-
-                modifier = Modifier
-
-                    .weight(1f),
-
-                onClick = { navController.navigate("mainScreen") },
-
-                ) {
-
+            IconButton(modifier = Modifier.weight(1f), onClick = { navController.navigate("mainScreen") }) {
                 Icon(imageVector = Icons.Filled.Home, contentDescription = "")
-
             }
-
-            IconButton(
-
-                modifier = Modifier
-
-                    .weight(1f),
-
-                onClick = { navController.navigate("searchScreen") },
-
-                ) {
-
+            IconButton(modifier = Modifier.weight(1f), onClick = { navController.navigate("searchScreen") }) {
                 Icon(imageVector = Icons.Filled.Search, contentDescription = "")
-
             }
-
-            IconButton(
-
-                modifier = Modifier
-
-                    .weight(1f),
-
-                onClick = { navController.navigate("notifScreen") },
-
-                ) {
-
+            IconButton(modifier = Modifier.weight(1f), onClick = { navController.navigate("notifScreen") }) {
                 Icon(imageVector = Icons.Filled.Notifications, contentDescription = "")
-
             }
-
-            IconButton(
-
-                modifier = Modifier
-
-                    .weight(1f),
-
-                onClick = { navController.navigate("settingsScreen") },
-
-                ) {
-
+            IconButton(modifier = Modifier.weight(1f), onClick = { navController.navigate("settingsScreen") }) {
                 Icon(imageVector = Icons.Filled.Menu, contentDescription = "")
-
             }
         }
     }

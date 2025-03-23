@@ -243,8 +243,10 @@ fun Adaptive(navController: NavHostController) {
         val arraySide = arrayOf(
             MenuModel(1, "Tamales oaxaqueños", "Llega el sabor de Oaxaca a tu mesa!", R.drawable.tamal,  ),
             MenuModel(2, "Tacos al pastor", "Un manjar galardonado globalmente", R.drawable.pastor),
-            MenuModel(3, "Hamburguesas de pollo", "¿Sin res en casa? ¿Y si las pruebas?", R.drawable.hamburg),
-            MenuModel(4, "Sincronizadas", "¿Traes prisa? Lo simple nunca falla!", R.drawable.sincro)
+            MenuModel(3, "Hamburguesas de pollo", "¿Sin res en casa? ¿Con ganas de algo nuevo?", R.drawable.hamburg),
+            MenuModel(4, "Sincronizadas", "¿Hoy traes prisa? Lo más simple nunca falla!", R.drawable.sincro),
+            MenuModel(5, "Caldo de pollo", "¿Con frío? Esto te lo quitará!", R.drawable.caldo),
+            MenuModel(6, "Huevos a la mexicana", "Con todo el estilo mexicano", R.drawable.huevmx)
         )
 
         if (width == WindowWidthSizeClass.COMPACT) {
@@ -351,7 +353,10 @@ fun Adaptive2(navController: NavHostController) {
         val arraySide = arrayOf(
             MenuModel(1, "Tamales oaxaqueños", "Llega el sabor de Oaxaca a tu mesa!", R.drawable.tamal),
             MenuModel(2, "Tacos al pastor", "Un manjar galardonado globalmente", R.drawable.pastor),
-            MenuModel(3, "Hamburguesas de pollo", "¿Sin res en casa? ¿Y si las pruebas?", R.drawable.hamburg), MenuModel(4, "Sincronizadas", "¿Traes prisa? Lo simple nunca falla!", R.drawable.sincro)
+            MenuModel(3, "Hamburguesas de pollo", "¿Sin res en casa? ¿Y si las pruebas?", R.drawable.hamburg),
+            MenuModel(4, "Sincronizadas", "¿Traes prisa? Lo simple nunca falla!", R.drawable.sincro),
+            MenuModel(5, "Caldo de pollo", "¿Con frío? Esto te lo quitará", R.drawable.caldo),
+            MenuModel(6, "Huevos a la mexicana", "Con todo el estilo mexicano", R.drawable.huevmx)
         )
 
         if (width == WindowWidthSizeClass.COMPACT) {
