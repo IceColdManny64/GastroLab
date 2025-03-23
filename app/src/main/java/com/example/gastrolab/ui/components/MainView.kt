@@ -6,6 +6,7 @@ import android.view.RoundedCorner
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,9 +24,13 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowRight
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,20 +41,27 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.VerticalAlignmentLine
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 
 @Composable
-fun MainView(id: Int, title: String, text: String, image: Int) {
+fun MainView(id: Int, title: String, text: String, image: Int, navController: NavController) {
     Card(
         modifier = Modifier
             .width(120.dp)
-            .height(200.dp)// 🔹 Ajuste de ancho fijo para evitar deformación
+            .height(180.dp)
             .padding(5.dp)
+            .clickable{
+                navController.navigate("recipeScreen")
+            }
             .border(
                 shape = RoundedCornerShape(10.dp),
                 width = 1.dp,
@@ -57,8 +69,11 @@ fun MainView(id: Int, title: String, text: String, image: Int) {
             )
     ) {
         Column(
+
             modifier = Modifier.fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
+                .background(MaterialTheme.colorScheme.background),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Image(
                 modifier = Modifier
@@ -68,29 +83,29 @@ fun MainView(id: Int, title: String, text: String, image: Int) {
                 contentDescription = "Food",
                 contentScale = ContentScale.Crop
             )
-            Column(
-                modifier = Modifier
-                    .background(MaterialTheme.colorScheme.onSecondary)
-                    .fillMaxWidth()
-                    .padding(2.dp)
-            ) {
                 Text(
+                    textAlign = TextAlign.Center,
                     text = title,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.secondary
+                    color = MaterialTheme.colorScheme.secondary,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(MaterialTheme.colorScheme.onSecondary)
                 )
-            }
         }
     }
 }
 
 @Composable
-fun MainViewExCard(id:Int, title:String, text:String, image:Int) {
+fun MainViewExCard(id:Int, title:String, text:String, image:Int, navController: NavController) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(5.dp)
+            .clickable{
+                navController.navigate("recipeScreen")
+            }
             .border(
                 shape = RoundedCornerShape(10.dp),
                 width = 3.dp,
@@ -100,7 +115,7 @@ fun MainViewExCard(id:Int, title:String, text:String, image:Int) {
     ) {
         Row(
             modifier = Modifier
-                .background(MaterialTheme.colorScheme.surface)
+                .background(MaterialTheme.colorScheme.onTertiary)
         ) {
             Column(
                 modifier = Modifier
@@ -110,6 +125,7 @@ fun MainViewExCard(id:Int, title:String, text:String, image:Int) {
             ) {
                 Image(
                     modifier = Modifier
+                        .fillMaxSize()
                         .size(100.dp)
                         .clip(RoundedCornerShape(15.dp))
                         .border(
@@ -121,20 +137,7 @@ fun MainViewExCard(id:Int, title:String, text:String, image:Int) {
                     contentDescription = "Food",
                     contentScale = ContentScale.Crop
                 )
-                Spacer(
-                    modifier = Modifier.height(10.dp)
-                )
-                Text(
-                    text = title,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Medium,
-                    textAlign = TextAlign.Center,
-                    lineHeight = 20.sp,
-                    color = MaterialTheme.colorScheme.tertiary,
-                    modifier = Modifier
-                        .padding(2.dp)
-                        .background(MaterialTheme.colorScheme.onTertiary)
-                )
+
             }
             Row(
                 modifier = Modifier
@@ -143,18 +146,38 @@ fun MainViewExCard(id:Int, title:String, text:String, image:Int) {
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = text,
-                    textAlign = TextAlign.Center,
-                    lineHeight = 25.sp,
-                    fontWeight = FontWeight.Black,
-                    color = MaterialTheme.colorScheme.background,
-                    fontSize = 18.sp,
+                Column(
                     modifier = Modifier
-                        .background(MaterialTheme.colorScheme.onBackground)
-                        .fillMaxSize()
-                        .padding(40.dp)
-                )
+                        .background(MaterialTheme.colorScheme.onTertiary)
+                        .fillMaxSize(),
+
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    Text(
+                        text = title,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Medium,
+                        textAlign = TextAlign.Center,
+                        lineHeight = 20.sp,
+                        color = MaterialTheme.colorScheme.tertiary,
+                        modifier = Modifier
+                            .padding(10.dp)
+                            .background(MaterialTheme.colorScheme.onTertiary)
+                    )
+                    Text(
+                        text = text,
+                        textAlign = TextAlign.Center,
+                        lineHeight = 25.sp,
+                        fontWeight = FontWeight.Black,
+                        color = MaterialTheme.colorScheme.background,
+                        fontSize = 18.sp,
+                        modifier = Modifier
+                            .background(MaterialTheme.colorScheme.onBackground)
+                            .fillMaxSize()
+                            .padding(20.dp)
+                    )
+                }
             }
         }
     }
@@ -162,11 +185,14 @@ fun MainViewExCard(id:Int, title:String, text:String, image:Int) {
 
 
 @Composable
-fun MainViewSideCard(id:Int, title:String, text:String, image:Int) {
+fun MainViewSideCard(id:Int, title:String, text:String, image:Int, navController: NavController) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(5.dp)
+            .clickable{
+                navController.navigate("recipeScreen")
+            }
             .border(shape = RoundedCornerShape(10.dp),  width = 3.dp, color = MaterialTheme.colorScheme.onBackground)
     ) {
         Row(modifier = Modifier
