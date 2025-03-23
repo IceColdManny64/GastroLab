@@ -37,12 +37,22 @@ import com.example.gastrolab.ui.screens.TroubleshootScreens.Report
 fun SettingsInterface(navController: NavHostController) {
     BarsSettings(navController)
 
-    Button(
-        onClick = {navController.navigate("reportProblem")}
-    )
-    {
-        Text("Go to Report Screen")
+    Column {
+        Button(
+            onClick = {navController.navigate("reportProblem")}
+        )
+        {
+            Text("Go to Report Screen")
+        }
+        Button(
+            onClick = {navController.navigate("supportScreen")}
+        )
+        {
+            Text("Go to Support Screen")
+        }
     }
+
+
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
