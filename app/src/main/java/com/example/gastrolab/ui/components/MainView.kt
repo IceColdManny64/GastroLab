@@ -104,7 +104,7 @@ fun MainViewExCard(id:Int, title:String, text:String, image:Int, navController: 
             .fillMaxWidth()
             .padding(5.dp)
             .clickable{
-                navController.navigate("recipeScreen")
+                navController.navigate("articleScreen")
             }
             .border(
                 shape = RoundedCornerShape(10.dp),
