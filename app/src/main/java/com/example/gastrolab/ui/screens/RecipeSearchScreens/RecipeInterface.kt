@@ -55,7 +55,6 @@ fun RecipeInterface(navController: NavHostController) {
                     Text(
                         text = "Enchiladas Verdes",
                         fontWeight = FontWeight.Bold,
-                        color = Color.White// Color de texto negro
                     )
                 },
                 navigationIcon = {
@@ -63,44 +62,36 @@ fun RecipeInterface(navController: NavHostController) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
                             contentDescription = "Volver",
-
+                            tint = MaterialTheme.colorScheme.tertiary
                         )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-
+                    containerColor = MaterialTheme.colorScheme.primary, // Color de fondo
+                    titleContentColor = MaterialTheme.colorScheme.onPrimary // Color del texto
                 )
             )
         },
         bottomBar = {
             // Barra de navegación inferior
-            BottomAppBar (
+            BottomAppBar(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp),
                 containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.secondary
+                contentColor = MaterialTheme.colorScheme.onPrimary
             ) {
-                IconButton(
-                    modifier = Modifier.weight(1f),
-                    onClick = { navController.navigate("mainScreen") }
-                ) {
-                    Icon(imageVector = Icons.Filled.Home, contentDescription = "Home")
+                IconButton(modifier = Modifier.weight(1f), onClick = { navController.navigate("mainScreen") }) {
+                    Icon(imageVector = Icons.Filled.Home, contentDescription = "")
                 }
-                IconButton(
-                    modifier = Modifier.weight(1f),
-                    onClick = { navController.navigate("searchScreen") }
-                ) {
-                    Icon(imageVector = Icons.Filled.Search, contentDescription = "Search")
+                IconButton(modifier = Modifier.weight(1f), onClick = { navController.navigate("searchScreen") }) {
+                    Icon(imageVector = Icons.Filled.Search, contentDescription = "")
                 }
-                IconButton(
-                    modifier = Modifier.weight(1f),
-                    onClick = { navController.navigate("notifScreen") }
-                ) {
-                    Icon(imageVector = Icons.Filled.Notifications, contentDescription = "Notifications")
+                IconButton(modifier = Modifier.weight(1f), onClick = { navController.navigate("notifScreen") }) {
+                    Icon(imageVector = Icons.Filled.Notifications, contentDescription = "")
                 }
-                IconButton (
-                    modifier = Modifier.weight(1f),
-                    onClick = { navController.navigate("settingsScreen") }
-                ) {
-                    Icon(imageVector = Icons.Filled.Menu, contentDescription = "Menu")
+                IconButton(modifier = Modifier.weight(1f), onClick = { navController.navigate("settingsScreen") }) {
+                    Icon(imageVector = Icons.Filled.Menu, contentDescription = "")
                 }
             }
         },
@@ -108,7 +99,7 @@ fun RecipeInterface(navController: NavHostController) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color.White)
+                    .background(MaterialTheme.colorScheme.background)
                     .padding(paddingValues)
                     .verticalScroll(rememberScrollState()) // Hace que el contenido sea desplazable
             ) {
@@ -148,7 +139,7 @@ fun RecipeInterface(navController: NavHostController) {
                             text = "Tiempo de preparación: 45 minutos",
                             style = MaterialTheme.typography.bodyLarge,
                             fontWeight = FontWeight.Bold,
-                            color = Color.White // Color de texto blanco
+                            color = MaterialTheme.colorScheme.onBackground // Color de texto blanco
                         )
                     }
                 }
@@ -160,7 +151,7 @@ fun RecipeInterface(navController: NavHostController) {
                     text = "Ingredientes",
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
-                    color = Color.Black, // Color de texto negro
+                    color = MaterialTheme.colorScheme.onBackground, // Color de texto negro
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
 
@@ -178,7 +169,7 @@ fun RecipeInterface(navController: NavHostController) {
                         - Aceite para freír
                     """.trimIndent(),
                     style = MaterialTheme.typography.bodyLarge,
-                    color = Color.Black, // Color de texto negro
+                    color = MaterialTheme.colorScheme.onBackground, // Color de texto
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
 
@@ -189,7 +180,7 @@ fun RecipeInterface(navController: NavHostController) {
                     text = "Preparación",
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
-                    color = Color.Black, // Color de texto negro
+                    color = MaterialTheme.colorScheme.onBackground, // Color de texto negro
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
 
@@ -206,7 +197,7 @@ fun RecipeInterface(navController: NavHostController) {
                         6. Sirve caliente y disfruta.
                     """.trimIndent(),
                     style = MaterialTheme.typography.bodyLarge,
-                    color = Color.Black, // Color de texto negro
+                    color = MaterialTheme.colorScheme.onBackground, // Color de texto negro
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
 

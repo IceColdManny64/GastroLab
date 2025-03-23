@@ -67,8 +67,7 @@ fun CommentsInterface(navController: NavHostController) {
                 title = {
                     Text(
                         text = "Comentarios",
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White
+                        fontWeight = FontWeight.Bold
                     )
                 },
                 navigationIcon = {
@@ -76,43 +75,35 @@ fun CommentsInterface(navController: NavHostController) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
                             contentDescription = "Volver",
-                            tint = Color.White
+                            tint = MaterialTheme.colorScheme.tertiary
                         )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primary
+                    containerColor = MaterialTheme.colorScheme.primary, // Color de fondo
+                    titleContentColor = MaterialTheme.colorScheme.onPrimary // Color del texto
                 )
             )
         },
         bottomBar = {
             BottomAppBar(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp),
                 containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.secondary
+                contentColor = MaterialTheme.colorScheme.onPrimary
             ) {
-                IconButton(
-                    modifier = Modifier.weight(1f),
-                    onClick = { navController.navigate("mainScreen") }
-                ) {
-                    Icon(imageVector = Icons.Filled.Home, contentDescription = "Home")
+                IconButton(modifier = Modifier.weight(1f), onClick = { navController.navigate("mainScreen") }) {
+                    Icon(imageVector = Icons.Filled.Home, contentDescription = "")
                 }
-                IconButton(
-                    modifier = Modifier.weight(1f),
-                    onClick = { navController.navigate("searchScreen") }
-                ) {
-                    Icon(imageVector = Icons.Filled.Search, contentDescription = "Search")
+                IconButton(modifier = Modifier.weight(1f), onClick = { navController.navigate("searchScreen") }) {
+                    Icon(imageVector = Icons.Filled.Search, contentDescription = "")
                 }
-                IconButton(
-                    modifier = Modifier.weight(1f),
-                    onClick = { navController.navigate("notifScreen") }
-                ) {
-                    Icon(imageVector = Icons.Filled.Notifications, contentDescription = "Notifications")
+                IconButton(modifier = Modifier.weight(1f), onClick = { navController.navigate("notifScreen") }) {
+                    Icon(imageVector = Icons.Filled.Notifications, contentDescription = "")
                 }
-                IconButton(
-                    modifier = Modifier.weight(1f),
-                    onClick = { navController.navigate("settingsScreen") }
-                ) {
-                    Icon(imageVector = Icons.Filled.Menu, contentDescription = "Menu")
+                IconButton(modifier = Modifier.weight(1f), onClick = { navController.navigate("settingsScreen") }) {
+                    Icon(imageVector = Icons.Filled.Menu, contentDescription = "")
                 }
             }
         },
@@ -120,7 +111,7 @@ fun CommentsInterface(navController: NavHostController) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color.White)
+                    .background(MaterialTheme.colorScheme.background)
                     .padding(paddingValues)
                     .verticalScroll(rememberScrollState())
             ) {
@@ -167,18 +158,17 @@ fun CommentsInterface(navController: NavHostController) {
                         text = "Calificación: 5",
                         style = MaterialTheme.typography.bodyLarge,
                         fontWeight = FontWeight.Bold,
-                        color = Color.Black
+                        color = MaterialTheme.colorScheme.onBackground
                     )
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
-
                 // Título de la receta
                 Text(
                     text = "Enchiladas Verdes",
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
-                    color = Color.Black,
+                    color = MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
 
@@ -199,13 +189,13 @@ fun CommentsInterface(navController: NavHostController) {
                         Icon(
                             imageVector = Icons.Filled.Add, // Ícono de favoritos
                             contentDescription = "Favoritos",
-                            tint = Color.Black
+                            tint = MaterialTheme.colorScheme.onBackground
                         )
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
                             text = "Favorito",
                             style = MaterialTheme.typography.bodySmall,
-                            color = Color.Black
+                            color = MaterialTheme.colorScheme.onBackground
                         )
                     }
 
@@ -217,13 +207,13 @@ fun CommentsInterface(navController: NavHostController) {
                         Icon(
                             imageVector = Icons.Filled.CheckCircle, // Ícono de guardar
                             contentDescription = "Guardar",
-                            tint = Color.Black
+                            tint = MaterialTheme.colorScheme.onBackground
                         )
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
                             text = "Guardar",
                             style = MaterialTheme.typography.bodySmall,
-                            color = Color.Black
+                            color = MaterialTheme.colorScheme.onBackground
                         )
                     }
 
@@ -235,13 +225,13 @@ fun CommentsInterface(navController: NavHostController) {
                         Icon(
                             imageVector = Icons.Filled.Send, // Ícono de compartir
                             contentDescription = "Compartir",
-                            tint = Color.Black
+                            tint = MaterialTheme.colorScheme.onBackground
                         )
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
                             text = "Compartir",
                             style = MaterialTheme.typography.bodySmall,
-                            color = Color.Black
+                            color = MaterialTheme.colorScheme.onBackground
                         )
                     }
                 }
@@ -253,7 +243,7 @@ fun CommentsInterface(navController: NavHostController) {
                     text = "788 comentarios",
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
-                    color = Color.Black,
+                    color = MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
 
@@ -278,26 +268,26 @@ fun CommentWithReplies() {
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp),
         shape = RoundedCornerShape(8.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.LightGray)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onBackground)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
                 text = "Mario Vargas",
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.Bold,
-                color = Color.Black
+                color = MaterialTheme.colorScheme.onTertiary
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "El mejor platillo del mundo, se lo recomendé a mi primo el Memo y dijo que estaba a toda madre.",
+                text = "El mejor platillo del mundo, se lo recomendé a mi primo y dijo que estaba a todo dar.",
                 style = MaterialTheme.typography.bodyMedium,
-                color = Color.Black
+                color = MaterialTheme.colorScheme.onSurface
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = "45 respuestas ✔",
                 style = MaterialTheme.typography.bodySmall,
-                color = Color.Gray,
+                color = MaterialTheme.colorScheme.background,
                 modifier = Modifier.clickable { /* Acción para ver respuestas */ }
             )
 
@@ -306,13 +296,13 @@ fun CommentWithReplies() {
             Text(
                 text = "Respuesta 1: ¡Totalmente de acuerdo!",
                 style = MaterialTheme.typography.bodySmall,
-                color = Color.Gray,
+                color = MaterialTheme.colorScheme.background,
                 modifier = Modifier.padding(start = 16.dp)
             )
             Text(
                 text = "Respuesta 2: Las mejores enchiladas que he probado.",
                 style = MaterialTheme.typography.bodySmall,
-                color = Color.Gray,
+                color = MaterialTheme.colorScheme.background,
                 modifier = Modifier.padding(start = 16.dp)
             )
         }
@@ -328,7 +318,7 @@ fun AddCommentField() {
             .fillMaxWidth()
             .padding(16.dp),
         shape = RoundedCornerShape(8.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.LightGray)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onPrimary)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             TextField(
@@ -337,10 +327,13 @@ fun AddCommentField() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .heightIn(min = 100.dp), // Altura mínima para el campo de texto
-                placeholder = { Text("Agrega un comentario...") },
+                placeholder = {
+                    Text(
+                        text= "Agrega un comentario...",
+                        color = MaterialTheme.colorScheme.onSurface) },
                 colors = TextFieldDefaults.colors(
                     focusedContainerColor = Color.Transparent,
-                    unfocusedContainerColor = Color.Gray
+                    unfocusedContainerColor = MaterialTheme.colorScheme.onSecondary
                 )
             )
             Spacer(modifier = Modifier.height(8.dp))
