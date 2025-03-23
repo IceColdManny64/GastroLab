@@ -121,8 +121,8 @@ fun Bars(navController: NavHostController) {
     var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
     val tabs = listOf("Explorar", "Recomendados")
     val composables = listOf<@Composable () -> Unit>(
-        { Adaptive() },
-        { Adaptive2() }
+        { Adaptive(navController) },
+        { Adaptive2(navController) }
     )
 
     Column(modifier = Modifier.fillMaxSize()) {
@@ -213,7 +213,7 @@ fun Bars(navController: NavHostController) {
 
 
 @Composable
-fun Adaptive() {
+fun Adaptive(navController: NavHostController) {
     var windowSize = currentWindowAdaptiveInfo().windowSizeClass
     var height = currentWindowAdaptiveInfo().windowSizeClass.windowHeightSizeClass
     var width = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass
@@ -226,7 +226,12 @@ fun Adaptive() {
         val arrayCard = arrayOf(
             MenuModel(1,"Un manjar de Italia: La Pizza",
                 "Descubre algo más sobre\neste manjar y lleva el" +
-                        "\nsabor de italia a tu horno 🇮🇹! ", R.drawable.pizza)
+                        "\nsabor de italia a tu horno 🇮🇹! ",
+                R.drawable.pizza),
+            MenuModel(2,"El kebab: brocheta al estilo Europeo ",
+                "Tiene muchos estilos, y el sabor \n" +
+                        " es delicioso en todos ellos! ",
+                R.drawable.kebab,),
         )
         val arrayView = arrayOf(
             MenuModel(1, "Enchiladas verdes", "Disfruta la pura tradición mexicana! 🇲🇽", R.drawable.enchis),
@@ -236,7 +241,7 @@ fun Adaptive() {
 
         )
         val arraySide = arrayOf(
-            MenuModel(1, "Tamales oaxaqueños", "Llega el sabor de Oaxaca a tu mesa!", R.drawable.tamal),
+            MenuModel(1, "Tamales oaxaqueños", "Llega el sabor de Oaxaca a tu mesa!", R.drawable.tamal,  ),
             MenuModel(2, "Tacos al pastor", "Un manjar galardonado globalmente", R.drawable.pastor),
             MenuModel(3, "Hamburguesas de pollo", "¿Sin res en casa? ¿Y si las pruebas?", R.drawable.hamburg),
             MenuModel(4, "Sincronizadas", "¿Traes prisa? Lo simple nunca falla!", R.drawable.sincro)
@@ -260,10 +265,10 @@ fun Adaptive() {
                     rows = GridCells.Adaptive(minSize = 110.dp),
                     modifier = Modifier
                         .fillMaxSize()
-                        .weight(1f)
+                        .weight(1.1f)
                 ) {
                     items(arrayCard) { item ->
-                        MainViewExCard(item.id, item.title, item.text, item.image)
+                        MainViewExCard(item.id, item.title, item.text, item.image, navController)
                     }
                 }
             TextButton(
@@ -280,11 +285,11 @@ fun Adaptive() {
             LazyRow(
                 modifier = Modifier
                     .padding(8.dp)
-                    .weight(1f)
-                    .height(120.dp)
+                    .weight(1.1f)
+                    .height(20.dp)
             ) {
                 items(arrayView) { item ->
-                    MainView(item.id, item.title, item.text, item.image)
+                    MainView(item.id, item.title, item.text, item.image, navController)
                 }
             }
 
@@ -300,13 +305,13 @@ fun Adaptive() {
 
             }
                 LazyHorizontalGrid(
-                    rows = GridCells.Adaptive(minSize = 70.dp),
+                    rows = GridCells.Adaptive(minSize =65.dp),
                     modifier = Modifier
                         .fillMaxSize()
                         .weight(1f)
                 ) {
                     items(arraySide) { item ->
-                        MainViewSideCard(item.id, item.title, item.text, item.image)
+                        MainViewSideCard(item.id, item.title, item.text, item.image, navController)
                     }
                 }
         } else if (height == WindowHeightSizeClass.COMPACT) {
@@ -325,7 +330,7 @@ fun Adaptive() {
 }
 
 @Composable
-fun Adaptive2() {
+fun Adaptive2(navController: NavHostController) {
     var windowSize = currentWindowAdaptiveInfo().windowSizeClass
     var height = currentWindowAdaptiveInfo().windowSizeClass.windowHeightSizeClass
     var width = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass
@@ -336,43 +341,17 @@ fun Adaptive2() {
             .background(MaterialTheme.colorScheme.background)
     ) {
         val arrayCard = arrayOf(
-            MenuModel(
-                1,
-                "Pizza tradicional",
-                "El sabor de italia en tu horno 🇮🇹! ",
-                R.drawable.pizza
-            ),
-            MenuModel(
-                1,
-                "Pizza tradicional",
-                "Esta es la pantalla de recomendados! ",
-                R.drawable.pizza
-            ),
+            MenuModel(1, "Pizza tradicional", "El sabor de italia en tu horno 🇮🇹! ", R.drawable.pizza),
+            MenuModel(1, "Pizza tradicional", "Esta es la pantalla de recomendados! ", R.drawable.pizza),
         )
         val arrayView = arrayOf(
-            MenuModel(
-                1,
-                "Enchiladas verdes",
-                "Disfruta la pura tradición mexicana! 🇲🇽",
-                R.drawable.enchis
-            ),
+            MenuModel(1, "Enchiladas verdes", "Disfruta la pura tradición mexicana! 🇲🇽", R.drawable.enchis),
             MenuModel(2, "Mole poblano", "Un manjar de muchos ingredientes", R.drawable.mole)
         )
         val arraySide = arrayOf(
-            MenuModel(
-                1,
-                "Tamales oaxaqueños",
-                "Llega el sabor de Oaxaca a tu mesa!",
-                R.drawable.tamal
-            ),
+            MenuModel(1, "Tamales oaxaqueños", "Llega el sabor de Oaxaca a tu mesa!", R.drawable.tamal),
             MenuModel(2, "Tacos al pastor", "Un manjar galardonado globalmente", R.drawable.pastor),
-            MenuModel(
-                3,
-                "Hamburguesas de pollo",
-                "¿Sin res en casa? ¿Y si las pruebas?",
-                R.drawable.hamburg
-            ),
-            MenuModel(4, "Sincronizadas", "¿Traes prisa? Lo simple nunca falla!", R.drawable.sincro)
+            MenuModel(3, "Hamburguesas de pollo", "¿Sin res en casa? ¿Y si las pruebas?", R.drawable.hamburg), MenuModel(4, "Sincronizadas", "¿Traes prisa? Lo simple nunca falla!", R.drawable.sincro)
         )
 
         if (width == WindowWidthSizeClass.COMPACT) {
@@ -383,7 +362,7 @@ fun Adaptive2() {
                     .weight(1f)
             ) {
                 items(arrayCard) { item ->
-                    MainViewExCard(item.id, item.title, item.text, item.image)
+                    MainViewExCard(item.id, item.title, item.text, item.image, navController)
                 }
             }
             LazyVerticalGrid(
@@ -393,7 +372,7 @@ fun Adaptive2() {
                     .weight(1f)
             ) {
                 items(arrayView) { item ->
-                    MainView(item.id, item.title, item.text, item.image)
+                    MainView(item.id, item.title, item.text, item.image, navController)
                 }
             }
             LazyHorizontalGrid(
@@ -403,7 +382,7 @@ fun Adaptive2() {
                     .weight(1f)
             ) {
                 items(arraySide) { item ->
-                    MainViewSideCard(item.id, item.title, item.text, item.image)
+                    MainViewSideCard(item.id, item.title, item.text, item.image, navController)
                 }
             }
         } else if (height == WindowHeightSizeClass.COMPACT) {
