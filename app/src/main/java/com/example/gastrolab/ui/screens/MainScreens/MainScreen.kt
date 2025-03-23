@@ -63,13 +63,11 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
-fun MainScreen(navController: NavHostController){
-
+fun MainScreen(navController: NavHostController) {
     Bars(navController)
-
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
-//@Preview
 @Composable
 fun Bars(navController: NavHostController) {
 
@@ -77,7 +75,7 @@ fun Bars(navController: NavHostController) {
         modifier = Modifier
             .fillMaxSize()
     ) {
-        //can use MediumTopAppBar and other similar components to change the top bar size.
+        // Barra superior
         TopAppBar(
             colors = TopAppBarDefaults.topAppBarColors(
                 containerColor = MaterialTheme.colorScheme.primary,
@@ -90,7 +88,8 @@ fun Bars(navController: NavHostController) {
                     fontStyle = FontStyle.Italic,
                     fontWeight = FontWeight.ExtraBold,
                     fontSize = 25.sp
-                )},
+                )
+            },
             actions = {
                 IconButton(onClick = {}) {
                     Icon(
@@ -101,88 +100,103 @@ fun Bars(navController: NavHostController) {
             }
         )
 
+        // Contenido principal
         Column(
             modifier = Modifier
                 .weight(1f)
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.background)
-
         ) {
-            Adaptive()
+            Adaptive(navController)  // Pasamos el navController aquí
         }
+
+        // Barra inferior
         BottomAppBar(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(MaterialTheme.colorScheme.primary),
             containerColor = MaterialTheme.colorScheme.primary,
             contentColor = MaterialTheme.colorScheme.secondary
-
         ) {
             IconButton(
-                modifier = Modifier
-                    .weight(1f),
-                onClick = {navController.navigate("mainScreen")},
+                modifier = Modifier.weight(1f),
+                onClick = { navController.navigate("mainScreen") },
             ) {
-                Icon(imageVector = Icons.Filled.Home, contentDescription = "")
+                Icon(imageVector = Icons.Filled.Home, contentDescription = "Home")
             }
             IconButton(
-                modifier = Modifier
-                    .weight(1f),
-                onClick = {navController.navigate("searchScreen")},
+                modifier = Modifier.weight(1f),
+                onClick = { navController.navigate("searchScreen") },
             ) {
-                Icon(imageVector = Icons.Filled.Search, contentDescription = "")
+                Icon(imageVector = Icons.Filled.Search, contentDescription = "Search")
             }
             IconButton(
-                modifier = Modifier
-                    .weight(1f),
-                onClick = {navController.navigate("notifScreen")},
+                modifier = Modifier.weight(1f),
+                onClick = { navController.navigate("notifScreen") },
             ) {
-                Icon(imageVector = Icons.Filled.Notifications, contentDescription = "")
+                Icon(imageVector = Icons.Filled.Notifications, contentDescription = "Notifications")
             }
             IconButton(
-                modifier = Modifier
-                    .weight(1f),
-                onClick = {navController.navigate("settingsScreen")},
+                modifier = Modifier.weight(1f),
+                onClick = { navController.navigate("settingsScreen") },
             ) {
-                Icon(imageVector = Icons.Filled.Menu, contentDescription = "")
-            }
+                Icon(imageVector = Icons.Filled.Menu, contentDescription = "Menu")
             }
         }
     }
+}
 
 @Composable
-fun Adaptive(){
+fun Adaptive(navController: NavHostController) {  // Recibe navController como parámetro
     var windowSize = currentWindowAdaptiveInfo().windowSizeClass
     var height = currentWindowAdaptiveInfo().windowSizeClass.windowHeightSizeClass
     var width = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass
-    //Compact width < 600dp Phone Portrait
-    //Medium width >=600dp < 840dp Tablet Portraitv
-    //Expanded Width >= 840dp Tablet Landscape
 
-    //Compact Height < 480dp Phone Landscape
-    //Medium Height >= 480dp < 900dp Tablet Landscape Phone Portrait
-    // Expanded Height >= 900dp Tablet Portrait
+    // Botón para navegar a ExploreScreen
+    Button(
+        onClick = {
+            // Usamos navController aquí
+            navController.navigate("exploreScreen")
+        },
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    ) {
+        Text(text = "Explorar Recetas", style = MaterialTheme.typography.bodyLarge)
+    }
+    // Botón para navegar a recomended
+    Button(
+        onClick = {
+            // Usamos navController aquí
+            navController.navigate("recommendedScreen")
+        },
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    ) {
+        Text(text = "Recomendadas", style = MaterialTheme.typography.bodyLarge)
+    }
+
+    // Resto del contenido adaptativo
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
         val arrayCard = arrayOf(
-        MenuModel(1, "Pizza tradicional", "El sabor de italia en tu horno \uD83C\uDDEE\uD83C\uDDF9! ", R.drawable.pizza),
+            MenuModel(1, "Pizza tradicional", "El sabor de Italia en tu horno 🍕", R.drawable.pizza),
         )
         val arrayView = arrayOf(
-            MenuModel(1, "Enchiladas verdes", "Disfruta la pura tradición mexicana! \uD83C\uDDF2\uD83C\uDDFD", R.drawable.enchis),
+            MenuModel(1, "Enchiladas verdes", "Disfruta la pura tradición mexicana! 🇲🇽", R.drawable.enchis),
             MenuModel(2, "Mole poblano", "Un manjar de muchos ingredientes", R.drawable.mole)
         )
 
-
-        if(width == WindowWidthSizeClass.COMPACT) {
+        if (width == WindowWidthSizeClass.COMPACT) {
             LazyVerticalGrid(
                 columns = GridCells.Adaptive(minSize = 200.dp),
                 modifier = Modifier
                     .fillMaxSize()
                     .weight(1f)
-
             ) {
                 items(arrayCard) { item ->
                     MainViewExCard(item.id, item.title, item.text, item.image)
@@ -193,17 +207,17 @@ fun Adaptive(){
                 modifier = Modifier
                     .fillMaxSize()
                     .weight(1.8f)
-
             ) {
-                items(arrayView){
-                        item -> MainView(item.id, item.title, item.text, item.image)
+                items(arrayView) { item ->
+                    MainView(item.id, item.title, item.text, item.image)
                 }
             }
         } else if (height == WindowHeightSizeClass.COMPACT) {
             LazyColumn {
-                items(arrayView) { item -> MainView(item.id, item.title, item.text, item.image) }
+                items(arrayView) { item ->
+                    MainView(item.id, item.title, item.text, item.image)
+                }
             }
         }
     }
-
 }
