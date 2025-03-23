@@ -1,10 +1,13 @@
 package com.example.gastrolab.ui.screens.MainScreens
 
+import android.util.Log.e
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -25,7 +29,9 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material3.adaptive.currentWindowSize
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.ui.platform.LocalConfiguration
@@ -45,6 +51,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.MultiChoiceSegmentedButtonRow
+import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.SecondaryTabRow
 import androidx.compose.material3.SegmentedButton
@@ -56,6 +63,7 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
@@ -77,6 +85,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.input.nestedscroll.nestedScrollModifierNode
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -84,6 +93,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.min
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
@@ -101,6 +111,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun MainScreen(navController: NavHostController) {
+
     Bars(navController)
 }
 
@@ -142,37 +153,40 @@ fun Bars(navController: NavHostController) {
             }
         )
 
-        TabRow(
-            selectedTabIndex = selectedTabIndex,
-            containerColor = MaterialTheme.colorScheme.primary,
-            contentColor = MaterialTheme.colorScheme.onPrimary,
-            indicator = { tabPositions ->
-                TabRowDefaults.Indicator(
-                    Modifier
-                        .tabIndicatorOffset(tabPositions[selectedTabIndex])
-                        .zIndex(-1f),// make sure the indicator is drawn behind the content
-
-                    color = MaterialTheme.colorScheme.surface, // indicator color
-                    height = 3.dp, // indicator height
-                )
-            }
-        ) {
-            tabs.forEachIndexed { index, title ->
-                Tab(
-                    selected = selectedTabIndex == index,
-                    onClick = { selectedTabIndex = index },
-                    text = { Text(title) }
-                )
+        Column {
+            PrimaryTabRow(
+                selectedTabIndex = selectedTabIndex,
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary,
+                divider = {},
+                indicator = {
+                    TabRowDefaults.PrimaryIndicator(
+                        Modifier.tabIndicatorOffset(selectedTabIndex),
+                        color = MaterialTheme.colorScheme.surface,
+                        height = 3.dp
+                    )
+                }
+            ) {
+                tabs.forEachIndexed { index, title ->
+                    Tab(
+                        selected = selectedTabIndex == index,
+                        onClick = { selectedTabIndex = index },
+                        text = { Text(
+                            title,
+                            color = if (selectedTabIndex == index) MaterialTheme.colorScheme.surface else MaterialTheme.colorScheme.onSurface
+                        ) }
+                    )
+                }
             }
         }
 
-        Box(modifier = Modifier
-            .weight(1f)
-            .fillMaxSize()) {
+        Box(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxSize()
+        ) {
             composables[selectedTabIndex]()
         }
-
-
 
         BottomAppBar(
             modifier = Modifier
@@ -197,6 +211,7 @@ fun Bars(navController: NavHostController) {
     }
 }
 
+
 @Composable
 fun Adaptive() {
     var windowSize = currentWindowAdaptiveInfo().windowSizeClass
@@ -209,50 +224,40 @@ fun Adaptive() {
             .background(MaterialTheme.colorScheme.background)
     ) {
         val arrayCard = arrayOf(
-            MenuModel(
-                1,
-                "Pizza tradicional",
-                "El sabor de italia en tu horno 🇮🇹! ",
-                R.drawable.pizza
-            )
+            MenuModel(1,"Un manjar de Italia: La Pizza",
+                "Descubre algo más sobre\neste manjar y lleva el" +
+                        "\nsabor de italia a tu horno 🇮🇹! ", R.drawable.pizza)
         )
         val arrayView = arrayOf(
-            MenuModel(
-                1,
-                "Enchiladas verdes",
-                "Disfruta la pura tradición mexicana! 🇲🇽",
-                R.drawable.enchis
-            ),
-            MenuModel(2, "Mole poblano", "Un manjar de muchos ingredientes", R.drawable.mole)
+            MenuModel(1, "Enchiladas verdes", "Disfruta la pura tradición mexicana! 🇲🇽", R.drawable.enchis),
+            MenuModel(2, "Mole poblano", "Un manjar de muchos ingredientes", R.drawable.mole),
+            MenuModel(3, "Enchiladas verdes", "Disfruta la pura tradición mexicana! 🇲🇽", R.drawable.enchis),
+            MenuModel(4, "Mole poblano", "Un manjar de muchos ingredientes", R.drawable.mole)
+
         )
         val arraySide = arrayOf(
-            MenuModel(
-                1,
-                "Tamales oaxaqueños",
-                "Llega el sabor de Oaxaca a tu mesa!",
-                R.drawable.tamal
-            ),
+            MenuModel(1, "Tamales oaxaqueños", "Llega el sabor de Oaxaca a tu mesa!", R.drawable.tamal),
             MenuModel(2, "Tacos al pastor", "Un manjar galardonado globalmente", R.drawable.pastor),
-            MenuModel(
-                3,
-                "Hamburguesas de pollo",
-                "¿Sin res en casa? ¿Y si las pruebas?",
-                R.drawable.hamburg
-            ),
+            MenuModel(3, "Hamburguesas de pollo", "¿Sin res en casa? ¿Y si las pruebas?", R.drawable.hamburg),
             MenuModel(4, "Sincronizadas", "¿Traes prisa? Lo simple nunca falla!", R.drawable.sincro)
         )
 
         if (width == WindowWidthSizeClass.COMPACT) {
 
-                Text(
-                    modifier = Modifier.padding(5.dp),
-                    text = stringResource(R.string.popular_header),
-                    color = MaterialTheme.colorScheme.onBackground,
-                    fontWeight = FontWeight.ExtraBold,
-                    fontSize = 20.sp
-                )
-                LazyVerticalGrid(
-                    columns = GridCells.Adaptive(minSize = 200.dp),
+
+                TextButton(
+                    onClick = {}
+
+                ){
+                    Text(stringResource(R.string.popular_header),
+                        color = MaterialTheme.colorScheme.onBackground,
+                        fontWeight = FontWeight.ExtraBold,
+                        fontSize = 25.sp)
+                    Icon(Icons.Filled.KeyboardArrowRight, contentDescription = "", tint = MaterialTheme.colorScheme.onPrimary)
+
+                }
+                LazyHorizontalGrid(
+                    rows = GridCells.Adaptive(minSize = 110.dp),
                     modifier = Modifier
                         .fillMaxSize()
                         .weight(1f)
@@ -261,32 +266,41 @@ fun Adaptive() {
                         MainViewExCard(item.id, item.title, item.text, item.image)
                     }
                 }
-                Text(
-                    modifier = Modifier.padding(5.dp),
-                    text = stringResource(R.string.featured_header),
+            TextButton(
+                onClick = {},
+
+                ){
+                Text(stringResource(R.string.featured_header),
                     color = MaterialTheme.colorScheme.onBackground,
                     fontWeight = FontWeight.ExtraBold,
-                    fontSize = 20.sp
-                )
-                LazyVerticalGrid(
-                    columns = GridCells.Adaptive(minSize = 160.dp),
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .weight(1f)
-                ) {
-                    items(arrayView) { item ->
-                        MainView(item.id, item.title, item.text, item.image)
-                    }
+                    fontSize = 25.sp)
+                Icon(Icons.Filled.KeyboardArrowRight, contentDescription = "", tint = MaterialTheme.colorScheme.onPrimary)
+
+            }
+            LazyRow(
+                modifier = Modifier
+                    .padding(8.dp)
+                    .weight(1f)
+                    .height(120.dp)
+            ) {
+                items(arrayView) { item ->
+                    MainView(item.id, item.title, item.text, item.image)
                 }
-                Text(
-                    modifier = Modifier.padding(5.dp),
-                    text = stringResource(R.string.seasonal_header),
+            }
+
+            TextButton(
+                onClick = {},
+
+                ){
+                Text(stringResource(R.string.seasonal_header),
                     color = MaterialTheme.colorScheme.onBackground,
                     fontWeight = FontWeight.ExtraBold,
-                    fontSize = 20.sp
-                )
+                    fontSize = 25.sp)
+                Icon(Icons.Filled.KeyboardArrowRight, contentDescription = "", tint = MaterialTheme.colorScheme.onPrimary)
+
+            }
                 LazyHorizontalGrid(
-                    rows = GridCells.Adaptive(minSize = 80.dp),
+                    rows = GridCells.Adaptive(minSize = 70.dp),
                     modifier = Modifier
                         .fillMaxSize()
                         .weight(1f)
