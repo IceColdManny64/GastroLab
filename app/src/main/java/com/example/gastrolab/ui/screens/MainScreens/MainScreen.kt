@@ -147,13 +147,11 @@ fun Bars(navController: NavHostController) {
 }
 
 @Composable
-fun Adaptive(navController: NavHostController) {  // Recibe navController como parámetro
+fun Adaptive(navController: NavHostController) {
     var windowSize = currentWindowAdaptiveInfo().windowSizeClass
     var height = currentWindowAdaptiveInfo().windowSizeClass.windowHeightSizeClass
     var width = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass
 
-
-    // Resto del contenido adaptativo
     Column(
         modifier = Modifier
             .fillMaxSize()
