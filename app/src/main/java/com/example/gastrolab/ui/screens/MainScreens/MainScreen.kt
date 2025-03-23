@@ -152,30 +152,6 @@ fun Adaptive(navController: NavHostController) {  // Recibe navController como p
     var height = currentWindowAdaptiveInfo().windowSizeClass.windowHeightSizeClass
     var width = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass
 
-    // Botón para navegar a ExploreScreen
-    Button(
-        onClick = {
-            // Usamos navController aquí
-            navController.navigate("exploreScreen")
-        },
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-    ) {
-        Text(text = "Explorar Recetas", style = MaterialTheme.typography.bodyLarge)
-    }
-    // Botón para navegar a recomended
-    Button(
-        onClick = {
-            // Usamos navController aquí
-            navController.navigate("recommendedScreen")
-        },
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-    ) {
-        Text(text = "Recomendadas", style = MaterialTheme.typography.bodyLarge)
-    }
 
     // Resto del contenido adaptativo
     Column(

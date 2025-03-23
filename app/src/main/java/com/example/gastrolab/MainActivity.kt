@@ -12,6 +12,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.gastrolab.ui.screens.AccountScrens.AccountInterface
 import com.example.gastrolab.ui.screens.AccountScrens.FavoritesInterface
 import com.example.gastrolab.ui.screens.AccountScrens.SavedInterface
+import com.example.gastrolab.ui.screens.ExploreNotifScreens.ArticleInterface
 import com.example.gastrolab.ui.screens.ExploreNotifScreens.ExploreInterface
 import com.example.gastrolab.ui.screens.ExploreNotifScreens.NotifInterface
 import com.example.gastrolab.ui.screens.ExploreNotifScreens.RecommendedInterface
@@ -61,6 +62,7 @@ fun SetupNavGraph(navController: NavHostController){
         composable("userMenuScreen"){ UserMenuInterface(navController) }
         composable("settingsScreen"){ SettingsInterface(navController) }
         composable("recommendedScreen"){ RecommendedInterface(navController) }
+        composable("ai"){ ArticleInterface(navController) }
         composable("supportScreen"){ SupportInterface(navController) }
         composable("privacyScreen"){ PrivacyInterface(navController) }
         composable("reportProblem"){ ReportarProblemaInterface(navController) }
