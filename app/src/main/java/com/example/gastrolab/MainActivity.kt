@@ -62,7 +62,7 @@ fun SetupNavGraph(navController: NavHostController){
         composable("userMenuScreen"){ UserMenuInterface(navController) }
         composable("settingsScreen"){ SettingsInterface(navController) }
         composable("recommendedScreen"){ RecommendedInterface(navController) }
-        composable("ai"){ ArticleInterface(navController) }
+        composable("articleScreen"){ ArticleInterface(navController) }
         composable("supportScreen"){ SupportInterface(navController) }
         composable("privacyScreen"){ PrivacyInterface(navController) }
         composable("reportProblem"){ ReportarProblemaInterface(navController) }

@@ -30,8 +30,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.gastrolab.R
-import com.example.gastrolab.ui.screens.MainScreens.Adaptive
-import com.example.gastrolab.ui.screens.MainScreens.Adaptive2
 import com.example.gastrolab.ui.screens.MainScreens.Bars
 import com.example.gastrolab.ui.theme.GastroLabTheme
 
