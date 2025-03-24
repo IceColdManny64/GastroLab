@@ -41,6 +41,7 @@ fun ReportarProblemaInterface(navController: NavHostController) {
 
 }
 
+
 @Composable
 fun Report(navController: NavHostController){
     var shortDescription by remember { mutableStateOf("") }
@@ -48,7 +49,7 @@ fun Report(navController: NavHostController){
 
     Column(
         modifier = Modifier
-            .padding(start = 16.dp, top = 70.dp, end = 16.dp, bottom = 80.dp)
+            .padding(start = 16.dp, end = 16.dp)
             .verticalScroll(rememberScrollState())
             .imePadding()
 
@@ -59,7 +60,7 @@ fun Report(navController: NavHostController){
             color = MaterialTheme.colorScheme.onBackground,
             style = MaterialTheme.typography.titleLarge,
             modifier = Modifier
-                .padding(top = 40.dp)
+                .padding(top = 20.dp)
         )
 
 
@@ -73,12 +74,17 @@ fun Report(navController: NavHostController){
                 withStyle(style = TextStyle(color = Color.Red).toSpanStyle()) {
                     append("*")
                 }
-            }
+            },
+            color = MaterialTheme.colorScheme.onPrimary
         )
         TextField(
             value = shortDescription,
             onValueChange = { shortDescription = it },
             label = { Text("Ejemplo: problema iniciando sesión") },
+            colors = TextFieldDefaults.colors(
+                focusedTextColor = MaterialTheme.colorScheme.onPrimary,
+                unfocusedTextColor = MaterialTheme.colorScheme.onPrimary
+            ),
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -92,12 +98,17 @@ fun Report(navController: NavHostController){
                 withStyle(style = TextStyle(color = Color.Red).toSpanStyle()) {
                     append("*")
                 }
-            }
+            },
+            color = MaterialTheme.colorScheme.onPrimary
         )
         TextField(
             value = detailedDescription,
             onValueChange = { detailedDescription = it },
             label = { Text("Detalles del problema") },
+            colors = TextFieldDefaults.colors(
+                focusedTextColor = MaterialTheme.colorScheme.onPrimary,
+                unfocusedTextColor = MaterialTheme.colorScheme.onPrimary
+            ),
             modifier = Modifier
                 .fillMaxWidth()
                 .height(120.dp)
@@ -113,7 +124,8 @@ fun Report(navController: NavHostController){
             Text(
                 color = MaterialTheme.colorScheme.onBackground,
                 text = "Adjuntar video o imagen del problema (opcional):",
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
+                color = MaterialTheme.colorScheme.onPrimary
             )
             Button(
                 onClick = { },
@@ -134,14 +146,7 @@ fun Report(navController: NavHostController){
 
         Spacer(modifier = Modifier.height(50.dp))
 
-        Button(
-            modifier = Modifier.fillMaxWidth(),
-            onClick = { navController.navigate("mainScreen") }
-        )
-        {
-            Text("Return to Main Menu")
 
-        }
     }
 }
 
