@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">GastroLab</string>
+    <string name="article_description">Un poco de la historia de la pizza, es una de las comidas más populares en todo el mundo, y ha evolucionado desde su origen en Nápoles, Italia, en el siglo XVIII. Aunque la pizza moderna se asocia comúnmente con la cocina italiana, su origen se remonta a la antigua Grecia, donde se cocinaba una masa plana llamada plakous.</string>
+    <string name="secondary_description">En la década de 1950, la pizza comenzó a popularizarse en todo el mundo gracias a la expansión de las cadenas de comida rápida. Empresas como Pizza Hut y Domino’s Pizza. Hoy en día, la pizza es un alimento muy popular en todo el mundo, y se ha adaptado a los gustos y culturas locales. En Italia, la pizza sigue siendo un alimento tradicional y se prepara con ingredientes locales como el queso mozzarella y el tomate San Marzano. En otros lugares, como Estados Unidos, la pizza ha evolucionado en una variedad de estilos.</string>
+    <string name="comment_placeholder">Escribe un comentario...</string>
+    <string name="popular_header">Artículos populares ahora</string>
+    <string name="featured_header">Recetas Destacadas</string>
+    <string name="seasonal_header">Recetas de temporada</string>
+    <string name="settings_header">Ajustes</string>
 </resources>
