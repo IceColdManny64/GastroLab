@@ -206,34 +206,21 @@ fun Bars(navController: NavHostController) {
     BottomAppBar(
         modifier = Modifier
             .fillMaxWidth()
-            .height(50.dp)
-            .background(MaterialTheme.colorScheme.onBackground),
+            .height(50.dp),
         containerColor = MaterialTheme.colorScheme.primary,
-        contentColor = MaterialTheme.colorScheme.secondary
+        contentColor = MaterialTheme.colorScheme.onPrimary
     ) {
-        IconButton(
-            modifier = Modifier.weight(1f),
-            onClick = { navController.navigate("mainScreen") }
-        ) {
-            Icon(imageVector = Icons.Filled.Home, contentDescription = "Inicio")
+        IconButton(modifier = Modifier.weight(1f), onClick = { navController.navigate("mainScreen") }) {
+            Icon(imageVector = Icons.Filled.Home, contentDescription = "")
         }
-        IconButton(
-            modifier = Modifier.weight(1f),
-            onClick = { navController.navigate("searchScreen") }
-        ) {
-            Icon(imageVector = Icons.Filled.Search, contentDescription = "Buscar")
+        IconButton(modifier = Modifier.weight(1f), onClick = { navController.navigate("searchScreen") }) {
+            Icon(imageVector = Icons.Filled.Search, contentDescription = "")
         }
-        IconButton(
-            modifier = Modifier.weight(1f),
-            onClick = { navController.navigate("notifScreen") }
-        ) {
-            Icon(imageVector = Icons.Filled.Notifications, contentDescription = "Notificaciones")
+        IconButton(modifier = Modifier.weight(1f), onClick = { navController.navigate("notifScreen") }) {
+            Icon(imageVector = Icons.Filled.Notifications, contentDescription = "")
         }
-        IconButton(
-            modifier = Modifier.weight(1f),
-            onClick = { navController.navigate("settingsScreen") }
-        ) {
-            Icon(imageVector = Icons.Filled.Menu, contentDescription = "Menú")
+        IconButton(modifier = Modifier.weight(1f), onClick = { navController.navigate("settingsScreen") }) {
+            Icon(imageVector = Icons.Filled.Menu, contentDescription = "")
         }
     }
 }

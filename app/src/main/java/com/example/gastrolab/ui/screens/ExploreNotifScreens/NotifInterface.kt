@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -26,23 +27,36 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.gastrolab.R
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NotifInterface(navController: NavHostController) {
         Scaffold(
             topBar = {
                 TopAppBar(
+
                     title = {
+                        val gastroGradient = listOf(
+                            MaterialTheme.colorScheme.tertiary,
+                            MaterialTheme.colorScheme.surface,
+                            MaterialTheme.colorScheme.tertiary
+                        )
                         Text(
                             text = "Notificaciones",
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 20.sp,
-                            color = MaterialTheme.colorScheme.onPrimary
+                            style = TextStyle(brush = Brush.verticalGradient(colors = gastroGradient)),
+                            fontStyle = FontStyle.Italic,
+                            fontWeight = FontWeight.ExtraBold,
+                            fontSize = 25.sp
                         )
                     },
                     actions = {
@@ -62,48 +76,34 @@ fun NotifInterface(navController: NavHostController) {
             },
             bottomBar = {
                 BottomAppBar(
-                    modifier = Modifier.fillMaxWidth(),
-                    containerColor = MaterialTheme.colorScheme.primary,  // Primario
-                    contentColor = MaterialTheme.colorScheme.onPrimary   // Íconos en barra inferior
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(50.dp),
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
                 ) {
-                    IconButton(
-                        modifier = Modifier.weight(1f),
-                        onClick = { navController.navigate("mainScreen") },
-                    ) {
+                    IconButton(modifier = Modifier.weight(1f), onClick = { navController.navigate("mainScreen") }) {
                         androidx.compose.material3.Icon(
                             imageVector = Icons.Filled.Home,
-                            contentDescription = "Inicio",
-                            tint = MaterialTheme.colorScheme.onPrimary
+                            contentDescription = ""
                         )
                     }
-                    IconButton(
-                        modifier = Modifier.weight(1f),
-                        onClick = { navController.navigate("searchScreen") },
-                    ) {
+                    IconButton(modifier = Modifier.weight(1f), onClick = { navController.navigate("searchScreen") }) {
                         androidx.compose.material3.Icon(
                             imageVector = Icons.Filled.Search,
-                            contentDescription = "Buscar",
-                            tint = MaterialTheme.colorScheme.onPrimary
+                            contentDescription = ""
                         )
                     }
-                    IconButton(
-                        modifier = Modifier.weight(1f),
-                        onClick = { navController.navigate("notifScreen") },
-                    ) {
+                    IconButton(modifier = Modifier.weight(1f), onClick = { navController.navigate("notifScreen") }) {
                         androidx.compose.material3.Icon(
                             imageVector = Icons.Filled.Notifications,
-                            contentDescription = "Notificaciones",
-                            tint = MaterialTheme.colorScheme.onPrimary
+                            contentDescription = ""
                         )
                     }
-                    IconButton(
-                        modifier = Modifier.weight(1f),
-                        onClick = { navController.navigate("settingsScreen") },
-                    ) {
+                    IconButton(modifier = Modifier.weight(1f), onClick = { navController.navigate("settingsScreen") }) {
                         androidx.compose.material3.Icon(
                             imageVector = Icons.Filled.Menu,
-                            contentDescription = "Menú",
-                            tint = MaterialTheme.colorScheme.onPrimary
+                            contentDescription = ""
                         )
                     }
                 }
