@@ -117,7 +117,7 @@ fun LoginPasswordInterface(navController: NavHostController) {
         Text(
             text = "¿Ya tienes cuenta? Conectarse",
             color = Color.Black,
-            fontSize = 14.sp,
+            fontSize = 15.sp,
             modifier = Modifier
                 .clickable { navController.navigate("loginScreen") }
                 .padding(8.dp)

@@ -143,7 +143,7 @@ fun SignUpInterface(navController: NavHostController) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Campo para confirmar la contraseña
+
         Text(
             text = "Confirmar Contraseña",
             color = Color.Black,
@@ -188,7 +188,7 @@ fun SignUpInterface(navController: NavHostController) {
         Text(
             text = "¿Has olvidado tu contraseña?",
             color = secondaryColor,
-            fontSize = 14.sp,
+            fontSize = 15.sp,
             modifier = Modifier
                 .clickable { navController.navigate("loginPasswordScreen") }
                 .align(Alignment.CenterHorizontally)

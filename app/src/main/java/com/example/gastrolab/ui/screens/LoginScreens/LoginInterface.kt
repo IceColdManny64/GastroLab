@@ -92,7 +92,7 @@ fun LoginInterface(navController: NavHostController) {
         LoginButton(
             text = "Inicia sesión con Google",
             backgroundColor = MaterialTheme.colorScheme.primaryContainer,
-            borderColor = MaterialTheme.colorScheme.scrim
+            borderColor = MaterialTheme.colorScheme.background
         )
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -124,7 +124,7 @@ fun LoginInterface(navController: NavHostController) {
             label = { Text("Email o teléfono") },
             modifier = Modifier.fillMaxWidth(),
 
-        )
+            )
 
         Spacer(modifier = Modifier.height(8.dp))
 
@@ -147,7 +147,7 @@ fun LoginInterface(navController: NavHostController) {
 
         Row(verticalAlignment = Alignment.CenterVertically) {
             Checkbox(checked = rememberPass, onCheckedChange = { rememberPass = it })
-            Text("Recordarme", color = Color.Black , modifier = Modifier.padding(start = 8.dp))
+            Text("Recordarme", color = Color.Black, modifier = Modifier.padding(start = 8.dp))
             Spacer(modifier = Modifier.width(8.dp))
             Text("Más información", color = Color.Red, fontSize = 12.sp)
         }
@@ -178,12 +178,7 @@ fun LoginInterface(navController: NavHostController) {
         {
             Text("Registrarse")
         }
-        Button(
-            onClick = { navController.navigate("mainScreen") }
-        )
-        {
-            Text("Pantalla principal")
-        }
+
     }
 }
 
