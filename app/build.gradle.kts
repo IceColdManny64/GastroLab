@@ -52,6 +52,8 @@ dependencies {
     implementation(libs.androidx.navigation.runtime.android)
     implementation(libs.androidx.material.icons.core)
     implementation(libs.androidx.benchmark.traceprocessor.android)
+    implementation(libs.androidx.runtime.saveable)
+    implementation(libs.androidx.material.icons.extended.android)
     testImplementation(libs.junit)
     implementation("androidx.navigation:navigation-compose:2.8.9")
     implementation("androidx.compose.material3:material3-adaptive-navigation-suite:1.4.0-alpha10") // Use the latest version

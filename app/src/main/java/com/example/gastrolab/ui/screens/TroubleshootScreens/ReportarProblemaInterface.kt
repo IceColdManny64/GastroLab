@@ -30,8 +30,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.gastrolab.R
-import com.example.gastrolab.ui.screens.MainScreens.Adaptive
-import com.example.gastrolab.ui.screens.MainScreens.Adaptive2
 import com.example.gastrolab.ui.screens.MainScreens.Bars
 import com.example.gastrolab.ui.theme.GastroLabTheme
 
@@ -43,6 +41,7 @@ fun ReportarProblemaInterface(navController: NavHostController) {
 
 }
 
+
 @Composable
 fun Report(navController: NavHostController){
     var shortDescription by remember { mutableStateOf("") }
@@ -50,7 +49,7 @@ fun Report(navController: NavHostController){
 
     Column(
         modifier = Modifier
-            .padding(start = 16.dp, top = 70.dp, end = 16.dp, bottom = 80.dp)
+            .padding(start = 16.dp, end = 16.dp)
             .verticalScroll(rememberScrollState())
             .imePadding()
 
@@ -58,9 +57,10 @@ fun Report(navController: NavHostController){
     ) {
         Text(
             text = "Reportar problema.",
+            color = MaterialTheme.colorScheme.onBackground,
             style = MaterialTheme.typography.titleLarge,
             modifier = Modifier
-                .padding(top = 40.dp)
+                .padding(top = 20.dp)
         )
 
 
@@ -68,17 +68,22 @@ fun Report(navController: NavHostController){
 
         // Descripción breve
         Text(
+            color = MaterialTheme.colorScheme.onBackground,
             text = buildAnnotatedString {
                 append("Descripción breve del problema:")
                 withStyle(style = TextStyle(color = Color.Red).toSpanStyle()) {
                     append("*")
                 }
-            }
+            },
         )
         TextField(
             value = shortDescription,
             onValueChange = { shortDescription = it },
             label = { Text("Ejemplo: problema iniciando sesión") },
+            colors = TextFieldDefaults.colors(
+                focusedTextColor = MaterialTheme.colorScheme.onPrimary,
+                unfocusedTextColor = MaterialTheme.colorScheme.onPrimary
+            ),
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -86,17 +91,22 @@ fun Report(navController: NavHostController){
 
         // Descripción detallada
         Text(
+            color = MaterialTheme.colorScheme.onBackground,
             text = buildAnnotatedString {
                 append("Descripción detallada del problema:")
                 withStyle(style = TextStyle(color = Color.Red).toSpanStyle()) {
                     append("*")
                 }
-            }
+            },
         )
         TextField(
             value = detailedDescription,
             onValueChange = { detailedDescription = it },
             label = { Text("Detalles del problema") },
+            colors = TextFieldDefaults.colors(
+                focusedTextColor = MaterialTheme.colorScheme.onPrimary,
+                unfocusedTextColor = MaterialTheme.colorScheme.onPrimary
+            ),
             modifier = Modifier
                 .fillMaxWidth()
                 .height(120.dp)
@@ -110,8 +120,9 @@ fun Report(navController: NavHostController){
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(
+                color = MaterialTheme.colorScheme.onBackground,
                 text = "Adjuntar video o imagen del problema (opcional):",
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
             )
             Button(
                 onClick = { },
@@ -132,14 +143,7 @@ fun Report(navController: NavHostController){
 
         Spacer(modifier = Modifier.height(50.dp))
 
-        Button(
-            modifier = Modifier.fillMaxWidth(),
-            onClick = { navController.navigate("mainScreen") }
-        )
-        {
-            Text("Return to Main Menu")
 
-        }
     }
 }
 
@@ -164,52 +168,28 @@ fun BarsReportarProblema(navController: NavHostController) {
 //can use MediumTopAppBar and other similar components to change the top bar size.
 
         TopAppBar(
-
-            modifier = Modifier
-
-                .height(50.dp),
-
+            modifier = Modifier.height(50.dp),
             colors = TopAppBarDefaults.topAppBarColors(
-
                 containerColor = MaterialTheme.colorScheme.primary,
-
                 titleContentColor = MaterialTheme.colorScheme.secondary
-
             ),
-
             title = {
-
                 val gastroGradient = listOf(
-                    MaterialTheme.colorScheme.surface, MaterialTheme.colorScheme.tertiary,
-
-                    MaterialTheme.colorScheme.onSurface,
-
-                    MaterialTheme.colorScheme.onTertiary
+                    MaterialTheme.colorScheme.tertiary,
+                    MaterialTheme.colorScheme.surface,
+                    MaterialTheme.colorScheme.tertiary
                 )
-
                 Text(
-
                     text = stringResource(R.string.app_name),
-
-                    style = TextStyle(brush = Brush.linearGradient(colors = gastroGradient)),
-
-                    color = MaterialTheme.colorScheme.secondary,
-
+                    style = TextStyle(brush = Brush.verticalGradient(colors = gastroGradient)),
                     fontStyle = FontStyle.Italic,
-
                     fontWeight = FontWeight.ExtraBold,
-
                     fontSize = 25.sp
-
                 )
             },
-
             actions = {
-                IconButton(onClick = {}) {
-                    Icon(
-                        imageVector = Icons.Filled.AccountCircle,
-                        contentDescription = "Account icon"
-                    )
+                IconButton(onClick = { navController.navigate("accountScreen") }) {
+                    Icon(imageVector = Icons.Filled.AccountCircle, contentDescription = "Account icon")
                 }
             }
         )
@@ -229,76 +209,23 @@ fun BarsReportarProblema(navController: NavHostController) {
         }
 
         BottomAppBar(
-
             modifier = Modifier
-
                 .fillMaxWidth()
-
-                .height(50.dp)
-
-                .background(MaterialTheme.colorScheme.primary),
-
+                .height(50.dp),
             containerColor = MaterialTheme.colorScheme.primary,
-
             contentColor = MaterialTheme.colorScheme.onPrimary
-
-
         ) {
-
-            IconButton(
-
-                modifier = Modifier
-
-                    .weight(1f),
-
-                onClick = { navController.navigate("mainScreen") },
-
-                ) {
-
+            IconButton(modifier = Modifier.weight(1f), onClick = { navController.navigate("mainScreen") }) {
                 Icon(imageVector = Icons.Filled.Home, contentDescription = "")
-
             }
-
-            IconButton(
-
-                modifier = Modifier
-
-                    .weight(1f),
-
-                onClick = { navController.navigate("searchScreen") },
-
-                ) {
-
+            IconButton(modifier = Modifier.weight(1f), onClick = { navController.navigate("searchScreen") }) {
                 Icon(imageVector = Icons.Filled.Search, contentDescription = "")
-
             }
-
-            IconButton(
-
-                modifier = Modifier
-
-                    .weight(1f),
-
-                onClick = { navController.navigate("notifScreen") },
-
-                ) {
-
+            IconButton(modifier = Modifier.weight(1f), onClick = { navController.navigate("notifScreen") }) {
                 Icon(imageVector = Icons.Filled.Notifications, contentDescription = "")
-
             }
-
-            IconButton(
-
-                modifier = Modifier
-
-                    .weight(1f),
-
-                onClick = { navController.navigate("settingsScreen") },
-
-                ) {
-
+            IconButton(modifier = Modifier.weight(1f), onClick = { navController.navigate("settingsScreen") }) {
                 Icon(imageVector = Icons.Filled.Menu, contentDescription = "")
-
             }
         }
     }
