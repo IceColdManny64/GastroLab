@@ -75,7 +75,6 @@ fun Report(navController: NavHostController){
                     append("*")
                 }
             },
-            color = MaterialTheme.colorScheme.onPrimary
         )
         TextField(
             value = shortDescription,
@@ -99,7 +98,6 @@ fun Report(navController: NavHostController){
                     append("*")
                 }
             },
-            color = MaterialTheme.colorScheme.onPrimary
         )
         TextField(
             value = detailedDescription,
@@ -125,7 +123,6 @@ fun Report(navController: NavHostController){
                 color = MaterialTheme.colorScheme.onBackground,
                 text = "Adjuntar video o imagen del problema (opcional):",
                 modifier = Modifier.weight(1f),
-                color = MaterialTheme.colorScheme.onPrimary
             )
             Button(
                 onClick = { },
