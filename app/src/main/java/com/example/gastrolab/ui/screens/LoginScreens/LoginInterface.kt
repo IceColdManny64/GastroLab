@@ -1,6 +1,8 @@
 package com.example.gastrolab.ui.screens.LoginScreens
 
-import androidx.compose.foundation.background
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,8 +15,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
@@ -27,46 +31,83 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginInterface(navController: NavHostController) {
     val primaryColor = MaterialTheme.colorScheme.primary
+    var password by remember { mutableStateOf("") }
+    var confirmPassword by remember { mutableStateOf("") }
+    var isPasswordVisible by remember { mutableStateOf(false) }
+    var isConfirmPasswordVisible by remember { mutableStateOf(false) }
+
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(primaryColor)
             .padding(16.dp)
             .verticalScroll(rememberScrollState())
     ) {
 
         Text(
+            text = "GastroLab",
+            style = TextStyle(
+                brush = Brush.verticalGradient(
+                    colors = listOf(
+                        MaterialTheme.colorScheme.tertiary,
+                        MaterialTheme.colorScheme.surface,
+                        MaterialTheme.colorScheme.tertiary
+                    )
+                ),
+                fontStyle = FontStyle.Italic,
+                fontWeight = FontWeight.ExtraBold,
+                fontSize = 32.sp
+            ),
+            modifier = Modifier
+        )
+
+        Spacer(modifier = Modifier.height(19.dp))
+
+        Text(
             "Inicia Sesión",
             fontSize = 26.sp,
-            color = Color.White
+            color = Color.Black
         )
         Spacer(modifier = Modifier.height(12.dp))
 
         Text(
             "o únete a",
             fontSize = 20.sp,
-            color = Color.White.copy(alpha = 0.8f)
+            color = Color.Black.copy(alpha = 0.8f)
         )
 
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(25.dp))
 
-        LoginButton(text = "Inicia sesión con Google")
+        LoginButton(
+            text = "Inicia sesión con Google",
+            backgroundColor = MaterialTheme.colorScheme.primaryContainer,
+            borderColor = MaterialTheme.colorScheme.background
+        )
         Spacer(modifier = Modifier.height(16.dp))
 
-        LoginButton(text = "Inicia sesión con Apple")
+        LoginButton(
+            text = "Inicia sesión con Apple",
+            backgroundColor = MaterialTheme.colorScheme.secondaryContainer,
+            borderColor = MaterialTheme.colorScheme.secondary
+        )
         Spacer(modifier = Modifier.height(16.dp))
 
-        LoginButton(text = "Inicia sesión con Facebook")
+        LoginButton(
+            text = "Inicia sesión con Facebook",
+            backgroundColor = MaterialTheme.colorScheme.tertiaryContainer,
+            borderColor = MaterialTheme.colorScheme.tertiary
+        )
         Spacer(modifier = Modifier.height(24.dp))
 
 
@@ -81,8 +122,9 @@ fun LoginInterface(navController: NavHostController) {
             value = email,
             onValueChange = { email = it },
             label = { Text("Email o teléfono") },
-            modifier = Modifier.fillMaxWidth()
-        )
+            modifier = Modifier.fillMaxWidth(),
+
+            )
 
         Spacer(modifier = Modifier.height(8.dp))
 
@@ -90,24 +132,31 @@ fun LoginInterface(navController: NavHostController) {
             value = password,
             onValueChange = { password = it },
             label = { Text("Contraseña") },
-            visualTransformation = PasswordVisualTransformation(),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            visualTransformation = if (isPasswordVisible) PasswordVisualTransformation() else androidx.compose.ui.text.input.VisualTransformation.None,
+            trailingIcon = {
+                Text(
+                    text = if (isPasswordVisible) "mostrar" else "ocultar",
+                    color = primaryColor,
+                    modifier = Modifier.clickable { isPasswordVisible = !isPasswordVisible }
+                )
+            },
         )
 
         Spacer(modifier = Modifier.height(8.dp))
 
         Row(verticalAlignment = Alignment.CenterVertically) {
             Checkbox(checked = rememberPass, onCheckedChange = { rememberPass = it })
-            Text("Recordarme", color = Color.White , modifier = Modifier.padding(start = 8.dp))
+            Text("Recordarme", color = Color.Black, modifier = Modifier.padding(start = 8.dp))
             Spacer(modifier = Modifier.width(8.dp))
-            Text("Más información", color = MaterialTheme.colorScheme.error, fontSize = 12.sp)
+            Text("Más información", color = Color.Red, fontSize = 12.sp)
         }
         Spacer(modifier = Modifier.height(8.dp))
 
 
         Text(
             text = "¿Has olvidado tu contraseña?",
-            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
+            color = Color.Black,
             fontSize = 14.sp,
             modifier = Modifier
                 .clickable { navController.navigate("loginPasswordScreen") }
@@ -129,30 +178,26 @@ fun LoginInterface(navController: NavHostController) {
         {
             Text("Registrarse")
         }
-        Button(
-            onClick = { navController.navigate("mainScreen") }
-        )
-        {
-            Text("Pantalla principal")
-        }
+
     }
 }
 
 @Composable
-fun LoginButton(text: String) {
+fun LoginButton(text: String, backgroundColor: Color, borderColor: Color) {
     OutlinedButton(
-        onClick = {  },
+        onClick = { },
         modifier = Modifier
             .fillMaxWidth()
-            .height(48.dp)
-
+            .height(48.dp),
+        colors = ButtonDefaults.outlinedButtonColors(
+            containerColor = backgroundColor
+        ),
+        border = BorderStroke(2.dp, borderColor)
     ) {
-
         Text(
             text = text,
             fontWeight = FontWeight.Bold,
-            color = Color.White
+            fontSize = 16.sp
         )
     }
 }
-

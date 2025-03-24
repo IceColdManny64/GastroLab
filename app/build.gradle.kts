@@ -51,6 +51,7 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.navigation.runtime.android)
     implementation(libs.androidx.material.icons.core)
+    implementation(libs.androidx.benchmark.traceprocessor.android)
     implementation(libs.androidx.runtime.saveable)
     implementation(libs.androidx.material.icons.extended.android)
     testImplementation(libs.junit)
