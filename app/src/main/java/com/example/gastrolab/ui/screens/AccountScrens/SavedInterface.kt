@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Favorite
@@ -17,6 +19,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,24 +28,51 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import androidx.window.core.layout.WindowHeightSizeClass
+import androidx.window.core.layout.WindowWidthSizeClass
 import com.example.gastrolab.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SavedInterface(navController: NavHostController) {
-    Scaffold (
-        topBar = { TopAppBar(title = { Text("Favoritos") }) },
+    val height = currentWindowAdaptiveInfo().windowSizeClass.windowHeightSizeClass
+    val width = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass
+
+    Scaffold(
+        topBar = { TopAppBar(title = { Text("Guardados") }) },
         bottomBar = { Bars(navController) }
     ) { paddingValues ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            FilterSection()
-            SavedRecipe()
+        if (width == WindowWidthSizeClass.COMPACT) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                FilterSection()
+                SavedRecipe()
+            }
+        } else if (height == WindowHeightSizeClass.COMPACT) {
+            Row(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+                    .padding(16.dp),
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                Column(
+                    modifier = Modifier.weight(2f),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    FilterSection()
+                }
+                Column(
+                    modifier = Modifier.weight(2f).verticalScroll(rememberScrollState())
+                ) {
+                    SavedRecipe()
+                }
+            }
         }
     }
 }
