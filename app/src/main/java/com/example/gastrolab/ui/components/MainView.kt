@@ -244,54 +244,162 @@ fun MainViewSideCard(id:Int, title:String, text:String, image:Int, navController
 }
 
 @Composable
-fun MainViewSideCardCompact(id:Int, title:String, text:String, image:Int) {
+fun MainViewCompact(id: Int, title: String, text: String, image: Int, navController: NavController) {
     Card(
         modifier = Modifier
-            .fillMaxSize()
+            .fillMaxWidth()
+            .height(120.dp)
             .padding(5.dp)
-            .border(shape = RoundedCornerShape(10.dp),  width = 3.dp, color = MaterialTheme.colorScheme.onBackground)
+            .clickable { navController.navigate("recipeScreen") }
+            .border(
+                shape = RoundedCornerShape(10.dp),
+                width = 1.dp,
+                color = MaterialTheme.colorScheme.onBackground
+            )
     ) {
-        Row(modifier = Modifier
-            .fillMaxSize()
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.onSecondary),
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
                 modifier = Modifier
-                    .fillMaxHeight()
-                    .padding(horizontal = 2.dp)
-                    .width(120.dp)
                     .size(100.dp)
-                    .border(shape = RectangleShape,  width = 1.dp, color = MaterialTheme.colorScheme.onBackground)
-                    .height(200.dp),
+                    .height(120.dp)
+                    .clip(RoundedCornerShape(10.dp))
+                    .border(1.dp, MaterialTheme.colorScheme.onBackground),
                 painter = painterResource(image),
                 contentDescription = "Food",
-                contentScale = ContentScale.Crop,
-
-                )
-
+                contentScale = ContentScale.Crop
+            )
             Column(
                 modifier = Modifier
-                    .background(MaterialTheme.colorScheme.background)
-                    .fillMaxSize()
-                    .border(shape = RectangleShape,  width = 1.dp, color = MaterialTheme.colorScheme.onBackground)
+                    .padding(5.dp)
+                    .fillMaxHeight(),
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = title,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.secondary
+                )
+                Text(
+                    text = text,
+                    fontSize = 12.sp,
+                    color = MaterialTheme.colorScheme.secondary
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun MainViewExCardCompact(id: Int, title: String, text: String, image: Int, navController: NavController) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(5.dp)
+            .clickable { navController.navigate("articleScreen") }
+            .border(
+                shape = RoundedCornerShape(10.dp),
+                width = 3.dp,
+                color = MaterialTheme.colorScheme.onTertiary
+            )
+    ) {
+        Row(
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.onTertiary)
+                .padding(8.dp)
+                .fillMaxSize(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Image(
+                modifier = Modifier
+                    .size(120.dp)
+                    .clip(RoundedCornerShape(15.dp))
+                    .border(2.dp, MaterialTheme.colorScheme.onBackground),
+                painter = painterResource(image),
+                contentDescription = "Food",
+                contentScale = ContentScale.Crop
+            )
+            Column(
+                modifier = Modifier
+                    .padding(start = 10.dp)
+                    .fillMaxHeight(),
+                verticalArrangement = Arrangement.Center
+
+
+            ) {
+                Text(
+                    text = title,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = MaterialTheme.colorScheme.tertiary
+                )
+                Text(
+                    text = text,
+                    textAlign = TextAlign.Start,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Black,
+                    color = MaterialTheme.colorScheme.background,
+                    modifier = Modifier
+                        .background(MaterialTheme.colorScheme.onBackground)
+                        .fillMaxSize()
+                        .padding(40.dp)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun MainViewSideCardCompact(id: Int, title: String, text: String, image: Int, navController: NavController) {
+    Card(
+        modifier = Modifier
+
+            .fillMaxWidth()
+            .padding(5.dp)
+            .clickable { navController.navigate("recipeScreen") }
+            .border(
+                shape = RoundedCornerShape(10.dp),
+                width = 3.dp,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+    ) {
+        Row(
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.background)
+                .fillMaxSize()
+                .padding(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Image(
+                modifier = Modifier
+                    .size(100.dp)
+                    .clip(RoundedCornerShape(10.dp))
+                    .border(1.dp, MaterialTheme.colorScheme.onBackground),
+                painter = painterResource(image),
+                contentDescription = "Food",
+                contentScale = ContentScale.Crop
+            )
+            Column(
+                modifier = Modifier
+                    .padding(start = 10.dp)
+                    .fillMaxHeight(),
+                verticalArrangement = Arrangement.Center
             ) {
                 Text(
                     text = title,
                     fontSize = 18.sp,
-                    textAlign = TextAlign.Justify,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onBackground,
-                    modifier = Modifier
-                        .padding(5.dp)
-
+                    color = MaterialTheme.colorScheme.onBackground
                 )
                 Text(
                     text = text,
-                    textAlign = TextAlign.Justify,
-                    lineHeight = 12.sp,
-                    fontSize = 15.sp,
-                    color = MaterialTheme.colorScheme.onBackground,
-                    modifier = Modifier
-                        .padding(5.dp)
+                    fontSize = 14.sp,
+                    color = MaterialTheme.colorScheme.onBackground
                 )
             }
         }

@@ -1,8 +1,11 @@
 package com.example.gastrolab.ui.screens.MainScreens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -14,6 +17,8 @@ import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Home
@@ -53,7 +58,9 @@ import androidx.window.core.layout.WindowWidthSizeClass
 import com.example.clasetrabajo.data.model.MenuModel
 import com.example.gastrolab.R
 import com.example.gastrolab.ui.components.MainView
+import com.example.gastrolab.ui.components.MainViewCompact
 import com.example.gastrolab.ui.components.MainViewExCard
+import com.example.gastrolab.ui.components.MainViewExCardCompact
 import com.example.gastrolab.ui.components.MainViewSideCard
 import com.example.gastrolab.ui.components.MainViewSideCardCompact
 import com.example.gastrolab.ui.screens.ExploreNotifScreens.RecommendedInterface
@@ -265,81 +272,119 @@ fun Adaptive(navController: NavHostController) {
                 }
             }
         } else if (height == WindowHeightSizeClass.COMPACT) {
-            LazyHorizontalGrid(
-                rows = GridCells.Adaptive(minSize = 80.dp),
+            Row(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .weight(1f)
+                    .horizontalScroll(rememberScrollState())
+                    .fillMaxWidth()
             ) {
-                items(arraySide) { item ->
-                    MainViewSideCardCompact(item.id, item.title, item.text, item.image)
+                Column(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .padding(horizontal = 8.dp)
+                ) {
+                    TextButton(onClick = {}) {
+                        Text(
+                            stringResource(R.string.popular_header),
+                            color = MaterialTheme.colorScheme.onBackground,
+                            fontWeight = FontWeight.ExtraBold,
+                            fontSize = 25.sp
+                        )
+                        Icon(
+                            Icons.Filled.KeyboardArrowRight,
+                            contentDescription = "",
+                            tint = MaterialTheme.colorScheme.onPrimary
+                        )
+                    }
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(500.dp) // Ajusta la altura según necesites
+                    ) {
+                        items(arrayCard) { item ->
+                            MainViewExCardCompact(
+                                item.id,
+                                item.title,
+                                item.text,
+                                item.image,
+                                navController
+                            )
+                        }
+                    }
+                }
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .padding(horizontal = 8.dp)
+                ) {
+                    TextButton(onClick = {}) {
+                        Text(
+                            stringResource(R.string.featured_header),
+                            color = MaterialTheme.colorScheme.onBackground,
+                            fontWeight = FontWeight.ExtraBold,
+                            fontSize = 25.sp
+                        )
+                        Icon(
+                            Icons.Filled.KeyboardArrowRight,
+                            contentDescription = "",
+                            tint = MaterialTheme.colorScheme.onPrimary
+                        )
+                    }
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(500.dp)
+                    ) {
+                        items(arrayView) { item ->
+                            MainViewCompact(
+                                item.id,
+                                item.title,
+                                item.text,
+                                item.image,
+                                navController
+                            )
+                        }
+                    }
+                }
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .padding(horizontal = 8.dp)
+                ) {
+                    TextButton(onClick = {}) {
+                        Text(
+                            stringResource(R.string.seasonal_header),
+                            color = MaterialTheme.colorScheme.onBackground,
+                            fontWeight = FontWeight.ExtraBold,
+                            fontSize = 25.sp
+                        )
+                        Icon(
+                            Icons.Filled.KeyboardArrowRight,
+                            contentDescription = "",
+                            tint = MaterialTheme.colorScheme.onPrimary
+                        )
+                    }
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(500.dp)
+                    ) {
+                        items(arraySide) { item ->
+                            MainViewSideCardCompact(
+                                item.id,
+                                item.title,
+                                item.text,
+                                item.image,
+                                navController
+                            )
+                        }
+                    }
                 }
             }
         }
+
     }
 }
 
-@Composable
-fun Adaptive2(navController: NavHostController) {
-    var windowSize = currentWindowAdaptiveInfo().windowSizeClass
-    var height = currentWindowAdaptiveInfo().windowSizeClass.windowHeightSizeClass
-    var width = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-    ) {
-        val arrayCard = arrayOf(
-            MenuModel(1, "Pizza tradicional", "El sabor de italia en tu horno 🇮🇹! ", R.drawable.pizza),
-            MenuModel(1, "Pizza tradicional", "Esta es la pantalla de recomendados! ", R.drawable.pizza),
-        )
-        val arrayView = arrayOf(
-            MenuModel(1, "Enchiladas verdes", "Disfruta la pura tradición mexicana! 🇲🇽", R.drawable.enchis),
-            MenuModel(2, "Mole poblano", "Un manjar de muchos ingredientes", R.drawable.mole)
-        )
-        val arraySide = arrayOf(
-            MenuModel(1, "Tamales oaxaqueños", "Llega el sabor de Oaxaca a tu mesa!", R.drawable.tamal),
-            MenuModel(2, "Tacos al pastor", "Un manjar galardonado globalmente", R.drawable.pastor),
-            MenuModel(3, "Hamburguesas de pollo", "¿Sin res en casa? ¿Y si las pruebas?", R.drawable.hamburg),
-            MenuModel(4, "Sincronizadas", "¿Traes prisa? Lo simple nunca falla!", R.drawable.sincro),
-            MenuModel(5, "Caldo de pollo", "¿Con frío? Esto te lo quitará", R.drawable.caldo),
-            MenuModel(6, "Huevos a la mexicana", "Con todo el estilo mexicano", R.drawable.huevmx)
-        )
-
-        if (width == WindowWidthSizeClass.COMPACT) {
-            LazyVerticalGrid(
-                columns = GridCells.Adaptive(minSize = 200.dp),
-                modifier = Modifier
-                    .fillMaxSize()
-                    .weight(1f)
-            ) {
-                items(arrayCard) { item ->
-                    MainViewExCard(item.id, item.title, item.text, item.image, navController)
-                }
-            }
-            LazyVerticalGrid(
-                columns = GridCells.Adaptive(minSize = 160.dp),
-                modifier = Modifier
-                    .fillMaxSize()
-                    .weight(1f)
-            ) {
-                items(arrayView) { item ->
-                    MainView(item.id, item.title, item.text, item.image, navController)
-                }
-            }
-            LazyHorizontalGrid(
-                rows = GridCells.Adaptive(minSize = 80.dp),
-                modifier = Modifier
-                    .fillMaxSize()
-                    .weight(1f)
-            ) {
-                items(arraySide) { item ->
-                    MainViewSideCard(item.id, item.title, item.text, item.image, navController)
-                }
-            }
-        } else if (height == WindowHeightSizeClass.COMPACT) {
-
-        }
-    }
-}

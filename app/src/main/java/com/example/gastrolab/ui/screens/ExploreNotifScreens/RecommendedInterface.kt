@@ -62,85 +62,15 @@ fun RecommendedInterface(navController: NavHostController) {
         Recipe("Smoothie Verde", "Saludables", R.drawable.smoothie, "10 min", 70, "Fácil")
     )
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = "Recomendadas",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 20.sp,
-                        color = MaterialTheme.colorScheme.onPrimary
-                    )
-                },
-                actions = {
-                    IconButton(onClick = { /* acción de cuenta */ }) {
-                        Icon(
-                            imageVector = Icons.Filled.AccountCircle,
-                            contentDescription = "Cuenta",
-                            tint = MaterialTheme.colorScheme.onPrimary
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    titleContentColor = MaterialTheme.colorScheme.onPrimary
-                )
-            )
-        },
-        bottomBar = {
-            BottomAppBar(
-                modifier = Modifier.fillMaxWidth(),
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimary
-            ) {
-                IconButton(
-                    modifier = Modifier.weight(1f),
-                    onClick = { navController.navigate("mainScreen") },
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.Home,
-                        contentDescription = "Inicio",
-                        tint = MaterialTheme.colorScheme.onPrimary
-                    )
-                }
-                IconButton(
-                    modifier = Modifier.weight(1f),
-                    onClick = { navController.navigate("searchScreen") },
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.Search,
-                        contentDescription = "Buscar",
-                        tint = MaterialTheme.colorScheme.onPrimary
-                    )
-                }
-                IconButton(
-                    modifier = Modifier.weight(1f),
-                    onClick = { navController.navigate("notifScreen") },
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.Notifications,
-                        contentDescription = "Notificaciones",
-                        tint = MaterialTheme.colorScheme.onPrimary
-                    )
-                }
-                IconButton(
-                    modifier = Modifier.weight(1f),
-                    onClick = { navController.navigate("settingsScreen") },
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.Menu,
-                        contentDescription = "Menú",
-                        tint = MaterialTheme.colorScheme.onPrimary
-                    )
-                }
-            }
-        }
-    ) { paddingValues ->
+    Column(
+        modifier = Modifier
+            .background(MaterialTheme.colorScheme.background)
+    ) {
+
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues),
+                .padding(10.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             items(recipes) { recipe ->
@@ -149,6 +79,7 @@ fun RecommendedInterface(navController: NavHostController) {
         }
     }
 }
+
 
 @Composable
 fun RecipeCard(recipe: Recipe) {
