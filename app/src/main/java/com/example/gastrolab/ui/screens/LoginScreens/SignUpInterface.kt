@@ -25,6 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -35,15 +36,19 @@ import androidx.navigation.NavHostController
 fun SignUpInterface(navController: NavHostController) {
     val primaryColor = MaterialTheme.colorScheme.primary
     val secondaryColor = MaterialTheme.colorScheme.secondary
+    var username by remember { mutableStateOf("") }
     var emailOrUsername by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var confirmPassword by remember { mutableStateOf("") }
     var isPasswordVisible by remember { mutableStateOf(false) }
+    var isConfirmPasswordVisible by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
+
 
         Row(
             verticalAlignment = Alignment.CenterVertically
@@ -69,13 +74,54 @@ fun SignUpInterface(navController: NavHostController) {
         Spacer(modifier = Modifier.height(32.dp))
 
 
+        Text(
+            text = "Registrarse",
+            color = Color.Black,
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold
+        )
 
+        Spacer(modifier = Modifier.height(35.dp))
+
+        Text(
+            text = "Nombre de usuario",
+            color = Color.Black,
+            fontSize = 16.sp
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        OutlinedTextField(
+            value = username,
+            onValueChange = { username = it },
+            label = { Text("Nombre de usuario") },
+            modifier = Modifier.fillMaxWidth(),
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+
+        Text(
+            text = "Correo electrónico",
+            color = Color.Black,
+            fontSize = 16.sp
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
         OutlinedTextField(
             value = emailOrUsername,
             onValueChange = { emailOrUsername = it },
-            label = { Text("Correo electrónico o nombre de usuario") },
+            label = { Text("Correo electrónico") },
             modifier = Modifier.fillMaxWidth(),
+        )
 
+        Spacer(modifier = Modifier.height(16.dp))
+
+
+        Text(
+            text = "Contraseña",
+            color = Color.Black,
+            fontSize = 16.sp
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -88,28 +134,56 @@ fun SignUpInterface(navController: NavHostController) {
             visualTransformation = if (isPasswordVisible) PasswordVisualTransformation() else androidx.compose.ui.text.input.VisualTransformation.None,
             trailingIcon = {
                 Text(
-                    text = if (isPasswordVisible) "ocultar" else "mostrar",
+                    text = if (isPasswordVisible) "mostrar" else "ocultar",
                     color = primaryColor,
                     modifier = Modifier.clickable { isPasswordVisible = !isPasswordVisible }
                 )
             },
+        )
 
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Campo para confirmar la contraseña
+        Text(
+            text = "Confirmar Contraseña",
+            color = Color.Black,
+            fontSize = 16.sp
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        OutlinedTextField(
+            value = confirmPassword,
+            onValueChange = { confirmPassword = it },
+            label = { Text("Confirmar Contraseña") },
+            modifier = Modifier.fillMaxWidth(),
+            visualTransformation = if (isConfirmPasswordVisible) PasswordVisualTransformation() else androidx.compose.ui.text.input.VisualTransformation.None,
+            trailingIcon = {
+                Text(
+                    text = if (isConfirmPasswordVisible) "mostrar" else "ocultar",
+                    color = primaryColor,
+                    modifier = Modifier.clickable { isConfirmPasswordVisible = !isConfirmPasswordVisible }
+                )
+            },
         )
 
         Spacer(modifier = Modifier.height(24.dp))
 
+
         Button(
             onClick = {
-
-                println("Email/Username: $emailOrUsername, Password: $password")
+                // Lógica para registrar al usuario
+                println("Email/Username: $emailOrUsername, Password: $password, Confirm Password: $confirmPassword")
+                navController.navigate("mainScreen")
             },
             modifier = Modifier.fillMaxWidth(),
             colors = androidx.compose.material3.ButtonDefaults.buttonColors(containerColor = primaryColor)
         ) {
-            Text("Iniciar sesión", color = Color.White)
+            Text("Registrarse", color = Color.White)
         }
 
         Spacer(modifier = Modifier.height(32.dp))
+
 
         Text(
             text = "¿Has olvidado tu contraseña?",
@@ -121,4 +195,3 @@ fun SignUpInterface(navController: NavHostController) {
         )
     }
 }
-
