@@ -64,7 +64,6 @@ fun UserListData(id: Int, title: String, text: String, icon: ImageVector) {
                     .padding(8.dp)
                     .size(20.dp)
             )
-
                 Text(
                     text = title,
                     fontSize = 18.sp,
@@ -96,7 +95,6 @@ fun UserListData(id: Int, title: String, text: String, icon: ImageVector) {
 fun UserListDataSwitch(id: Int, title: String, text: String, icon: ImageVector) {
     Card(
         modifier = Modifier
-            .fillMaxSize()
             .padding(5.dp)
             .border(
                 shape = RoundedCornerShape(10.dp),

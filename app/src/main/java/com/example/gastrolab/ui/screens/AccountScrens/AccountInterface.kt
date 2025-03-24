@@ -67,7 +67,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.gastrolab.R
 import com.example.gastrolab.ui.screens.MainScreens.Adaptive
-import com.example.gastrolab.ui.screens.MainScreens.Adaptive2
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

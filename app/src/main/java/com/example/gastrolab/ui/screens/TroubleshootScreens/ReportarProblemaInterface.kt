@@ -56,6 +56,7 @@ fun Report(navController: NavHostController){
     ) {
         Text(
             text = "Reportar problema.",
+            color = MaterialTheme.colorScheme.onBackground,
             style = MaterialTheme.typography.titleLarge,
             modifier = Modifier
                 .padding(top = 40.dp)
@@ -66,6 +67,7 @@ fun Report(navController: NavHostController){
 
         // Descripción breve
         Text(
+            color = MaterialTheme.colorScheme.onBackground,
             text = buildAnnotatedString {
                 append("Descripción breve del problema:")
                 withStyle(style = TextStyle(color = Color.Red).toSpanStyle()) {
@@ -84,6 +86,7 @@ fun Report(navController: NavHostController){
 
         // Descripción detallada
         Text(
+            color = MaterialTheme.colorScheme.onBackground,
             text = buildAnnotatedString {
                 append("Descripción detallada del problema:")
                 withStyle(style = TextStyle(color = Color.Red).toSpanStyle()) {
@@ -108,6 +111,7 @@ fun Report(navController: NavHostController){
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(
+                color = MaterialTheme.colorScheme.onBackground,
                 text = "Adjuntar video o imagen del problema (opcional):",
                 modifier = Modifier.weight(1f)
             )

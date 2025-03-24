@@ -134,7 +134,7 @@ fun SearchInterface(navController: NavHostController) {
                 ) {
                     DropdownMenuItem(text = { Text("Ingredientes") }, onClick = { /* Acción Ingredientes */ expanded = false })
                     DropdownMenuItem(text = { Text("Receta") }, onClick = {
-                        navController.navigate("recipeInterface")
+                        navController.navigate("recipeScreen")
                         expanded = false
                     })
                 }

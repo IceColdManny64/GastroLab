@@ -44,7 +44,11 @@ fun NotifInterface(navController: NavHostController) {
         Scaffold(
             topBar = {
                 TopAppBar(
-
+                    modifier = Modifier.height(50.dp),
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        titleContentColor = MaterialTheme.colorScheme.secondary
+                    ),
                     title = {
                         val gastroGradient = listOf(
                             MaterialTheme.colorScheme.tertiary,
@@ -60,18 +64,13 @@ fun NotifInterface(navController: NavHostController) {
                         )
                     },
                     actions = {
-                        IconButton(onClick = { }) {
+                        IconButton(onClick = { navController.navigate("accountScreen") }) {
                             androidx.compose.material3.Icon(
                                 imageVector = Icons.Filled.AccountCircle,
-                                contentDescription = "Cuenta",
-                                tint = MaterialTheme.colorScheme.onPrimary
+                                contentDescription = "Account icon"
                             )
                         }
-                    },
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.primary,  // Primario
-                        titleContentColor = MaterialTheme.colorScheme.onPrimary // Texto en primario
-                    )
+                    }
                 )
             },
             bottomBar = {
@@ -139,7 +138,7 @@ fun NotifInterface(navController: NavHostController) {
                 Text(
                     text = "¡Aquí verás los mensajes que recibas de la Comunidad!",
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.secondary,
+                    color = MaterialTheme.colorScheme.onPrimary,
                     textAlign = TextAlign.Center
                 )
             }

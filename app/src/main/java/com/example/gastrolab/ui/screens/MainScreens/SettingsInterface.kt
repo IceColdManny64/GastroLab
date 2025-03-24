@@ -60,6 +60,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import androidx.window.core.layout.WindowHeightSizeClass
 import androidx.window.core.layout.WindowWidthSizeClass
 import com.example.clasetrabajo.data.model.MenuModel
 import com.example.gastrolab.R
@@ -174,7 +175,21 @@ fun SettingsAdaptive(navController: NavHostController) {
 
         if (width == WindowWidthSizeClass.COMPACT) {
             LazyVerticalGrid(
-                columns = GridCells.Adaptive(minSize = 200.dp),
+                columns = GridCells.Adaptive(minSize = 250.dp),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(1.1f),
+
+                verticalArrangement = Arrangement.Center,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                items(settingsArray) { item ->
+                    SettingsList(item.id, item.title, item.text, item.icon, navController)
+                }
+            }
+    } else if (height == WindowHeightSizeClass.COMPACT) {
+            LazyVerticalGrid(
+                columns = GridCells.Adaptive(minSize = 400.dp),
                 modifier = Modifier
                     .fillMaxSize()
                     .weight(1.1f),

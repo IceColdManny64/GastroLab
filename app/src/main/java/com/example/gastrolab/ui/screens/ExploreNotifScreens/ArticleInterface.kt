@@ -36,8 +36,13 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -52,73 +57,65 @@ fun ArticleInterface(navController: NavController) {
         Scaffold(
             topBar = {
                 TopAppBar(
+                    modifier = Modifier.height(50.dp),
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        titleContentColor = MaterialTheme.colorScheme.secondary
+                    ),
                     title = {
+                        val gastroGradient = listOf(
+                            MaterialTheme.colorScheme.tertiary,
+                            MaterialTheme.colorScheme.surface,
+                            MaterialTheme.colorScheme.tertiary
+                        )
                         Text(
-                            text = "GastroLab",
-                            fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
-                            fontSize = 20.sp,
-                            color = MaterialTheme.colorScheme.onPrimary
+                            text = stringResource(R.string.app_name),
+                            style = TextStyle(brush = Brush.verticalGradient(colors = gastroGradient)),
+                            fontStyle = FontStyle.Italic,
+                            fontWeight = FontWeight.ExtraBold,
+                            fontSize = 25.sp
                         )
                     },
                     actions = {
-                        IconButton(onClick = { /* Acción de cuenta */ }) {
+                        IconButton(onClick = { navController.navigate("accountScreen") }) {
                             androidx.compose.material3.Icon(
                                 imageVector = Icons.Filled.AccountCircle,
-                                contentDescription = "Cuenta",
-                                tint = MaterialTheme.colorScheme.onPrimary
+                                contentDescription = "Account icon"
                             )
                         }
-                    },
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        titleContentColor = MaterialTheme.colorScheme.onPrimary
-                    )
+                    }
                 )
             },
             bottomBar = {
                 BottomAppBar(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(50.dp),
                     containerColor = MaterialTheme.colorScheme.primary,
                     contentColor = MaterialTheme.colorScheme.onPrimary
                 ) {
-                    IconButton(
-                        modifier = Modifier.weight(1f),
-                        onClick = { navController.navigate("mainScreen") },
-                    ) {
+                    IconButton(modifier = Modifier.weight(1f), onClick = { navController.navigate("mainScreen") }) {
                         androidx.compose.material3.Icon(
                             imageVector = Icons.Filled.Home,
-                            contentDescription = "Inicio",
-                            tint = MaterialTheme.colorScheme.onPrimary
+                            contentDescription = ""
                         )
                     }
-                    IconButton(
-                        modifier = Modifier.weight(1f),
-                        onClick = { navController.navigate("searchScreen") },
-                    ) {
+                    IconButton(modifier = Modifier.weight(1f), onClick = { navController.navigate("searchScreen") }) {
                         androidx.compose.material3.Icon(
                             imageVector = Icons.Filled.Search,
-                            contentDescription = "Buscar",
-                            tint = MaterialTheme.colorScheme.onPrimary
+                            contentDescription = ""
                         )
                     }
-                    IconButton(
-                        modifier = Modifier.weight(1f),
-                        onClick = { navController.navigate("notifScreen") },
-                    ) {
+                    IconButton(modifier = Modifier.weight(1f), onClick = { navController.navigate("notifScreen") }) {
                         androidx.compose.material3.Icon(
                             imageVector = Icons.Filled.Notifications,
-                            contentDescription = "Notificaciones",
-                            tint = MaterialTheme.colorScheme.onPrimary
+                            contentDescription = ""
                         )
                     }
-                    IconButton(
-                        modifier = Modifier.weight(1f),
-                        onClick = { navController.navigate("settingsScreen") },
-                    ) {
+                    IconButton(modifier = Modifier.weight(1f), onClick = { navController.navigate("settingsScreen") }) {
                         androidx.compose.material3.Icon(
                             imageVector = Icons.Filled.Menu,
-                            contentDescription = "Menú",
-                            tint = MaterialTheme.colorScheme.onPrimary
+                            contentDescription = ""
                         )
                     }
                 }
@@ -136,7 +133,7 @@ fun ArticleInterface(navController: NavController) {
                 item {
                     Text(
                         text = "La pizza: Un manjar de Italia",
-                        color = MaterialTheme.colorScheme.primary,
+                        color = MaterialTheme.colorScheme.onBackground,
                         style = MaterialTheme.typography.titleLarge,
                         modifier = Modifier.padding(bottom = 8.dp)
                     )
@@ -148,12 +145,14 @@ fun ArticleInterface(navController: NavController) {
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(180.dp)
-                            .background(MaterialTheme.colorScheme.primaryContainer),
+                            .background(MaterialTheme.colorScheme.onBackground),
                         contentAlignment = Alignment.Center
                     ) {
                         Image(
+                            modifier = Modifier.fillMaxSize(),
                             painter = painterResource(id = R.drawable.pizza),
-                            contentDescription = "Imagen principal"
+                            contentDescription = "Imagen principal",
+                            contentScale = ContentScale.Crop
                         )
                     }
                 }
@@ -162,7 +161,7 @@ fun ArticleInterface(navController: NavController) {
                 item {
                     Text(
                         text = stringResource(id = R.string.article_description),
-                        color = MaterialTheme.colorScheme.onSurface,
+                        color = MaterialTheme.colorScheme.onBackground,
                         style = MaterialTheme.typography.bodyMedium
                     )
                 }
@@ -178,16 +177,18 @@ fun ArticleInterface(navController: NavController) {
                         ) {
                             Text(
                                 text = stringResource(id = R.string.secondary_description),
-                                color = MaterialTheme.colorScheme.onSurface,
+                                color = MaterialTheme.colorScheme.onBackground,
                                 style = MaterialTheme.typography.bodySmall
                             )
                         }
                         Spacer(modifier = Modifier.width(8.dp))
                         Image(
-                            painter = painterResource(id = R.drawable.pizza),
+                            painter = painterResource(id = R.drawable.sincro),
                             contentDescription = "Imagen secundaria",
+                            contentScale = ContentScale.Crop,
                             modifier = Modifier
                                 .size(150.dp)
+                                .fillMaxSize()
                                 .background(MaterialTheme.colorScheme.surfaceVariant)
                         )
                     }
@@ -200,7 +201,8 @@ fun ArticleInterface(navController: NavController) {
                         onValueChange = {},
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(100.dp),
+                            .height(100.dp)
+                            .background(MaterialTheme.colorScheme.surface),
                         shape = RoundedCornerShape(8.dp),
                         placeholder = {
                             Text(

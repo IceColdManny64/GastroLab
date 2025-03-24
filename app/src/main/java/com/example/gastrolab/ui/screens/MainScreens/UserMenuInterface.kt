@@ -2,6 +2,7 @@ package com.example.gastrolab.ui.screens.MainScreens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,6 +13,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
@@ -52,6 +54,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import androidx.window.core.layout.WindowHeightSizeClass
 import androidx.window.core.layout.WindowWidthSizeClass
 import com.example.gastrolab.R
 import com.example.gastrolab.data.model.SettingsModel
@@ -151,21 +154,22 @@ fun UserAdaptive() {
         val settingsArray = arrayOf(
             UserMenuModel(1, "Número telefónico", "+52 123-345-6789", Icons.Filled.Phone),
             UserMenuModel(2, "Correo electrónico", "alguien@algo.com", Icons.Filled.MailOutline),
-            UserMenuModel(3, "Cambiar contraseña", "ㅤㅤㅤㅤㅤㅤㅤㅤㅤ", Icons.Filled.Password)
+            UserMenuModel(3, "Cambiar contraseña", "ㅤㅤㅤㅤㅤㅤㅤ", Icons.Filled.Password)
         )
         val settingsArraySwitch = arrayOf(
-            UserMenuModel(1, "Modo oscuro", "ㅤㅤㅤㅤㅤㅤㅤㅤㅤ", Icons.Filled.DarkMode),
-            UserMenuModel(2, "Texto a Voz", "ㅤㅤㅤㅤㅤㅤㅤㅤㅤ", Icons.Filled.Hearing)
+            UserMenuModel(1, "Modo oscuro", "ㅤㅤㅤㅤㅤ", Icons.Filled.DarkMode),
+            UserMenuModel(2, "Texto a Voz", "ㅤㅤㅤㅤㅤ", Icons.Filled.Hearing)
         )
         val settingsArraySwitchNotif = arrayOf(
-            UserMenuModel(1, "Recetas populares", "ㅤㅤㅤㅤㅤㅤㅤ", Icons.Filled.Info),
-            UserMenuModel(2, "Recetas nuevas", "ㅤㅤㅤㅤㅤㅤㅤㅤㅤ", Icons.Filled.AddComment)
+            UserMenuModel(1, "Recetas populares", "ㅤㅤㅤㅤㅤ", Icons.Filled.Info),
+            UserMenuModel(2, "Recetas nuevas", "ㅤㅤㅤㅤㅤ", Icons.Filled.AddComment)
         )
 
 
         if (width == WindowWidthSizeClass.COMPACT) {
             Row(
                 modifier = Modifier
+
                     .fillMaxWidth()
                     .background(MaterialTheme.colorScheme.background)
                     .border(shape = RectangleShape, width = 2.dp, color = MaterialTheme.colorScheme.onBackground),
@@ -181,7 +185,7 @@ fun UserAdaptive() {
                 )
             }
             LazyVerticalGrid(
-                columns = GridCells.Adaptive(minSize = 200.dp),
+                columns = GridCells.Adaptive(minSize = 250.dp),
                 modifier = Modifier
                     .fillMaxSize()
                     .weight(1f),
@@ -210,7 +214,7 @@ fun UserAdaptive() {
                 )
             }
             LazyVerticalGrid(
-                columns = GridCells.Adaptive(minSize = 200.dp),
+                columns = GridCells.Adaptive(minSize = 250.dp),
                 modifier = Modifier
                     .fillMaxSize()
                     .weight(1f),
@@ -240,7 +244,7 @@ fun UserAdaptive() {
                 )
             }
             LazyVerticalGrid(
-                columns = GridCells.Adaptive(minSize = 200.dp),
+                columns = GridCells.Adaptive(minSize = 250.dp),
                 modifier = Modifier
                     .fillMaxSize()
                     .weight(1f),
@@ -251,7 +255,93 @@ fun UserAdaptive() {
                 items(settingsArraySwitchNotif) { item ->
                     UserListDataSwitch(item.id, item.title, item.text, item.icon)
                 }
+            }
+        } else if (height == WindowHeightSizeClass.COMPACT) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.background)
+                    .border(shape = RectangleShape, width = 2.dp, color = MaterialTheme.colorScheme.onBackground),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    textAlign = TextAlign.Center,
+                    fontWeight = FontWeight.Bold,
+                    text = "Cuenta",
+                    fontSize = 25.sp,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+            }
+            LazyHorizontalGrid(
+                rows = GridCells.Adaptive(minSize = 300.dp),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(1f),
+                verticalArrangement = Arrangement.Center,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                items(settingsArray) { item ->
+                    UserListData(item.id, item.title, item.text, item.icon)
+                }
+            }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.background)
+                    .border(shape = RectangleShape, width = 2.dp, color = MaterialTheme.colorScheme.onBackground),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    textAlign = TextAlign.Center,
+                    fontWeight = FontWeight.Bold,
+                    text = "Accesibilidad",
+                    fontSize = 25.sp,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+            }
+            LazyHorizontalGrid(
+                rows = GridCells.Adaptive(minSize = 300.dp),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(1f),
+                verticalArrangement = Arrangement.Center,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                items(settingsArraySwitch) { item ->
+                    UserListDataSwitch(item.id, item.title, item.text, item.icon)
+                }
 
+            }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.background)
+                    .border(shape = RectangleShape, width = 2.dp, color = MaterialTheme.colorScheme.onBackground),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    textAlign = TextAlign.Center,
+                    fontWeight = FontWeight.Bold,
+                    text = "Notificaciones",
+                    fontSize = 25.sp,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+            }
+            LazyHorizontalGrid(
+                rows = GridCells.Adaptive(minSize = 300.dp),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(1f),
+
+                verticalArrangement = Arrangement.Center,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                items(settingsArraySwitchNotif) { item ->
+                    UserListDataSwitch(item.id, item.title, item.text, item.icon)
+                }
             }
         }
     }
