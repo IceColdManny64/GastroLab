@@ -26,6 +26,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -40,28 +41,59 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import androidx.window.core.layout.WindowHeightSizeClass
+import androidx.window.core.layout.WindowWidthSizeClass
 import com.example.gastrolab.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FavoritesInterface(navController: NavHostController) {
-    Scaffold (
+    val height = currentWindowAdaptiveInfo().windowSizeClass.windowHeightSizeClass
+    val width = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass
+
+    Scaffold(
         topBar = { TopAppBar(title = { Text("Favoritos") }) },
         bottomBar = { Bars(navController) }
     ) { paddingValues ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            FilterSection()
-            FavoriteRecipesList()
-            SuggestedRecipesH()
+        if (width == WindowWidthSizeClass.COMPACT) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                FilterSection()
+                FavoriteRecipesList()
+                SuggestedRecipesH()
+            }
+        } else if (height == WindowHeightSizeClass.COMPACT) {
+            Row(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+                    .padding(16.dp),
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                Column(
+                    modifier = Modifier.weight(2f),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    FilterSection()
+                    FavoriteRecipesList()
+                }
+                Column(
+                    modifier = Modifier.weight(2f)
+                ) {
+                    SuggestedRecipesH()
+                }
+            }
         }
     }
 }
+
+
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

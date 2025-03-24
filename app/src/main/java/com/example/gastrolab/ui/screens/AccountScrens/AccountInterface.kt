@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
@@ -44,6 +45,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -65,31 +67,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import androidx.window.core.layout.WindowHeightSizeClass
+import androidx.window.core.layout.WindowWidthSizeClass
 import com.example.gastrolab.R
 import com.example.gastrolab.ui.screens.MainScreens.Adaptive
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun AccountInterface(navController: NavHostController) {
-    Scaffold(
-        topBar = { TopAppBar(title = { Text("Cuenta") }) },
-        bottomBar = { Bars(navController) }
-    ) { paddingValues ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            ProfileSection()
-            SearchBar()
-            ActionButtons(navController)
-            RecentRecipesSection()
-            RecipeCountSection()
-        }
-    }
-}//accountInterface
 
 @Composable
 fun ProfileSection() {
@@ -223,4 +204,58 @@ fun Bars(navController: NavHostController) {
         }
     }
 }
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AccountInterface(navController: NavHostController) {
+    val height = currentWindowAdaptiveInfo().windowSizeClass.windowHeightSizeClass
+    val width = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass
+
+    Scaffold(
+        topBar = { TopAppBar(title = { Text("Cuenta") }) },
+        bottomBar = { Bars(navController) }
+    ) { paddingValues ->
+        if (width == WindowWidthSizeClass.COMPACT) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                ProfileSection()
+                SearchBar()
+                ActionButtons(navController)
+                RecentRecipesSection()
+                RecipeCountSection()
+            }
+        } else if (height == WindowHeightSizeClass.COMPACT) {
+            Row(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+                    .padding(16.dp),
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                Column(
+                    modifier = Modifier.weight(2f),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    ProfileSection()
+                    SearchBar()
+                    ActionButtons(navController)
+                }
+                Column(
+                    modifier = Modifier.weight(2f),
+                ) {
+                    RecentRecipesSection()
+                    RecipeCountSection()
+
+                }
+            }
+        }
+    }
+}
+
+
 
