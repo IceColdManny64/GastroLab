@@ -65,6 +65,7 @@ import com.example.clasetrabajo.data.model.MenuModel
 import com.example.gastrolab.R
 import com.example.gastrolab.data.model.SettingsModel
 import com.example.gastrolab.ui.components.MainViewExCard
+import com.example.gastrolab.ui.components.SettingsList
 import com.example.gastrolab.ui.screens.TroubleshootScreens.Report
 
 @Composable
@@ -189,62 +190,4 @@ fun SettingsAdaptive(navController: NavHostController) {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun SettingsList(id: Int, title: String, text: String, icon: ImageVector, navController: NavHostController) {
-    val navArray = arrayOf(
-        "userMenuScreen",
-        "privacyScreen",
-        "supportScreen",
-        "reportProblem"
-    )
 
-    // Verifica que el ID sea válido dentro del array
-    val destination = if (id in 1..navArray.size) navArray[id - 1] else null
-
-    Card(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(20.dp)
-            .clickable {
-                destination?.let { navController.navigate(it) }
-            }
-            .border(
-                shape = RoundedCornerShape(10.dp),
-                width = 3.dp,
-                color = MaterialTheme.colorScheme.onBackground
-            )
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(8.dp)
-        ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = "icon",
-                tint = MaterialTheme.colorScheme.onBackground,
-                modifier = Modifier
-                    .padding(8.dp)
-                    .size(40.dp)
-            )
-            Column(
-                modifier = Modifier
-                    .padding(start = 8.dp)
-                    .fillMaxSize()
-            ) {
-                Text(
-                    text = title,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-                Text(
-                    text = text,
-                    fontSize = 15.sp,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-            }
-        }
-    }
-}
