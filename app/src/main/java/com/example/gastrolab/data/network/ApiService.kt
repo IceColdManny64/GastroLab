@@ -17,9 +17,9 @@ interface ApiService {
     @POST("register.php") //POST login create account
     suspend fun loginCreate(@Body user: LoginModel): Response<JsonObject>
 
-    @GET("service.php") //get all recipes
+    @GET("recipe.php") //get all recipes
     suspend fun getRecipes(): Response<List<RecipeModel>>
 
-    @GET("service.php")//get one recipe
+    @GET("recipe.php")//get one recipe
     suspend fun getRecipe(@Query("id") id: Int): Response<RecipeModel>
 }
