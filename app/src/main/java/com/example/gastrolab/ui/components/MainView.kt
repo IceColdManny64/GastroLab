@@ -1,19 +1,11 @@
 package com.example.gastrolab.ui.components
 
-import android.R
-import android.graphics.drawable.shapes.RoundRectShape
-import android.view.RoundedCorner
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.displayCutoutPadding
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,39 +13,27 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowRight
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.layout.VerticalAlignmentLine
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
+import coil.compose.AsyncImage
+import com.example.gastrolab.R
 
 @Composable
-fun MainView(id: Int, title: String, text: String, image: Int, navController: NavController) {
+fun MainView(id: Int, title: String, description: String, imageURL: String, navController: NavController) {
     Card(
         modifier = Modifier
             .width(120.dp)
@@ -75,13 +55,14 @@ fun MainView(id: Int, title: String, text: String, image: Int, navController: Na
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Image(
+            AsyncImage(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(100.dp),
-                painter = painterResource(image),
-                contentDescription = "Food",
-                contentScale = ContentScale.Crop
+                model = imageURL,
+                contentDescription = "",
+                error = painterResource(R.drawable.generic),
+                contentScale = ContentScale.Crop,
             )
                 Text(
                     textAlign = TextAlign.Center,
@@ -98,7 +79,7 @@ fun MainView(id: Int, title: String, text: String, image: Int, navController: Na
 }
 
 @Composable
-fun MainViewExCard(id:Int, title:String, text:String, image:Int, navController: NavController) {
+fun MainViewExCard(id:Int, title:String, description:String, imageURL:String, navController: NavController) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -123,7 +104,7 @@ fun MainViewExCard(id:Int, title:String, text:String, image:Int, navController: 
                     .background(MaterialTheme.colorScheme.onTertiary),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                Image(
+                AsyncImage(
                     modifier = Modifier
                         .fillMaxSize()
                         .size(100.dp)
@@ -133,10 +114,11 @@ fun MainViewExCard(id:Int, title:String, text:String, image:Int, navController: 
                             width = 2.dp,
                             color = MaterialTheme.colorScheme.onBackground
                         ),
-                    painter = painterResource(image),
-                    contentDescription = "Food",
-                    contentScale = ContentScale.Crop
-                )
+                    model = imageURL,
+                    contentDescription = "",
+                    error = painterResource(R.drawable.generic),
+                    contentScale = ContentScale.Crop,
+                    )
 
             }
             Row(
@@ -166,7 +148,7 @@ fun MainViewExCard(id:Int, title:String, text:String, image:Int, navController: 
                             .background(MaterialTheme.colorScheme.onTertiary)
                     )
                     Text(
-                        text = text,
+                        text = description,
                         textAlign = TextAlign.Center,
                         lineHeight = 25.sp,
                         fontWeight = FontWeight.Black,
@@ -185,7 +167,7 @@ fun MainViewExCard(id:Int, title:String, text:String, image:Int, navController: 
 
 
 @Composable
-fun MainViewSideCard(id:Int, title:String, text:String, image:Int, navController: NavController) {
+fun MainViewSideCard(id:Int, title:String, description:String, imageURL:String, navController: NavController) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -198,7 +180,7 @@ fun MainViewSideCard(id:Int, title:String, text:String, image:Int, navController
         Row(modifier = Modifier
             .fillMaxSize()
         ) {
-            Image(
+            AsyncImage(
                 modifier = Modifier
                     .fillMaxHeight()
                     .padding(horizontal = 2.dp)
@@ -206,11 +188,11 @@ fun MainViewSideCard(id:Int, title:String, text:String, image:Int, navController
                     .size(100.dp)
                     .border(shape = RectangleShape,  width = 1.dp, color = MaterialTheme.colorScheme.onBackground)
                     .height(200.dp),
-                painter = painterResource(image),
-                contentDescription = "Food",
+                model = imageURL,
+                contentDescription = "",
+                error = painterResource(R.drawable.generic),
                 contentScale = ContentScale.Crop,
-
-                )
+            )
 
             Column(
                 modifier = Modifier
@@ -229,7 +211,7 @@ fun MainViewSideCard(id:Int, title:String, text:String, image:Int, navController
 
                 )
                 Text(
-                    text = text,
+                    text = description,
                     textAlign = TextAlign.Justify,
                     lineHeight = 12.sp,
                     fontSize = 15.sp,
@@ -244,7 +226,7 @@ fun MainViewSideCard(id:Int, title:String, text:String, image:Int, navController
 }
 
 @Composable
-fun MainViewCompact(id: Int, title: String, text: String, image: Int, navController: NavController) {
+fun MainViewCompact(id: Int, title: String, description: String, imageURL: String, navController: NavController) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -263,15 +245,16 @@ fun MainViewCompact(id: Int, title: String, text: String, image: Int, navControl
                 .background(MaterialTheme.colorScheme.onSecondary),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Image(
+            AsyncImage(
                 modifier = Modifier
                     .size(100.dp)
                     .height(120.dp)
                     .clip(RoundedCornerShape(10.dp))
                     .border(1.dp, MaterialTheme.colorScheme.onBackground),
-                painter = painterResource(image),
-                contentDescription = "Food",
-                contentScale = ContentScale.Crop
+                model = imageURL,
+                contentDescription = "",
+                error = painterResource(R.drawable.generic),
+                contentScale = ContentScale.Crop,
             )
             Column(
                 modifier = Modifier
@@ -286,7 +269,7 @@ fun MainViewCompact(id: Int, title: String, text: String, image: Int, navControl
                     color = MaterialTheme.colorScheme.secondary
                 )
                 Text(
-                    text = text,
+                    text = description,
                     fontSize = 12.sp,
                     color = MaterialTheme.colorScheme.secondary
                 )
@@ -296,7 +279,7 @@ fun MainViewCompact(id: Int, title: String, text: String, image: Int, navControl
 }
 
 @Composable
-fun MainViewExCardCompact(id: Int, title: String, text: String, image: Int, navController: NavController) {
+fun MainViewExCardCompact(id: Int, title: String, text: String, imageURL: String, navController: NavController) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -315,14 +298,15 @@ fun MainViewExCardCompact(id: Int, title: String, text: String, image: Int, navC
                 .fillMaxSize(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Image(
+            AsyncImage(
                 modifier = Modifier
                     .size(120.dp)
                     .clip(RoundedCornerShape(15.dp))
                     .border(2.dp, MaterialTheme.colorScheme.onBackground),
-                painter = painterResource(image),
-                contentDescription = "Food",
-                contentScale = ContentScale.Crop
+                model = imageURL,
+                contentDescription = "",
+                error = painterResource(R.drawable.generic),
+                contentScale = ContentScale.Crop,
             )
             Column(
                 modifier = Modifier
@@ -355,7 +339,7 @@ fun MainViewExCardCompact(id: Int, title: String, text: String, image: Int, navC
 }
 
 @Composable
-fun MainViewSideCardCompact(id: Int, title: String, text: String, image: Int, navController: NavController) {
+fun MainViewSideCardCompact(id: Int, title: String, description: String, imageURL: String, navController: NavController) {
     Card(
         modifier = Modifier
 
@@ -375,14 +359,15 @@ fun MainViewSideCardCompact(id: Int, title: String, text: String, image: Int, na
                 .padding(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Image(
+            AsyncImage(
                 modifier = Modifier
                     .size(100.dp)
                     .clip(RoundedCornerShape(10.dp))
                     .border(1.dp, MaterialTheme.colorScheme.onBackground),
-                painter = painterResource(image),
-                contentDescription = "Food",
-                contentScale = ContentScale.Crop
+                model = imageURL,
+                contentDescription = "",
+                error = painterResource(R.drawable.generic),
+                contentScale = ContentScale.Crop,
             )
             Column(
                 modifier = Modifier
@@ -397,7 +382,7 @@ fun MainViewSideCardCompact(id: Int, title: String, text: String, image: Int, na
                     color = MaterialTheme.colorScheme.onBackground
                 )
                 Text(
-                    text = text,
+                    text = description,
                     fontSize = 14.sp,
                     color = MaterialTheme.colorScheme.onBackground
                 )

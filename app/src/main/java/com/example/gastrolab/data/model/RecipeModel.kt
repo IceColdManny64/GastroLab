@@ -15,6 +15,8 @@ data class RecipeModel(
     var difficulty: String = ""
 )
 
+
+
 @Entity
 data class RecipeEntity(
     @PrimaryKey val id: Int,
