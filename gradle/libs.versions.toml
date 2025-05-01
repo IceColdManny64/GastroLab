@@ -1,5 +1,5 @@
 [versions]
-agp = "8.9.0"
+agp = "8.9.1"
 authControlSdk = "5.1.1"
 kotlin = "2.0.0"
 coreKtx = "1.15.0"
@@ -17,6 +17,15 @@ material3WindowSizeClassAndroid = "1.4.0-alpha10"
 benchmarkTraceprocessorAndroid = "1.4.0-alpha09"
 runtimeSaveable = "1.8.0-rc01"
 materialIconsExtendedAndroid = "1.7.8"
+foundationLayout = "1.9.0-alpha01"
+material = "1.9.0-alpha01"
+materialIconsExtended = "1.7.8"
+foundationLayoutAndroid = "1.9.0-alpha01"
+foundationAndroid = "1.9.0-alpha01"
+foundation = "1.9.0-alpha01"
+runtime = "1.1.1"
+navigationCompose = "2.9.0-rc01"
+uiMaterialIconsCore = "0.1.0-dev14"
 
 
 [libraries]
@@ -43,6 +52,15 @@ androidx-material3-window-size-class1-android = { group = "androidx.compose.mate
 androidx-benchmark-traceprocessor-android = { group = "androidx.benchmark", name = "benchmark-traceprocessor-android", version.ref = "benchmarkTraceprocessorAndroid" }
 androidx-runtime-saveable = { group = "androidx.compose.runtime", name = "runtime-saveable", version.ref = "runtimeSaveable" }
 androidx-material-icons-extended-android = { group = "androidx.compose.material", name = "material-icons-extended-android", version.ref = "materialIconsExtendedAndroid" }
+androidx-foundation-layout = { group = "androidx.compose.foundation", name = "foundation-layout", version.ref = "foundationLayout" }
+androidx-material = { group = "androidx.compose.material", name = "material", version.ref = "material" }
+androidx-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended", version.ref = "materialIconsExtended" }
+androidx-foundation-layout-android = { group = "androidx.compose.foundation", name = "foundation-layout-android", version.ref = "foundationLayoutAndroid" }
+androidx-foundation-android = { group = "androidx.compose.foundation", name = "foundation-android", version.ref = "foundationAndroid" }
+androidx-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "foundation" }
+runtime = { group = "android.arch.core", name = "runtime", version.ref = "runtime" }
+androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
+androidx-ui-material-icons-core = { group = "androidx.ui", name = "ui-material-icons-core", version.ref = "uiMaterialIconsCore" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
