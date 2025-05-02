@@ -68,6 +68,7 @@ import com.example.gastrolab.data.model.RecipeModel
 import com.example.gastrolab.ui.components.MainView
 import com.example.gastrolab.ui.components.MainViewCompact
 import com.example.gastrolab.ui.components.MainViewExCard
+import com.example.gastrolab.ui.components.MainViewExCardCompact
 import com.example.gastrolab.ui.components.MainViewSideCard
 import com.example.gastrolab.ui.components.MainViewSideCardCompact
 import com.example.gastrolab.ui.screens.ExploreNotifScreens.RecommendedInterface
@@ -89,11 +90,6 @@ fun Bars(navController: NavHostController) {
         { Adaptive(navController) },
         { RecommendedInterface(navController) }
     )
-
-
-
-
-
     Column(modifier = Modifier.fillMaxSize()) {
         TopAppBar(
             modifier = Modifier.height(50.dp),
@@ -186,7 +182,7 @@ fun Adaptive(navController: NavHostController, viewModel: RecipeViewModel = view
     val height = currentWindowAdaptiveInfo().windowSizeClass.windowHeightSizeClass
     val width = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass
     var recipes by remember { mutableStateOf<List<RecipeModel>>(emptyList()) }
-
+    var recipeDetail by remember { mutableStateOf<RecipeModel?>(null) }
     LaunchedEffect(Unit) {
         viewModel.getRecipes { response ->
             if (response.isSuccessful) {
@@ -198,6 +194,8 @@ fun Adaptive(navController: NavHostController, viewModel: RecipeViewModel = view
     }
 
     val listState = rememberLazyListState()
+
+
 
     Column(modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
 
@@ -217,7 +215,16 @@ fun Adaptive(navController: NavHostController, viewModel: RecipeViewModel = view
                 modifier = Modifier.fillMaxSize().weight(1.1f)
             ) {
                 items(recipes.take(4)) { item ->
-                    MainViewExCard(item.id, item.title, item.description, item.imageURL, navController)
+                    MainViewExCard(item.id, item.title, item.description, item.imageURL,
+                        onButtonClick = {
+                            viewModel.getRecipe(item.id){ response ->
+                                if(response.isSuccessful){
+                                    recipeDetail = response.body()
+                                }
+                            }
+                            navController.navigate("articleScreen/${item.id}")
+                        }
+                    )
                 }
             }
 
@@ -235,7 +242,15 @@ fun Adaptive(navController: NavHostController, viewModel: RecipeViewModel = view
                 modifier = Modifier.padding(8.dp).weight(1.3f).height(25.dp)
             ) {
                 items(recipes.drop(6).take(6)) { item ->
-                    MainView(item.id, item.title, item.description, item.imageURL, navController)
+                    MainView(item.id, item.title, item.description, item.imageURL,
+                        onButtonClick = {
+                            viewModel.getRecipe(item.id){ response ->
+                                if(response.isSuccessful){
+                                    recipeDetail = response.body()
+                                }
+                            }
+                            navController.navigate("recipeScreen/${item.id}")
+                        })
                 }
             }
 
@@ -254,7 +269,14 @@ fun Adaptive(navController: NavHostController, viewModel: RecipeViewModel = view
                 modifier = Modifier.fillMaxSize().weight(1f)
             ) {
                 items(recipes.drop(8).take(6)) { item ->
-                    MainViewSideCard(item.id, item.title, item.description, item.imageURL, navController)
+                    MainViewSideCard(item.id, item.title, item.description, item.imageURL,                         onButtonClick = {
+                        viewModel.getRecipe(item.id){ response ->
+                            if(response.isSuccessful){
+                                recipeDetail = response.body()
+                            }
+                        }
+                        navController.navigate("recipeScreen/${item.id}")
+                    })
                 }
             }
 
@@ -274,7 +296,14 @@ fun Adaptive(navController: NavHostController, viewModel: RecipeViewModel = view
                     }
                     LazyColumn(modifier = Modifier.fillMaxSize(), state = listState) {
                         items(recipes.take(4)) { item ->
-                            MainViewExCard(item.id, item.title, item.description, item.imageURL, navController)
+                            MainViewExCardCompact(item.id, item.title, item.description, item.imageURL,                         onButtonClick = {
+                                viewModel.getRecipe(item.id){ response ->
+                                    if(response.isSuccessful){
+                                        recipeDetail = response.body()
+                                    }
+                                }
+                                navController.navigate("articleScreen/${item.id}")
+                            })
                         }
                     }
                 }
@@ -291,7 +320,15 @@ fun Adaptive(navController: NavHostController, viewModel: RecipeViewModel = view
                     }
                     LazyColumn(modifier = Modifier.fillMaxWidth().height(500.dp)) {
                         items(recipes.drop(4).take(4)) { item ->
-                            MainViewCompact(item.id, item.title, item.description, item.imageURL, navController)
+                            MainViewCompact(item.id, item.title, item.description, item.imageURL,                         onButtonClick = {
+                                viewModel.getRecipe(item.id){ response ->
+                                    if(response.isSuccessful){
+                                        recipeDetail = response.body()
+                                    }
+                                }
+                                navController.navigate("recipeScreen/${item.id}")
+                            }
+                            )
                         }
                     }
                 }
@@ -308,7 +345,14 @@ fun Adaptive(navController: NavHostController, viewModel: RecipeViewModel = view
                     }
                     LazyColumn(modifier = Modifier.fillMaxWidth().height(500.dp)) {
                         items(recipes.drop(8).take(6)) { item ->
-                            MainViewSideCardCompact(item.id, item.title, item.description, item.imageURL, navController)
+                            MainViewSideCardCompact(item.id, item.title, item.description, item.imageURL,                         onButtonClick = {
+                                viewModel.getRecipe(item.id){ response ->
+                                    if(response.isSuccessful){
+                                        recipeDetail = response.body()
+                                    }
+                                }
+                                navController.navigate("recipeScreen/${item.id}")
+                            })
                         }
                     }
                 }

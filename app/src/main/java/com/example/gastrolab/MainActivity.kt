@@ -1,6 +1,7 @@
 package com.example.gastrolab
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
@@ -9,6 +10,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.clasetrabajo.data.database.AppDatabase
+import com.example.clasetrabajo.data.database.DatabaseProvider
 import com.example.gastrolab.ui.screens.AccountScrens.AccountInterface
 import com.example.gastrolab.ui.screens.AccountScrens.FavoritesInterface
 import com.example.gastrolab.ui.screens.AccountScrens.SavedInterface
@@ -30,8 +33,16 @@ import com.example.gastrolab.ui.screens.TroubleshootScreens.ReportarProblemaInte
 import com.example.gastrolab.ui.screens.TroubleshootScreens.SupportInterface
 
 class MainActivity : ComponentActivity() {
+    lateinit var database: AppDatabase
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        try{
+            database = DatabaseProvider.getDatabase(this)
+            Log.d("debug-db", "DATABASE LOADED SUCCESSFULLY" )
+        }catch (exception: Exception){
+            Log.d("debug-db", "ERROR: $exception" )
+        }
                 //enableEdgeToEdge()
         setContent {
             GastroLabTheme {
@@ -55,14 +66,21 @@ fun SetupNavGraph(navController: NavHostController){
         composable("loginPasswordScreen"){ LoginPasswordInterface(navController) }
         composable("mainScreen"){ MainScreen(navController) }
         composable("searchScreen"){ SearchInterface(navController) }
-        composable("recipeScreen"){ RecipeInterface(navController) }
+        composable("recipeScreen/{id}") { backStackEntry ->
+            val id = backStackEntry.arguments?.getString("id")?.toIntOrNull() ?: 0
+            RecipeInterface(id = id, navController = navController)
+        }
+
         composable("commentsScreen"){ CommentsInterface(navController) }
         composable("exploreScreen"){ ExploreInterface(navController) }
         composable("notifScreen"){ NotifInterface(navController) }
         composable("userMenuScreen"){ UserMenuInterface(navController) }
         composable("settingsScreen"){ SettingsInterface(navController) }
         composable("recommendedScreen"){ RecommendedInterface(navController) }
-        composable("articleScreen"){ ArticleInterface(navController) }
+        composable("articleScreen/{id}") { backStackEntry ->
+            val id = backStackEntry.arguments?.getString("id")?.toIntOrNull() ?: 0
+            ArticleInterface(id = id, navController = navController)
+        }
         composable("supportScreen"){ SupportInterface(navController) }
         composable("privacyScreen"){ PrivacyInterface(navController) }
         composable("reportProblem"){ ReportarProblemaInterface(navController) }
