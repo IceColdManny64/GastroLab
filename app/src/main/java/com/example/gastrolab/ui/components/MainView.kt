@@ -28,19 +28,22 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
+import com.example.clasetrabajo.data.viewmodel.RecipeViewModel
 import com.example.gastrolab.R
+import kotlin.Unit
 
 @Composable
-fun MainView(id: Int, title: String, description: String, imageURL: String, navController: NavController) {
+fun MainView(id: Int, title: String, description: String, imageURL: String,
+             onButtonClick: () -> Unit, viewModel: RecipeViewModel = viewModel()) {
     Card(
         modifier = Modifier
             .width(120.dp)
             .height(180.dp)
             .padding(5.dp)
             .clickable{
-                navController.navigate("recipeScreen")
+                onButtonClick()
             }
             .border(
                 shape = RoundedCornerShape(10.dp),
@@ -79,13 +82,14 @@ fun MainView(id: Int, title: String, description: String, imageURL: String, navC
 }
 
 @Composable
-fun MainViewExCard(id:Int, title:String, description:String, imageURL:String, navController: NavController) {
+fun MainViewExCard(id:Int, title:String, description:String, imageURL:String,
+                   onButtonClick: () -> Unit, viewModel: RecipeViewModel = viewModel()) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(5.dp)
             .clickable{
-                navController.navigate("articleScreen")
+                onButtonClick()
             }
             .border(
                 shape = RoundedCornerShape(10.dp),
@@ -167,13 +171,14 @@ fun MainViewExCard(id:Int, title:String, description:String, imageURL:String, na
 
 
 @Composable
-fun MainViewSideCard(id:Int, title:String, description:String, imageURL:String, navController: NavController) {
+fun MainViewSideCard(id:Int, title:String, description:String, imageURL:String,
+                     onButtonClick: () -> Unit, viewModel: RecipeViewModel = viewModel()) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(5.dp)
             .clickable{
-                navController.navigate("recipeScreen")
+                onButtonClick()
             }
             .border(shape = RoundedCornerShape(10.dp),  width = 3.dp, color = MaterialTheme.colorScheme.onBackground)
     ) {
@@ -226,13 +231,14 @@ fun MainViewSideCard(id:Int, title:String, description:String, imageURL:String, 
 }
 
 @Composable
-fun MainViewCompact(id: Int, title: String, description: String, imageURL: String, navController: NavController) {
+fun MainViewCompact(id: Int, title: String, description: String, imageURL: String,
+                    onButtonClick: () -> Unit, viewModel: RecipeViewModel = viewModel()) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .height(120.dp)
             .padding(5.dp)
-            .clickable { navController.navigate("recipeScreen") }
+            .clickable { onButtonClick() }
             .border(
                 shape = RoundedCornerShape(10.dp),
                 width = 1.dp,
@@ -279,12 +285,13 @@ fun MainViewCompact(id: Int, title: String, description: String, imageURL: Strin
 }
 
 @Composable
-fun MainViewExCardCompact(id: Int, title: String, text: String, imageURL: String, navController: NavController) {
+fun MainViewExCardCompact(id: Int, title: String, text: String, imageURL: String,
+  onButtonClick: () -> Unit, viewModel: RecipeViewModel = viewModel()) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(5.dp)
-            .clickable { navController.navigate("articleScreen") }
+            .clickable {onButtonClick()}
             .border(
                 shape = RoundedCornerShape(10.dp),
                 width = 3.dp,
@@ -339,13 +346,13 @@ fun MainViewExCardCompact(id: Int, title: String, text: String, imageURL: String
 }
 
 @Composable
-fun MainViewSideCardCompact(id: Int, title: String, description: String, imageURL: String, navController: NavController) {
+fun MainViewSideCardCompact(id: Int, title: String, description: String, imageURL: String, onButtonClick: () -> Unit, viewModel: RecipeViewModel = viewModel()) {
     Card(
         modifier = Modifier
 
             .fillMaxWidth()
             .padding(5.dp)
-            .clickable { navController.navigate("recipeScreen") }
+            .clickable { onButtonClick()}
             .border(
                 shape = RoundedCornerShape(10.dp),
                 width = 3.dp,

@@ -29,7 +29,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SegmentedButtonDefaults.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -52,7 +51,7 @@ import com.example.gastrolab.ui.theme.GastroLabTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ArticleInterface(navController: NavController) {
+fun ArticleInterface(id: Int, navController: NavController) {
     GastroLabTheme {
         Scaffold(
             topBar = {
