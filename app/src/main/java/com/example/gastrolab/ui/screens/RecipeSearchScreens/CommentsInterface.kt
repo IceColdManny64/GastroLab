@@ -14,10 +14,6 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -61,7 +57,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.clasetrabajo.data.database.AppDatabase
 import com.example.clasetrabajo.data.database.DatabaseProvider
@@ -76,23 +72,23 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CommentsInterface(
-    navController: NavHostController,
+    id: Int,
+    navController: NavController,
     viewModel: RecipeViewModel = viewModel()) {
-    var recipes by remember { mutableStateOf<List<RecipeModel>>(emptyList()) }
     var recipeDetail by remember { mutableStateOf<RecipeModel?>(null) }
     val db: AppDatabase = DatabaseProvider.getDatabase(LocalContext.current)
     val recipeDao = db.recipeDao()
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(id) {
         viewModel.getRecipes { response ->
             if (response.isSuccessful) {
-                recipes = response.body() ?: emptyList()
+                val allRecipes = response.body() ?: emptyList()
+                recipeDetail = allRecipes.find { it.id == id }
             } else {
                 Log.d("debug", "Failed to load recipes: ${response.code()}")
             }
         }
     }
-    val listState = rememberLazyListState()
 
     Scaffold(
         topBar = {
@@ -149,14 +145,17 @@ fun CommentsInterface(
                     .padding(paddingValues)
                     .verticalScroll(rememberScrollState())
             ) {
-                LazyVerticalGrid(
-                    columns = GridCells.Adaptive(minSize = 300.dp),
-                    modifier = Modifier.fillMaxSize().weight(1.1f)
-                ) {
-                    items(recipes.take(1)) { item ->
-                        CommentSection(item.id, item.title, item.imageURL, item.likerate)
-                    }
-                }
+                recipeDetail?.let { recipe ->
+                    CommentSection(
+                        recipe.id,
+                        recipe.title,
+                        recipe.imageURL,
+                        recipe.likerate
+                    )
+                } ?: Text(
+                    text = "Cargando receta...",
+                    modifier = Modifier.padding(16.dp)
+                )
             }
         }
     )
@@ -167,11 +166,19 @@ fun CommentsInterface(
 fun CommentSection(
     id:Int, title:String, imageURL:String, likerate: Int,
     viewModel: RecipeViewModel = viewModel()){
-    var recipes by remember { mutableStateOf<List<RecipeModel>>(emptyList()) }
     var recipeDetail by remember { mutableStateOf<RecipeModel?>(null) }
     val db: AppDatabase = DatabaseProvider.getDatabase(LocalContext.current)
     val recipeDao = db.recipeDao()
-
+    var recipes by remember { mutableStateOf<List<RecipeModel>>(emptyList()) }
+    LaunchedEffect(Unit) {
+        viewModel.getRecipes { response ->
+            if (response.isSuccessful) {
+                recipes = response.body() ?: emptyList()
+            } else {
+                Log.d("debug", "Failed to load recipes: ${response.code()}")
+            }
+        }
+    }
         // Imagen de la receta
     AsyncImage(
         modifier = Modifier
@@ -213,20 +220,11 @@ fun CommentSection(
 
 
         Text(
-            text = likerate.toString(),
+            text = "Calificación: " + likerate.toString(),
             style = MaterialTheme.typography.bodyLarge,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onBackground
         )
-    }
-    LaunchedEffect(Unit) {
-        viewModel.getRecipes{ response ->
-            if(response.isSuccessful){
-                recipes = response.body() ?: emptyList()
-            } else {
-                Log.d("debug", "Failed to load accounts: ${response.code()}")
-            }
-        }
     }
     Spacer(modifier = Modifier.height(16.dp))
     // Título de la receta
@@ -259,42 +257,6 @@ fun CommentSection(
                 }
             }
         )
-
-        // Botón de guardar con texto
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.clickable { /* Acción para guardar */ }
-        ) {
-            Icon(
-                imageVector = Icons.Filled.CheckCircle, // Ícono de guardar
-                contentDescription = "Guardar",
-                tint = MaterialTheme.colorScheme.onBackground
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = "Guardar",
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onBackground
-            )
-        }
-
-        // Botón de compartir con texto
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.clickable { /* Acción para compartir */ }
-        ) {
-            Icon(
-                imageVector = Icons.Filled.Send, // Ícono de compartir
-                contentDescription = "Compartir",
-                tint = MaterialTheme.colorScheme.onBackground
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = "Compartir",
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onBackground
-            )
-        }
     }
 
     Spacer(modifier = Modifier.height(24.dp))
@@ -317,7 +279,6 @@ fun CommentSection(
 
     // Campo para agregar un nuevo comentario
     AddCommentField()
-
 }
 @Composable
 fun CommentWithReplies() {
@@ -407,22 +368,57 @@ fun AddCommentField() {
 
 @Composable
 fun RecipeDetailComponent(
-    onSaveClick: () -> Unit,
-    viewModel: RecipeViewModel = viewModel()
+    onSaveClick: () -> Unit
 ) {
-    var recipes by remember { mutableStateOf<List<RecipeModel>>(emptyList()) }
-    val listState = rememberLazyListState()
         // Botón de favoritos con texto
-
-    IconButton(onClick = { onSaveClick() }) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.clickable { /* Acción para guardar */ }
+    ) {
         Icon(
+            modifier = Modifier
+                .clickable{onSaveClick()},
             imageVector = Icons.Filled.Add, // Ícono de favoritos
             contentDescription = "Favoritos",
             tint = MaterialTheme.colorScheme.onBackground,
         )
-        Spacer(modifier = Modifier.height(4.dp))
         Text(
             text = "Favorito",
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onBackground
+        )
+    }
+    // Botón de guardar con texto
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.clickable { /* Acción para guardar */ }
+    ) {
+        Icon(
+            imageVector = Icons.Filled.CheckCircle, // Ícono de guardar
+            contentDescription = "Guardar",
+            tint = MaterialTheme.colorScheme.onBackground
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        Text(
+            text = "Guardar",
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onBackground
+        )
+    }
+
+    // Botón de compartir con texto
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.clickable { /* Acción para compartir */ }
+    ) {
+        Icon(
+            imageVector = Icons.Filled.Send, // Ícono de compartir
+            contentDescription = "Compartir",
+            tint = MaterialTheme.colorScheme.onBackground
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        Text(
+            text = "Compartir",
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onBackground
         )

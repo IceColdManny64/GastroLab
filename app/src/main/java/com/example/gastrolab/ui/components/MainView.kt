@@ -82,7 +82,7 @@ fun MainView(id: Int, title: String, description: String, imageURL: String,
 }
 
 @Composable
-fun MainViewExCard(id:Int, title:String, description:String, imageURL:String,
+fun MainViewExCard(id: Int, title:String, description:String, imageURL:String,
                    onButtonClick: () -> Unit, viewModel: RecipeViewModel = viewModel()) {
     Card(
         modifier = Modifier

@@ -70,8 +70,10 @@ fun SetupNavGraph(navController: NavHostController){
             val id = backStackEntry.arguments?.getString("id")?.toIntOrNull() ?: 0
             RecipeInterface(id = id, navController = navController)
         }
-
-        composable("commentsScreen"){ CommentsInterface(navController) }
+        composable("commentsScreen/{id}") { backStackEntry ->
+            val id = backStackEntry.arguments?.getString("id")?.toIntOrNull() ?: 0
+            CommentsInterface(id = id, navController = navController)
+        }
         composable("exploreScreen"){ ExploreInterface(navController) }
         composable("notifScreen"){ NotifInterface(navController) }
         composable("userMenuScreen"){ UserMenuInterface(navController) }
