@@ -49,7 +49,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
@@ -60,8 +59,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.window.core.layout.WindowHeightSizeClass
 import androidx.window.core.layout.WindowWidthSizeClass
-import com.example.clasetrabajo.data.database.AppDatabase
-import com.example.clasetrabajo.data.database.DatabaseProvider
 import com.example.clasetrabajo.data.viewmodel.RecipeViewModel
 import com.example.gastrolab.R
 import com.example.gastrolab.data.model.RecipeModel
@@ -75,15 +72,12 @@ import com.example.gastrolab.ui.screens.ExploreNotifScreens.RecommendedInterface
 
 @Composable
 fun MainScreen(navController: NavHostController) {
-    val db: AppDatabase = DatabaseProvider.getDatabase(LocalContext.current)
-    val recipeDao = db.recipeDao()
     Bars(navController)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Bars(navController: NavHostController) {
-
     var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
     val tabs = listOf("Explorar", "Recomendados")
     val composables = listOf<@Composable () -> Unit>(

@@ -62,7 +62,6 @@ import com.example.gastrolab.data.model.RecipeModel
 fun RecipeInterface(id: Int, navController: NavHostController,
                     viewModel: RecipeViewModel = viewModel()) {
     var recipeDetail by remember { mutableStateOf<RecipeModel?>(null) }
-    var recipes by remember { mutableStateOf<List<RecipeModel>>(emptyList()) }
     LaunchedEffect(id) {
         viewModel.getRecipes { response ->
             if (response.isSuccessful) {
@@ -136,8 +135,7 @@ fun RecipeInterface(id: Int, navController: NavHostController,
                         recipe.description,
                         recipe.imageURL,
                         recipe.preparetime,
-                        recipe.difficulty,
-                        viewModel
+                        recipe.difficulty
                     )
                 } ?: Text(
                     text = "Cargando receta...",
@@ -220,6 +218,21 @@ fun ShowRecipe(
 
     Spacer(modifier = Modifier.height(10.dp))
 
+    LoadCommentButton(
+        id = id,
+        onButtonClick = {
+            viewModel.getRecipe(id) { response ->
+                if (response.isSuccessful) {
+
+                }
+            }
+            navController.navigate("commentsScreen/$id")
+        }
+    )
+
+
+    Spacer(modifier = Modifier.height(10.dp))
+
     Text(
         text = "Dificultad: " + difficulty,
         fontWeight = FontWeight.Bold,
@@ -282,18 +295,19 @@ fun ShowRecipe(
         color = MaterialTheme.colorScheme.onBackground, // Color de texto negro
         modifier = Modifier.padding(horizontal = 16.dp)
     )
-
+    // Botón para ver comentarios (en la parte inferior)
     Spacer(modifier = Modifier.height(16.dp))
 
-    // Botón para ver comentarios (en la parte inferior)
+}
+
+@Composable
+fun LoadCommentButton(id: Int, onButtonClick: () -> Unit){
     Button(
-        onClick = { navController.navigate("commentsScreen") },
+        onClick = { onButtonClick() },
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp)
     ) {
         Text("Ver Comentarios")
     }
-
-    Spacer(modifier = Modifier.height(16.dp))
 }
