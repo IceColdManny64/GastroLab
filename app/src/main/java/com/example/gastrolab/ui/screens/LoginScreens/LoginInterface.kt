@@ -132,7 +132,8 @@ fun LoginInterface(navController: NavHostController, ViewModel: LoginViewModel =
                 .fillMaxWidth()
                 .height(48.dp),
             colors = ButtonDefaults.outlinedButtonColors(
-                containerColor = backgroundColor
+                containerColor = MaterialTheme.colorScheme.secondary,
+                contentColor = MaterialTheme.colorScheme.onSecondary
             ),
             border = BorderStroke(2.dp, Color.Red)
         ) {
@@ -157,6 +158,24 @@ fun LoginInterface(navController: NavHostController, ViewModel: LoginViewModel =
         )
         {
             Text("Registrarse")
+        }
+
+        OutlinedButton(
+            onClick = { navController.navigate("mainScreen") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(48.dp),
+            colors = ButtonDefaults.outlinedButtonColors(
+                containerColor = MaterialTheme.colorScheme.onPrimary,
+                contentColor = MaterialTheme.colorScheme.primary
+            ),
+            border = BorderStroke(2.dp, Color.Red)
+        ) {
+            Text(
+                text = "Modo invitado/sin conexión",
+                fontWeight = FontWeight.Bold,
+                fontSize = 16.sp
+            )
         }
 
     }

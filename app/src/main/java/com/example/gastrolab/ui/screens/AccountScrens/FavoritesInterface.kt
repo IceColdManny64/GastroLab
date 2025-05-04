@@ -2,6 +2,7 @@ package com.example.gastrolab.ui.screens.AccountScrens
 
 import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,7 +13,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
@@ -32,7 +32,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -51,7 +50,6 @@ import com.example.clasetrabajo.data.database.AppDatabase
 import com.example.clasetrabajo.data.database.DatabaseProvider
 import com.example.gastrolab.R
 import com.example.gastrolab.data.model.RecipeEntity
-import com.example.gastrolab.data.model.RecipeModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -66,78 +64,99 @@ fun FavoritesInterface(navController: NavHostController) {
     val db: AppDatabase = DatabaseProvider.getDatabase(LocalContext.current)
     val recipeDao = db.recipeDao()
     var recipesdb by remember { mutableStateOf<List<RecipeEntity>>(emptyList()) }
-    var recipeDetail by remember { mutableStateOf<RecipeModel?>(null) }
 
     LaunchedEffect(Unit) {
         recipesdb = withContext(Dispatchers.IO) {
             recipeDao.getAll()
         }
+        Log.d("debug-db", "Recipes: ${recipesdb.size}")
     }
+
 
     Scaffold(
         topBar = { TopAppBar(title = { Text("Favoritos") }) },
         bottomBar = { Bars(navController) }
     ) { paddingValues ->
         if (width == WindowWidthSizeClass.COMPACT) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                FilterSection()
-
-                SuggestedRecipesH()
-            }
-        } else if (height == WindowHeightSizeClass.COMPACT) {
-            Row(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
-                    .padding(16.dp),
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
+            if (recipesdb.isEmpty()) {
+                Text("No hay recetas favoritas aún.", modifier = Modifier.padding(16.dp))
+            } else {
                 Column(
-                    modifier = Modifier.weight(2f),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues)
+                        .padding(16.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     FilterSection()
-                }
-                val listState = rememberLazyListState()
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    state = listState
-                ) {
-                    items(recipesdb) { recipedb ->
-                        FavoriteRecipesList(
-                            recipedb?.id ?: 0,
-                            recipedb?.title ?: "",
-                            recipedb?.preparetime ?: "",
-                            recipedb?.imageURL ?: "",
-                            onDeleteClick = {
-                                CoroutineScope(Dispatchers.IO).launch {
-                                    try {
+
+                    LazyColumn {
+                        items(recipesdb) { recipedb ->
+                            FavoriteRecipesList(
+                                id = recipedb.id,
+                                title = recipedb.title ?: "",
+                                preparetime = recipedb.preparetime ?: "",
+                                imageURL = recipedb.imageURL ?: "",
+                                onItemClick = {
+                                    navController.navigate("localRecipeScreen/${recipedb.id}")
+                                },
+                                onDeleteClick = {
+                                    CoroutineScope(Dispatchers.IO).launch {
                                         recipeDao.delete(recipedb)
-                                        //update the consult so the deleted element can disappear from screen immediately
-                                        recipesdb = withContext(Dispatchers.IO) {
-                                            recipeDao.getAll()
-                                        }
-                                        Log.d("debug-db", "Account deleted successfully")
-                                    } catch (exception: Exception) {
-                                        Log.d("debug-db", "ERROR: $exception")
+                                        // Actualiza la lista después de eliminar
+                                        recipesdb = recipeDao.getAll()
                                     }
                                 }
-                            }
-                        )
+                            )
+                        }
                     }
-                }
-                Column(
-                    modifier = Modifier.weight(2f)
-                ) {
                     SuggestedRecipesH()
                 }
             }
+        } else if (height == WindowHeightSizeClass.COMPACT) {
+                if (recipesdb.isEmpty()) {
+                    Text("No hay recetas favoritas aún.", modifier = Modifier.padding(16.dp))
+                } else {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(paddingValues)
+                            .padding(16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        Column(
+                            modifier = Modifier.weight(2f),
+                            verticalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            LazyColumn {
+                                items(recipesdb) { recipedb ->
+                                    FavoriteRecipesList(
+                                        id = recipedb.id,
+                                        title = recipedb.title ?: "",
+                                        preparetime = recipedb.preparetime ?: "",
+                                        imageURL = recipedb.imageURL ?: "",
+                                        onDeleteClick = {
+                                            CoroutineScope(Dispatchers.IO).launch {
+                                                recipeDao.delete(recipedb)
+                                                // Actualiza la lista después de eliminar
+                                                recipesdb = recipeDao.getAll()
+                                            }
+                                        },
+                                        onItemClick = {
+                                            navController.navigate("localRecipeScreen/${recipedb.id}")
+                                        },
+                                    )
+                                }
+                            }
+                        }
+                        Column(
+                            modifier = Modifier.weight(2f)
+                        ) {
+                            SuggestedRecipesH()
+                            FilterSection()
+                        }
+                    }
+                }
         }
     }
 }
@@ -175,13 +194,14 @@ fun FavoriteRecipesList(
     title: String,
     preparetime: String,
     imageURL: String,
-    onDeleteClick:() -> Unit
+    onDeleteClick: () -> Unit,
+    onItemClick: () -> Unit // Nuevo parámetro
 ) {
-    val coroutineScope = rememberCoroutineScope()
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp),
+            .padding(vertical = 8.dp)
+            .clickable { onItemClick() }, // ¡Aquí está el cambio!
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {

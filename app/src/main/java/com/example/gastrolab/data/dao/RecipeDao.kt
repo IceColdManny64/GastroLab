@@ -10,11 +10,14 @@ import com.example.gastrolab.data.model.RecipeEntity
 @Dao
 interface RecipeDao {
     @Query("SELECT * FROM RecipeEntity")
-    fun getAll(): List<RecipeEntity>
+    suspend fun getAll(): List<RecipeEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(account: RecipeEntity)
+    suspend fun insert(recipe: RecipeEntity)
 
     @Delete
-    fun delete(account: RecipeEntity)
+    suspend fun delete(recipe: RecipeEntity)
+
+    @Query("SELECT * FROM RecipeEntity WHERE id = :id")
+    suspend fun getById(id: Int): RecipeEntity? // Nueva función
 }

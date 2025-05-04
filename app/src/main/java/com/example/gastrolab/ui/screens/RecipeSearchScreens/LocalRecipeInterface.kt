@@ -1,7 +1,5 @@
 package com.example.gastrolab.ui.screens.RecipeSearchScreens
 
-import android.util.Log
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,12 +16,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Face
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -33,7 +25,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -45,119 +36,79 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
-import com.example.clasetrabajo.data.viewmodel.RecipeViewModel
+import com.example.clasetrabajo.data.database.AppDatabase
+import com.example.clasetrabajo.data.database.DatabaseProvider
 import com.example.gastrolab.R
-import com.example.gastrolab.data.model.RecipeModel
+import com.example.gastrolab.data.model.RecipeEntity
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RecipeInterface(id: Int, navController: NavHostController,
-                    viewModel: RecipeViewModel = viewModel()) {
-    var recipeDetail by remember { mutableStateOf<RecipeModel?>(null) }
+fun LocalRecipeInterface(id: Int, navController: NavHostController) {
+    val db: AppDatabase = DatabaseProvider.getDatabase(LocalContext.current)
+    val recipeDao = db.recipeDao()
+    var recipeEntity by remember { mutableStateOf<RecipeEntity?>(null) }
+
     LaunchedEffect(id) {
-        viewModel.getRecipes { response ->
-            if (response.isSuccessful) {
-                val allRecipes = response.body() ?: emptyList()
-                recipeDetail = allRecipes.find { it.id == id }
-            } else {
-                Log.d("debug", "Failed to load recipes: ${response.code()}")
-            }
+        withContext(Dispatchers.IO) {
+            recipeEntity = recipeDao.getById(id)
         }
     }
+
     Scaffold(
         topBar = {
             TopAppBar(
-                title = {
-                    Text(
-                        text = "Receta",
-                        fontWeight = FontWeight.Bold,
-                    )
-                },
+                title = { Text("Receta Guardada") },
                 navigationIcon = {
                     IconButton(onClick = { navController.navigateUp() }) {
-                        Icon(
-                            imageVector = Icons.Filled.ArrowBack,
-                            contentDescription = "Volver",
-                            tint = MaterialTheme.colorScheme.tertiary
-                        )
+                        Icon(Icons.Filled.ArrowBack, "Volver")
                     }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primary, // Color de fondo
-                    titleContentColor = MaterialTheme.colorScheme.onPrimary // Color del texto
-                )
+                }
             )
-        },
-        bottomBar = {
-            // Barra de navegación inferior
-            BottomAppBar(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(50.dp),
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimary
-            ) {
-                IconButton(modifier = Modifier.weight(1f), onClick = { navController.navigate("mainScreen") }) {
-                    Icon(imageVector = Icons.Filled.Home, contentDescription = "")
-                }
-                IconButton(modifier = Modifier.weight(1f), onClick = { navController.navigate("searchScreen") }) {
-                    Icon(imageVector = Icons.Filled.Search, contentDescription = "")
-                }
-                IconButton(modifier = Modifier.weight(1f), onClick = { navController.navigate("notifScreen") }) {
-                    Icon(imageVector = Icons.Filled.Notifications, contentDescription = "")
-                }
-                IconButton(modifier = Modifier.weight(1f), onClick = { navController.navigate("settingsScreen") }) {
-                    Icon(imageVector = Icons.Filled.Menu, contentDescription = "")
-                }
-            }
         },
         content = { paddingValues ->
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.background)
                     .padding(paddingValues)
                     .verticalScroll(rememberScrollState())
             ) {
-                recipeDetail?.let { recipe ->
-                    ShowRecipe(
-                        navController,
-                        recipe.id,
-                        recipe.title,
-                        recipe.description,
-                        recipe.imageURL,
-                        recipe.preparetime,
-                        recipe.difficulty
+                recipeEntity?.let { entity ->
+                    ShowLocalRecipe(
+                        navController = navController,
+                        id = entity.id,
+                        title = entity.title,
+                        description = entity.description,
+                        imageURL = entity.imageURL,
+                        preparetime = entity.preparetime,
+                        difficulty = entity.difficulty
                     )
-                } ?: Text(
-                    text = "Cargando receta...",
-                    modifier = Modifier.padding(16.dp)
-                )
+                } ?: Text("Cargando...", modifier = Modifier.padding(16.dp))
             }
         }
-
     )
 }
 
 @Composable
-fun ShowRecipe(
+fun ShowLocalRecipe(
     navController: NavController,
     id: Int,
     title: String,
     description: String,
     imageURL: String,
     preparetime: String,
-    difficulty: String,
-    viewModel: RecipeViewModel = viewModel()){
-    // Imagen de la receta
+    difficulty: String
+) {
+    // Reutiliza la misma UI de ShowRecipe pero con datos locales
     AsyncImage(
         contentDescription = "",
         modifier = Modifier
@@ -217,19 +168,6 @@ fun ShowRecipe(
     }
 
     Spacer(modifier = Modifier.height(10.dp))
-
-    LoadCommentButton(
-        id = id,
-        onButtonClick = {
-            viewModel.getRecipe(id) { response ->
-                if (response.isSuccessful) {
-
-                }
-            }
-            navController.navigate("commentsScreen/$id")
-        }
-    )
-
 
     Spacer(modifier = Modifier.height(10.dp))
 
@@ -297,17 +235,4 @@ fun ShowRecipe(
     )
     // Botón para ver comentarios (en la parte inferior)
     Spacer(modifier = Modifier.height(16.dp))
-
-}
-
-@Composable
-fun LoadCommentButton(id: Int, onButtonClick: () -> Unit){
-    Button(
-        onClick = { onButtonClick() },
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp)
-    ) {
-        Text("Ver Comentarios")
-    }
 }

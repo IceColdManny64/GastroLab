@@ -12,7 +12,7 @@ object DatabaseProvider{
                 context.applicationContext,
                 //if database does not exist, it will be created with the name
                 //shown above between quotation marks
-                AppDatabase::class.java, "app-db"
+                AppDatabase::class.java, "gastrolab_database"
             ).build()
             instance = db
             db
