@@ -26,6 +26,7 @@ import com.example.gastrolab.ui.screens.MainScreens.MainScreen
 import com.example.gastrolab.ui.screens.MainScreens.SettingsInterface
 import com.example.gastrolab.ui.screens.MainScreens.UserMenuInterface
 import com.example.gastrolab.ui.screens.RecipeSearchScreens.CommentsInterface
+import com.example.gastrolab.ui.screens.RecipeSearchScreens.LocalRecipeInterface
 import com.example.gastrolab.ui.screens.RecipeSearchScreens.RecipeInterface
 import com.example.gastrolab.ui.screens.RecipeSearchScreens.SearchInterface
 import com.example.gastrolab.ui.screens.TroubleshootScreens.PrivacyInterface
@@ -89,6 +90,10 @@ fun SetupNavGraph(navController: NavHostController){
         composable("accountScreen"){ AccountInterface(navController) }
         composable("favoritesScreen"){ FavoritesInterface(navController) }
         composable("savedScreen"){ SavedInterface(navController) }
+        composable("localRecipeScreen/{id}") { backStackEntry ->
+            val id = backStackEntry.arguments?.getString("id")?.toIntOrNull() ?: 0
+            LocalRecipeInterface(id = id, navController = navController)
+        }
     }
 
 }

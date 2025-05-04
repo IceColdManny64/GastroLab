@@ -9,4 +9,5 @@ import com.example.gastrolab.data.model.RecipeEntity
 @Database(entities = [RecipeEntity::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun recipeDao(): RecipeDao
+
 }

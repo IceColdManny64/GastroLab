@@ -147,10 +147,8 @@ fun CommentsInterface(
             ) {
                 recipeDetail?.let { recipe ->
                     CommentSection(
-                        recipe.id,
-                        recipe.title,
-                        recipe.imageURL,
-                        recipe.likerate
+                        id,
+                        recipe
                     )
                 } ?: Text(
                     text = "Cargando receta...",
@@ -164,18 +162,20 @@ fun CommentsInterface(
 
 @Composable
 fun CommentSection(
-    id:Int, title:String, imageURL:String, likerate: Int,
+    id: Int,
+    recipe: RecipeModel,
     viewModel: RecipeViewModel = viewModel()){
+    var id = recipe.id
     var recipeDetail by remember { mutableStateOf<RecipeModel?>(null) }
     val db: AppDatabase = DatabaseProvider.getDatabase(LocalContext.current)
     val recipeDao = db.recipeDao()
     var recipes by remember { mutableStateOf<List<RecipeModel>>(emptyList()) }
     LaunchedEffect(Unit) {
-        viewModel.getRecipes { response ->
+        viewModel.getRecipe(id) { response ->
             if (response.isSuccessful) {
-                recipes = response.body() ?: emptyList()
+                recipeDetail = response.body()
             } else {
-                Log.d("debug", "Failed to load recipes: ${response.code()}")
+                Log.d("debug", "Error al cargar la receta: ${response.code()}")
             }
         }
     }
@@ -186,7 +186,7 @@ fun CommentSection(
             .heightIn(max = 300.dp)
             .clip(RoundedCornerShape(8.dp)),
         contentScale = ContentScale.Crop,
-        model = imageURL,
+        model = recipe.imageURL,
         contentDescription = "",
         error = painterResource(R.drawable.generic),
 )
@@ -220,7 +220,7 @@ fun CommentSection(
 
 
         Text(
-            text = "Calificación: " + likerate.toString(),
+            text = "Calificación: " + recipe.likerate.toString(),
             style = MaterialTheme.typography.bodyLarge,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onBackground
@@ -229,7 +229,7 @@ fun CommentSection(
     Spacer(modifier = Modifier.height(16.dp))
     // Título de la receta
     Text(
-        text = title,
+        text = recipe.title,
         style = MaterialTheme.typography.titleLarge,
         fontWeight = FontWeight.Bold,
         color = MaterialTheme.colorScheme.onBackground,
@@ -249,10 +249,12 @@ fun CommentSection(
             onSaveClick = {
                 CoroutineScope(Dispatchers.IO).launch {
                     try {
-                        recipeDetail?.let { recipeDao.insert(it.toRecipeEntity()) }
-                        Log.d("debug-db", "Receta agregada a favoritos")
+                        recipeDetail?.let { recipe ->
+                            recipeDao.insert(recipe.toRecipeEntity())
+                            Log.d("debug-db", "Receta guardada: ${recipe.title}")
+                        }
                     } catch (e: Exception) {
-                        Log.e("debug-db", "Error al guardar receta: $e")
+                        Log.e("debug-db", "Error al guardar: $e")
                     }
                 }
             }
@@ -382,6 +384,7 @@ fun RecipeDetailComponent(
             contentDescription = "Favoritos",
             tint = MaterialTheme.colorScheme.onBackground,
         )
+        Spacer(modifier = Modifier.height(4.dp))
         Text(
             text = "Favorito",
             style = MaterialTheme.typography.bodySmall,
