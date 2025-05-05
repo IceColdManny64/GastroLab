@@ -22,4 +22,5 @@ interface ApiService {
 
     @GET("recipe.php")//get one recipe
     suspend fun getRecipe(@Query("id") id: Int): Response<RecipeModel>
+
 }

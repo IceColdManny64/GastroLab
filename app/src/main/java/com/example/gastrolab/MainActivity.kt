@@ -66,7 +66,7 @@ fun SetupNavGraph(navController: NavHostController){
         composable("signUpScreen"){ SignUpInterface(navController) }
         composable("loginPasswordScreen"){ LoginPasswordInterface(navController) }
         composable("mainScreen"){ MainScreen(navController) }
-        composable("searchScreen"){ SearchInterface(navController) }
+        composable("searchScreen") { SearchInterface(navController) }
         composable("recipeScreen/{id}") { backStackEntry ->
             val id = backStackEntry.arguments?.getString("id")?.toIntOrNull() ?: 0
             RecipeInterface(id = id, navController = navController)
