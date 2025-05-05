@@ -62,13 +62,13 @@ import com.example.gastrolab.data.model.RecipeModel
 fun RecipeInterface(id: Int, navController: NavHostController,
                     viewModel: RecipeViewModel = viewModel()) {
     var recipeDetail by remember { mutableStateOf<RecipeModel?>(null) }
+
     LaunchedEffect(id) {
-        viewModel.getRecipes { response ->
+        viewModel.getRecipe(id) { response -> // Cambio crítico aquí
             if (response.isSuccessful) {
-                val allRecipes = response.body() ?: emptyList()
-                recipeDetail = allRecipes.find { it.id == id }
+                recipeDetail = response.body()
             } else {
-                Log.d("debug", "Failed to load recipes: ${response.code()}")
+                Log.e("debug", "Error cargando receta: ${response.code()}")
             }
         }
     }

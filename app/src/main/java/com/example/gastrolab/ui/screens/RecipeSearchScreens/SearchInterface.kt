@@ -1,9 +1,6 @@
 package com.example.gastrolab.ui.screens.RecipeSearchScreens
 
-import android.graphics.fonts.FontStyle
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -40,6 +37,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -55,31 +53,39 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import coil.compose.AsyncImage
+import com.example.clasetrabajo.data.viewmodel.RecipeViewModel
 import com.example.gastrolab.R
-
-
-
-// Define la clase Recipe
-data class Recipe(
-    val name: String,
-    val imageResId: Int
-)
-
+import com.example.gastrolab.data.model.RecipeModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchInterface(navController: NavHostController) {
+fun SearchInterface(
+    navController: NavHostController,
+    viewModel: RecipeViewModel = viewModel()
+) {
     var searchText by remember { mutableStateOf("") }
     var expanded by remember { mutableStateOf(false) }
+    var recipes by remember { mutableStateOf<List<RecipeModel>>(emptyList()) }
+
+    // Cargar recetas desde la API
+    LaunchedEffect(Unit) {
+        viewModel.getRecipes { response ->
+            if (response.isSuccessful) {
+                recipes = response.body() ?: emptyList()
+            }
+        }
+    }
 
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
             .background(MaterialTheme.colorScheme.background)
     ) {
-        // Top Bar
+        // Top App Bar con gradiente y estilo anterior
         TopAppBar(
             modifier = Modifier.height(50.dp),
             colors = TopAppBarDefaults.topAppBarColors(
@@ -106,6 +112,7 @@ fun SearchInterface(navController: NavHostController) {
                 }
             }
         )
+
         // Barra de búsqueda y filtro
         Row(
             modifier = Modifier
@@ -119,20 +126,16 @@ fun SearchInterface(navController: NavHostController) {
                 label = { Text("Buscar") },
                 modifier = Modifier.weight(1f)
             )
-
             Spacer(modifier = Modifier.width(8.dp))
-
             Box {
                 Button(onClick = { expanded = true }) {
                     Text("Filtrar por")
                 }
                 DropdownMenu(
-                    modifier = Modifier
-                        .background(MaterialTheme.colorScheme.surface),
                     expanded = expanded,
                     onDismissRequest = { expanded = false }
                 ) {
-                    DropdownMenuItem(text = { Text("Ingredientes") }, onClick = { /* Acción Ingredientes */ expanded = false })
+                    DropdownMenuItem(text = { Text("Ingredientes") }, onClick = { expanded = false })
                     DropdownMenuItem(text = { Text("Receta") }, onClick = {
                         navController.navigate("recipeScreen")
                         expanded = false
@@ -140,65 +143,50 @@ fun SearchInterface(navController: NavHostController) {
                 }
             }
         }
+
         Text(
             text = "Recomendaciones",
             color = MaterialTheme.colorScheme.onBackground,
             style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
-            modifier = Modifier
-                .padding(horizontal = 16.dp, vertical = 8.dp)
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
         )
 
-        // Lista de recetas
-        val recipes = listOf(
-            Recipe("Enchiladas verdes", R.drawable.enchis),
-            Recipe("Pastor", R.drawable.pastor),
-            Recipe("Tamal", R.drawable.tamal),
-            Recipe("Hamburguesa", R.drawable.hamburg),
-            Recipe("Pizza", R.drawable.pizza),
-            Recipe("Sincronizada", R.drawable.sincro)
-        )
-
+        // Lista dinámica de recetas (puede mostrar menos)
         LazyColumn(
             modifier = Modifier
                 .weight(1f)
                 .padding(horizontal = 16.dp)
         ) {
-            items(recipes) { recipe ->
+            items(recipes.take(6)) { recipe ->  // limitar a 6 elementos para estética
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 8.dp),
+                        .padding(vertical = 8.dp)
+                        .clickable { navController.navigate("recipeScreen/${recipe.id}") },
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    // Imagen de la receta
-                    Image(
-                        painter = painterResource(id = recipe.imageResId),
-                        contentDescription = recipe.name,
+                    AsyncImage(
+                        model = recipe.imageURL,
+                        contentDescription = recipe.title,
                         modifier = Modifier
                             .size(120.dp)
                             .clip(RoundedCornerShape(8.dp)),
-                        contentScale = ContentScale.Crop
+                        contentScale = ContentScale.Crop,
+                        error = painterResource(R.drawable.generic)
                     )
                     Spacer(modifier = Modifier.width(16.dp))
-                    // Nombre de la receta
                     Text(
-                        text = recipe.name,
+                        text = recipe.title,
                         color = MaterialTheme.colorScheme.onBackground,
                         style = MaterialTheme.typography.bodyLarge,
                         modifier = Modifier.weight(1f)
                     )
-                    // Icono de tres puntos con .clickable
                     Icon(
-                        tint = MaterialTheme.colorScheme.onPrimary,
                         imageVector = Icons.Default.MoreVert,
                         contentDescription = "Ver más",
+                        tint = MaterialTheme.colorScheme.onPrimary,
                         modifier = Modifier
-                            .clickable {
-                                // Navegar a RecipeInterface solo para "Enchiladas verdes"
-                                if (recipe.name == "Enchiladas verdes") {
-                                    navController.navigate("recipeScreen")
-                                }
-                            }
+                            .clickable { navController.navigate("recipeScreen/${recipe.id}") }
                             .padding(8.dp)
                     )
                 }
@@ -214,16 +202,16 @@ fun SearchInterface(navController: NavHostController) {
             contentColor = MaterialTheme.colorScheme.onPrimary
         ) {
             IconButton(modifier = Modifier.weight(1f), onClick = { navController.navigate("mainScreen") }) {
-                Icon(imageVector = Icons.Filled.Home, contentDescription = "")
+                Icon(imageVector = Icons.Filled.Home, contentDescription = "Home")
             }
             IconButton(modifier = Modifier.weight(1f), onClick = { navController.navigate("searchScreen") }) {
-                Icon(imageVector = Icons.Filled.Search, contentDescription = "")
+                Icon(imageVector = Icons.Filled.Search, contentDescription = "Search")
             }
             IconButton(modifier = Modifier.weight(1f), onClick = { navController.navigate("notifScreen") }) {
-                Icon(imageVector = Icons.Filled.Notifications, contentDescription = "")
+                Icon(imageVector = Icons.Filled.Notifications, contentDescription = "Notifications")
             }
             IconButton(modifier = Modifier.weight(1f), onClick = { navController.navigate("settingsScreen") }) {
-                Icon(imageVector = Icons.Filled.Menu, contentDescription = "")
+                Icon(imageVector = Icons.Filled.Menu, contentDescription = "Menu")
             }
         }
     }
