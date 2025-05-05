@@ -10,17 +10,23 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.getValue
+import androidx.compose.material.TextField
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Done
-import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.List
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.mutableStateOf
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -31,6 +37,7 @@ import androidx.navigation.NavHostController
 import androidx.window.core.layout.WindowHeightSizeClass
 import androidx.window.core.layout.WindowWidthSizeClass
 import com.example.gastrolab.R
+import com.example.gastrolab.ui.screens.MainScreens.Bars
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -112,6 +119,30 @@ fun SavedRecipe() {
                     }
                 }
             }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun FilterSection() {
+    val selectedFilter by remember { mutableStateOf("Todo") }
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        ExposedDropdownMenuBox(expanded = false, onExpandedChange = {}) {
+            TextField(
+                value = selectedFilter,
+                onValueChange = {},
+                readOnly = true,
+                modifier = Modifier.fillMaxWidth(0.8f),
+                trailingIcon = {Icons.Default.ArrowDropDown }
+            )
+        }
+        IconButton(onClick = {}) {
+            Icon(Icons.Default.List, contentDescription = "Filter")
         }
     }
 }
