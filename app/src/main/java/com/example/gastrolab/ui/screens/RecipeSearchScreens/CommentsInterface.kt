@@ -20,7 +20,10 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.BookmarkAdded
+import androidx.compose.material.icons.filled.Bookmarks
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Notifications
@@ -265,7 +268,7 @@ fun CommentSection(
 
     // Número de comentarios
     Text(
-        text = "788 comentarios",
+        text = "188 comentarios",
         style = MaterialTheme.typography.titleLarge,
         fontWeight = FontWeight.Bold,
         color = MaterialTheme.colorScheme.onBackground,
@@ -380,7 +383,7 @@ fun RecipeDetailComponent(
         Icon(
             modifier = Modifier
                 .clickable{onSaveClick()},
-            imageVector = Icons.Filled.Add, // Ícono de favoritos
+            imageVector = Icons.Filled.Favorite, // Ícono de favoritos
             contentDescription = "Favoritos",
             tint = MaterialTheme.colorScheme.onBackground,
         )
@@ -397,7 +400,7 @@ fun RecipeDetailComponent(
         modifier = Modifier.clickable { /* Acción para guardar */ }
     ) {
         Icon(
-            imageVector = Icons.Filled.CheckCircle, // Ícono de guardar
+            imageVector = Icons.Filled.Bookmarks, // Ícono de guardar
             contentDescription = "Guardar",
             tint = MaterialTheme.colorScheme.onBackground
         )
