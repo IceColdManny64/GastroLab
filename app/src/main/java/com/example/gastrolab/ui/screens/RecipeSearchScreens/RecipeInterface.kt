@@ -1,6 +1,10 @@
 package com.example.gastrolab.ui.screens.RecipeSearchScreens
 
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.net.Uri
 import android.util.Log
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -21,11 +26,14 @@ import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CheckboxDefaults.colors
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -40,11 +48,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -72,6 +82,8 @@ fun RecipeInterface(id: Int, navController: NavHostController,
             }
         }
     }
+
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -267,6 +279,66 @@ fun ShowRecipe(
         color = MaterialTheme.colorScheme.onBackground, // Color de texto
         modifier = Modifier.padding(horizontal = 16.dp)
     )
+    Spacer(modifier = Modifier.height(24.dp))
+    val youtubeVideoId = "atKtlyhcRlM"
+    val context = LocalContext.current
+    fun openYouTubeVideo(videoId: String) {
+        val appIntent = Intent(Intent.ACTION_VIEW).apply {
+            data = Uri.parse("https://www.youtube.com/watch?v=$videoId")
+            setPackage("com.google.android.youtube") // Fuerza apertura en app de YouTube
+        }
+
+        // Fallback a navegador
+        val webIntent = Intent(
+            Intent.ACTION_VIEW,
+            Uri.parse("https://www.youtube.com/watch?v=$videoId")
+        )
+
+        try {
+            context.startActivity(appIntent)
+        } catch (e: ActivityNotFoundException) {
+            context.startActivity(webIntent)
+        }
+    }
+
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+    Button(
+        onClick = { openYouTubeVideo(youtubeVideoId) },
+        colors = ButtonDefaults.buttonColors(
+            containerColor = Color.Red,
+            contentColor = Color.White
+        ),
+        border = BorderStroke(2.dp, Color.Black)
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = Icons.Filled.PlayArrow,
+                contentDescription = "Icono de video",
+                tint = Color.White,
+                modifier = Modifier.size(24.dp)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text("Ver video tutorial")
+        }
+    }
+    }
+
+
+
+    // Subtítulo "Preparación"
+    Text(
+        text = "Preparación",
+        style = MaterialTheme.typography.titleMedium,
+        fontWeight = FontWeight.Bold,
+        color = MaterialTheme.colorScheme.onBackground, // Color de texto negro
+        modifier = Modifier.padding(horizontal = 16.dp)
+    )
+
 
     Spacer(modifier = Modifier.height(24.dp))
 
@@ -295,10 +367,13 @@ fun ShowRecipe(
         color = MaterialTheme.colorScheme.onBackground, // Color de texto negro
         modifier = Modifier.padding(horizontal = 16.dp)
     )
+
+
     // Botón para ver comentarios (en la parte inferior)
     Spacer(modifier = Modifier.height(16.dp))
 
 }
+
 
 @Composable
 fun LoadCommentButton(id: Int, onButtonClick: () -> Unit){
@@ -309,5 +384,6 @@ fun LoadCommentButton(id: Int, onButtonClick: () -> Unit){
             .padding(horizontal = 16.dp, vertical = 8.dp)
     ) {
         Text("Ver Comentarios")
+
     }
 }

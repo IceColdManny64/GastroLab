@@ -1,5 +1,8 @@
 package com.example.clasetrabajo.data.viewmodel
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,6 +13,7 @@ import retrofit2.Response
 
 class RecipeViewModel: ViewModel() {
     val api = RetrofitClient.api
+
 
     fun getRecipes(onResult: (Response<List<RecipeModel>>) -> Unit){
         viewModelScope.launch{
