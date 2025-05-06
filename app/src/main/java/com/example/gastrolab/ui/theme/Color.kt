@@ -11,16 +11,19 @@ val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
 //App Basic Colors
-val TexasRose100= Color(0xFFffc845)
-val BlueGray = Color(0xFF003b49)
-val Whitey = Color(0xFFFFEEEE)
-val Bluesky = Color(0xFF1d4289)
-val LightRed = Color(0xFFd3273e)
-val BoneGray = Color(0xFFd6d2c4)
-val DarkBlue = Color(0XFF1b365d)
-val TexasRose200 = Color(0xFFf2c75c)
-val Midnight = Color(0xFF000000)
-val IkeaBlue = Color(0xFF1d4289)
-val Bluey = Color(0xFF41b6e6)
-val Gray = Color(0xFF003b49)
-val Bluey200 = Color(0xFF7da1c4)
+
+val LightSalmon = Color(0xFFFF6F61)     // primary
+val FreshGreen = Color(0xFF4CAF50)       // secondary
+
+// Fondos
+val BackgroundLight = Color(0xFFFFFFFF)  // fondo claro general
+val BackgroundDark = Color(0xFF1E1E1E)   // fondo oscuro general
+
+val CardLight = Color(0xFFFFF3E0)        // fondo de tarjetas claro
+val CardDark = Color(0xFF1E1E1E)         // fondo de tarjetas oscuro
+
+// Textos
+val TextPrimaryLight = Color(0xFF212121)
+val TextSecondaryLight = Color(0xFF757575)
+val TextPrimaryDark = Color(0xFFFAFAFA)
+val TextSecondaryDark = Color(0xFFBDBDBD)
