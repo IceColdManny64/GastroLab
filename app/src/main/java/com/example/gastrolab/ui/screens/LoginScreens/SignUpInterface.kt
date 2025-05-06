@@ -72,7 +72,7 @@ fun SignUpInterface(navController: NavHostController, ViewModel: LoginViewModel 
             Spacer(modifier = Modifier.size(10.dp))
 
             Text(
-                text = "Regresar a las opciones de inicio de sesión",
+                text = "Regresar a opciones de inicio de sesión",
                 color = Color.Black,
                 fontSize = 16.sp
             )
