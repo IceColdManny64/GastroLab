@@ -45,7 +45,6 @@ fun LoginPasswordInterface(navController: NavHostController) {
             .fillMaxSize()
             .padding(16.dp)
     ) {
-
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
                 imageVector = Icons.Default.ArrowBack,

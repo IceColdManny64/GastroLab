@@ -32,7 +32,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
@@ -45,18 +44,15 @@ fun SignUpInterface(navController: NavHostController, ViewModel: LoginViewModel 
     val primaryColor = MaterialTheme.colorScheme.primary
     val secondaryColor = MaterialTheme.colorScheme.secondary
     var email by remember { mutableStateOf("") }
-//    var emailOrUsername by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    var confirmPassword by remember { mutableStateOf("") }
     var isPasswordVisible by remember { mutableStateOf(false) }
     val context = LocalContext.current
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
-
-
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -79,7 +75,6 @@ fun SignUpInterface(navController: NavHostController, ViewModel: LoginViewModel 
         }
 
         Spacer(modifier = Modifier.height(32.dp))
-
 
         Text(
             text = "Registrarse",
@@ -105,7 +100,6 @@ fun SignUpInterface(navController: NavHostController, ViewModel: LoginViewModel 
         )
 
         Spacer(modifier = Modifier.height(16.dp))
-
 
         Text(
             text = "Contraseña",
@@ -136,8 +130,6 @@ fun SignUpInterface(navController: NavHostController, ViewModel: LoginViewModel 
             onClick = {
                 val account = LoginModel(email = email, password = password)
                 TryCreate(account, context, ViewModel, navController)
-                // Lógica para registrar al usuario
-                println("Email/Username: $email, Password: $password")
             },
             modifier = Modifier.fillMaxWidth(),
             colors = androidx.compose.material3.ButtonDefaults.buttonColors(containerColor = primaryColor)
@@ -146,16 +138,6 @@ fun SignUpInterface(navController: NavHostController, ViewModel: LoginViewModel 
         }
 
         Spacer(modifier = Modifier.height(32.dp))
-
-
-//        Text(
-//            text = "¿Has olvidado tu contraseña?",
-//            color = secondaryColor,
-//            fontSize = 15.sp,
-//            modifier = Modifier
-//                .clickable { navController.navigate("loginPasswordScreen") }
-//                .align(Alignment.CenterHorizontally)
-//        )
     }
 }
 

@@ -3,6 +3,8 @@ package com.example.gastrolab.ui.screens.LoginScreens
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -17,6 +19,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -30,10 +33,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -51,7 +52,7 @@ fun LoginInterface(navController: NavHostController, ViewModel: LoginViewModel =
     val context = LocalContext.current
     val primaryColor = MaterialTheme.colorScheme.primary
     var isPasswordVisible by remember { mutableStateOf(false) }
-
+    var rememberPass by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -59,22 +60,6 @@ fun LoginInterface(navController: NavHostController, ViewModel: LoginViewModel =
             .padding(16.dp)
             .verticalScroll(rememberScrollState())
     ) {
-
-        Text(
-            "Inicia Sesión",
-            fontSize = 26.sp,
-            color = Color.Black
-        )
-        Spacer(modifier = Modifier.height(12.dp))
-
-        Text(
-            "o únete a",
-            fontSize = 20.sp,
-            color = Color.Black.copy(alpha = 0.8f)
-        )
-
-        Spacer(modifier = Modifier.height(25.dp))
-
         Text(
             text = "GastroLab",
             style = TextStyle(
@@ -94,8 +79,20 @@ fun LoginInterface(navController: NavHostController, ViewModel: LoginViewModel =
 
         Spacer(modifier = Modifier.height(19.dp))
 
-        Divider(color = Color.White)
-        Spacer(modifier = Modifier.height(24.dp))
+        Text(
+            "Inicia Sesión",
+            fontSize = 26.sp,
+            color = Color.Black
+        )
+        Spacer(modifier = Modifier.height(12.dp))
+
+        Text(
+            "o únete a",
+            fontSize = 20.sp,
+            color = Color.Black.copy(alpha = 0.8f)
+        )
+
+        Spacer(modifier = Modifier.height(25.dp))
 
         var email by remember { mutableStateOf("") }
         var password by remember { mutableStateOf("") }
@@ -105,8 +102,7 @@ fun LoginInterface(navController: NavHostController, ViewModel: LoginViewModel =
             onValueChange = { email = it },
             label = { Text("Email / teléfono") },
             modifier = Modifier.fillMaxWidth(),
-
-            )
+        )
 
         Spacer(modifier = Modifier.height(8.dp))
 
@@ -125,8 +121,10 @@ fun LoginInterface(navController: NavHostController, ViewModel: LoginViewModel =
             },
         )
 
+        Spacer(modifier = Modifier.height(40.dp))
+
         OutlinedButton(
-            onClick = {TryLogin(email, password, context, ViewModel, navController) },
+            onClick = { TryLogin(email, password, context, ViewModel, navController) },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(48.dp),
@@ -137,7 +135,7 @@ fun LoginInterface(navController: NavHostController, ViewModel: LoginViewModel =
             border = BorderStroke(2.dp, Color.Red)
         ) {
             Text(
-                text = "Iniciar sesion",
+                text = "Iniciar sesión",
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp
             )
@@ -145,17 +143,10 @@ fun LoginInterface(navController: NavHostController, ViewModel: LoginViewModel =
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Text("¿No tienes cuenta?", color = Color.Black, modifier = Modifier.padding(start = 8.dp))
-            Spacer(modifier = Modifier.width(8.dp))
-        }
-        Spacer(modifier = Modifier.height(8.dp))
-
         Button(
             modifier = Modifier.fillMaxWidth(),
             onClick = { navController.navigate("signUpScreen") }
-        )
-        {
+        ) {
             Text("Registrarse")
         }
 
@@ -176,7 +167,6 @@ fun LoginInterface(navController: NavHostController, ViewModel: LoginViewModel =
                 fontSize = 16.sp
             )
         }
-
     }
 }
 
@@ -188,12 +178,10 @@ fun TryLogin(
     navController: NavController
 ){
     if(email == "" || password == ""){
-        //requires a context
         Toast.makeText(
-            //will show a message only when both user and password are empty
             context,
             "email or password cannot be empty",
-            Toast.LENGTH_SHORT //the message will show for a shorter timespan
+            Toast.LENGTH_SHORT
         ).show()
     } else {
         val login_model = LoginModel(email = email, password = password)
