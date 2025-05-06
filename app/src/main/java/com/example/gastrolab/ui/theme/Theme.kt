@@ -6,6 +6,8 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+
 
 private val DarkColorScheme = darkColorScheme(
     primary = LightSalmon,
@@ -31,7 +33,6 @@ private val LightColorScheme = lightColorScheme(
      onTertiary = TextSecondaryLight,
      onBackground = TextPrimaryLight,
      onSurface = TextPrimaryLight
-
 
 
     /* Other default colors to override

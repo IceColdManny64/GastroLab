@@ -13,10 +13,12 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -33,11 +35,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.gastrolab.ui.theme.FreshGreen
+import com.example.gastrolab.ui.theme.LightSalmon
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginPasswordInterface(navController: NavHostController) {
-    val primaryColor = MaterialTheme.colorScheme.primary
     var email by remember { mutableStateOf("") }
 
     Column(
@@ -45,33 +48,35 @@ fun LoginPasswordInterface(navController: NavHostController) {
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
+        // Logo con degradado
+        Text(
+            text = "GastroLab",
+            style = TextStyle(
+                brush = Brush.verticalGradient(
+                    listOf(FreshGreen, LightSalmon)
+                ),
+                fontStyle = FontStyle.Italic,
+                fontWeight = FontWeight.ExtraBold,
+                fontSize = 32.sp
+            )
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        // Botón de volver
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .clickable { navController.navigate("loginScreen") }
+        ) {
             Icon(
                 imageVector = Icons.Default.ArrowBack,
-                contentDescription = "Back",
-                tint = primaryColor,
-                modifier = Modifier
-                    .size(28.dp)
-                    .clickable { navController.navigate("loginScreen") }
+                contentDescription = "Regresar",
+                tint = FreshGreen,
+                modifier = Modifier.size(28.dp)
             )
-
             Spacer(modifier = Modifier.width(8.dp))
-
-            Text(
-                text = "GastroLab",
-                style = TextStyle(
-                    brush = Brush.verticalGradient(
-                        colors = listOf(
-                            MaterialTheme.colorScheme.tertiary,
-                            MaterialTheme.colorScheme.surface,
-                            MaterialTheme.colorScheme.tertiary
-                        )
-                    ),
-                    fontStyle = FontStyle.Italic,
-                    fontWeight = FontWeight.ExtraBold,
-                    fontSize = 28.sp
-                ),
-            )
+            Text("Volver", color = FreshGreen, fontSize = 16.sp)
         }
 
         Spacer(modifier = Modifier.height(32.dp))
@@ -81,7 +86,7 @@ fun LoginPasswordInterface(navController: NavHostController) {
             style = MaterialTheme.typography.headlineSmall.copy(color = Color.Black)
         )
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
         Text(
             text = "Ingresa tu nombre de usuario o correo electrónico aquí y te enviaremos instrucciones sobre cómo restablecerla.",
@@ -89,13 +94,19 @@ fun LoginPasswordInterface(navController: NavHostController) {
             fontSize = 14.sp
         )
 
-        Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.height(28.dp))
 
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
-            label = { Text("Email") },
-            modifier = Modifier.fillMaxWidth()
+            label = { Text("Email", color = Color.Black) },
+            modifier = Modifier.fillMaxWidth(),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = LightSalmon,
+                unfocusedBorderColor = LightSalmon.copy(alpha = 0.6f),
+                cursorColor = LightSalmon
+            ),
+            singleLine = true
         )
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -105,8 +116,11 @@ fun LoginPasswordInterface(navController: NavHostController) {
                 println("Correo electrónico enviado a: $email")
             },
             modifier = Modifier
-                .fillMaxWidth(0.8f)
-                .align(Alignment.CenterHorizontally)
+                .fillMaxWidth(0.7f),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = FreshGreen,
+                contentColor = Color.Black
+            )
         ) {
             Text("Enviar")
         }
@@ -119,8 +133,7 @@ fun LoginPasswordInterface(navController: NavHostController) {
             fontSize = 15.sp,
             modifier = Modifier
                 .clickable { navController.navigate("loginScreen") }
-                .padding(8.dp)
-                .align(Alignment.CenterHorizontally)
+                .padding(8.dp),
         )
     }
 }
