@@ -7,4 +7,6 @@
     <string name="featured_header">Recetas Destacadas</string>
     <string name="seasonal_header">Recetas de temporada</string>
     <string name="settings_header">Ajustes</string>
+    <string name="view_comments">Ver comentarios</string>
+    <string name="view_recipe">Ver receta</string>
 </resources>

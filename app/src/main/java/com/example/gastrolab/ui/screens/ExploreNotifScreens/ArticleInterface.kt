@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Home
@@ -25,34 +24,53 @@ import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SegmentedButtonDefaults.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
+import com.example.clasetrabajo.data.viewmodel.RecipeViewModel
 import com.example.gastrolab.R
+import com.example.gastrolab.data.model.RecipeModel
 import com.example.gastrolab.ui.theme.GastroLabTheme
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ArticleInterface(navController: NavController) {
+fun ArticleInterface(id: Int, navController: NavController) {
+    val viewModel: RecipeViewModel = viewModel()
+    var recipe by remember { mutableStateOf<RecipeModel?>(null) }
+
+    LaunchedEffect(id) {
+        viewModel.getRecipe(id) { response ->
+            if (response.isSuccessful) {
+                recipe = response.body()
+            }
+        }
+    }
+
     GastroLabTheme {
         Scaffold(
             topBar = {
@@ -69,16 +87,17 @@ fun ArticleInterface(navController: NavController) {
                             MaterialTheme.colorScheme.tertiary
                         )
                         Text(
-                            text = stringResource(R.string.app_name),
+                            text = recipe?.title ?: stringResource(R.string.app_name),
                             style = TextStyle(brush = Brush.verticalGradient(colors = gastroGradient)),
                             fontStyle = FontStyle.Italic,
                             fontWeight = FontWeight.ExtraBold,
-                            fontSize = 25.sp
+                            fontSize = 25.sp,
+                            maxLines = 1
                         )
                     },
                     actions = {
                         IconButton(onClick = { navController.navigate("accountScreen") }) {
-                            androidx.compose.material3.Icon(
+                            Icon(
                                 imageVector = Icons.Filled.AccountCircle,
                                 contentDescription = "Account icon"
                             )
@@ -95,28 +114,16 @@ fun ArticleInterface(navController: NavController) {
                     contentColor = MaterialTheme.colorScheme.onPrimary
                 ) {
                     IconButton(modifier = Modifier.weight(1f), onClick = { navController.navigate("mainScreen") }) {
-                        androidx.compose.material3.Icon(
-                            imageVector = Icons.Filled.Home,
-                            contentDescription = ""
-                        )
+                        Icon(imageVector = Icons.Filled.Home, contentDescription = "")
                     }
                     IconButton(modifier = Modifier.weight(1f), onClick = { navController.navigate("searchScreen") }) {
-                        androidx.compose.material3.Icon(
-                            imageVector = Icons.Filled.Search,
-                            contentDescription = ""
-                        )
+                        Icon(imageVector = Icons.Filled.Search, contentDescription = "")
                     }
                     IconButton(modifier = Modifier.weight(1f), onClick = { navController.navigate("notifScreen") }) {
-                        androidx.compose.material3.Icon(
-                            imageVector = Icons.Filled.Notifications,
-                            contentDescription = ""
-                        )
+                        Icon(imageVector = Icons.Filled.Notifications, contentDescription = "")
                     }
                     IconButton(modifier = Modifier.weight(1f), onClick = { navController.navigate("settingsScreen") }) {
-                        androidx.compose.material3.Icon(
-                            imageVector = Icons.Filled.Menu,
-                            contentDescription = ""
-                        )
+                        Icon(imageVector = Icons.Filled.Menu, contentDescription = "")
                     }
                 }
             }
@@ -132,7 +139,7 @@ fun ArticleInterface(navController: NavController) {
                 // Título del artículo
                 item {
                     Text(
-                        text = "La pizza: Un manjar de Italia",
+                        text = recipe?.title ?: "Artículo sobre recetas",
                         color = MaterialTheme.colorScheme.onBackground,
                         style = MaterialTheme.typography.titleLarge,
                         modifier = Modifier.padding(bottom = 8.dp)
@@ -149,15 +156,21 @@ fun ArticleInterface(navController: NavController) {
                         contentAlignment = Alignment.Center
                     ) {
                         Image(
-                            modifier = Modifier.fillMaxSize(),
-                            painter = painterResource(id = R.drawable.pizza),
+                            painter = rememberAsyncImagePainter(
+                                ImageRequest.Builder(LocalContext.current)
+                                    .data(recipe?.imageURL)
+                                    .placeholder(R.drawable.generic)
+                                    .error(R.drawable.generic)
+                                    .build()
+                            ),
                             contentDescription = "Imagen principal",
-                            contentScale = ContentScale.Crop
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier.fillMaxSize()
                         )
                     }
                 }
 
-                // Texto del artículo principal (desde strings.xml)
+                // Texto del artículo principal
                 item {
                     Text(
                         text = stringResource(id = R.string.article_description),
@@ -172,9 +185,7 @@ fun ArticleInterface(navController: NavController) {
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.Top
                     ) {
-                        Column(
-                            modifier = Modifier.weight(1f)
-                        ) {
+                        Column(modifier = Modifier.weight(1f)) {
                             Text(
                                 text = stringResource(id = R.string.secondary_description),
                                 color = MaterialTheme.colorScheme.onBackground,
@@ -183,7 +194,13 @@ fun ArticleInterface(navController: NavController) {
                         }
                         Spacer(modifier = Modifier.width(8.dp))
                         Image(
-                            painter = painterResource(id = R.drawable.sincro),
+                            painter = rememberAsyncImagePainter(
+                                ImageRequest.Builder(LocalContext.current)
+                                    .data(recipe?.imageURL)
+                                    .placeholder(R.drawable.generic)
+                                    .error(R.drawable.generic)
+                                    .build()
+                            ),
                             contentDescription = "Imagen secundaria",
                             contentScale = ContentScale.Crop,
                             modifier = Modifier
@@ -195,40 +212,61 @@ fun ArticleInterface(navController: NavController) {
                 }
 
                 // Área para comentarios o notas
-                item {
-                    OutlinedTextField(
-                        value = "",
-                        onValueChange = {},
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(100.dp)
-                            .background(MaterialTheme.colorScheme.surface),
-                        shape = RoundedCornerShape(8.dp),
-                        placeholder = {
-                            Text(
-                                text = stringResource(id = R.string.comment_placeholder),
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
-                        }
-                    )
-                }
+//                item {
+//                    OutlinedTextField(
+//                        value = "",
+//                        onValueChange = {},
+//                        modifier = Modifier
+//                            .fillMaxWidth()
+//                            .height(100.dp)
+//                            .background(MaterialTheme.colorScheme.surface),
+//                        shape = RoundedCornerShape(8.dp),
+//                        placeholder = {
+//                            Text(
+//                                text = stringResource(id = R.string.comment_placeholder),
+//                                color = MaterialTheme.colorScheme.onSurface
+//                            )
+//                        }
+//                    )
+//                }
 
-                // Botón "Ver receta" con navegación a RecipeInterface
+                // Botones de acción
                 item {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.End
+                        horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Button(
                             onClick = {
-                                navController.navigate("recipeScreen")
+                                recipe?.id?.let {
+                                    navController.navigate("commentsScreen/$it")
+                                }
+                            },
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.secondary
+                            ),
+                            modifier = Modifier.weight(1f).padding(end = 4.dp)
+                        ) {
+                            Text(
+                                text = stringResource(R.string.view_comments),
+                                fontSize = 14.sp,
+                                color = MaterialTheme.colorScheme.onSecondary
+                            )
+                        }
+
+                        Button(
+                            onClick = {
+                                recipe?.id?.let {
+                                    navController.navigate("recipeScreen/$it")
+                                }
                             },
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = MaterialTheme.colorScheme.tertiary
-                            )
+                            ),
+                            modifier = Modifier.weight(1f).padding(start = 4.dp)
                         ) {
                             Text(
-                                "Ver receta ➤",
+                                text = stringResource(R.string.view_recipe),
                                 fontSize = 14.sp,
                                 color = MaterialTheme.colorScheme.onTertiary
                             )
@@ -239,5 +277,3 @@ fun ArticleInterface(navController: NavController) {
         }
     }
 }
-
-
