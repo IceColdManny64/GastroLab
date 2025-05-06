@@ -63,10 +63,11 @@ fun LoginPasswordInterface(navController: NavHostController) {
 
         Spacer(modifier = Modifier.height(12.dp))
 
-      
+        // Botón de volver
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.clickable { navController.navigate("loginScreen") }
+            modifier = Modifier
+                .clickable { navController.navigate("loginScreen") }
         ) {
             Icon(
                 imageVector = Icons.Default.ArrowBack,
@@ -95,7 +96,6 @@ fun LoginPasswordInterface(navController: NavHostController) {
 
         Spacer(modifier = Modifier.height(28.dp))
 
-
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
@@ -111,14 +111,12 @@ fun LoginPasswordInterface(navController: NavHostController) {
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Botón enviar con estilo consistente
         Button(
             onClick = {
                 println("Correo electrónico enviado a: $email")
             },
             modifier = Modifier
-                .fillMaxWidth(0.7f)
-                .align(Alignment.CenterHorizontally),
+                .fillMaxWidth(0.7f),
             colors = ButtonDefaults.buttonColors(
                 containerColor = FreshGreen,
                 contentColor = Color.Black
@@ -135,8 +133,7 @@ fun LoginPasswordInterface(navController: NavHostController) {
             fontSize = 15.sp,
             modifier = Modifier
                 .clickable { navController.navigate("loginScreen") }
-                .padding(8.dp)
-                .align(Alignment.CenterHorizontally)
+                .padding(8.dp),
         )
     }
 }

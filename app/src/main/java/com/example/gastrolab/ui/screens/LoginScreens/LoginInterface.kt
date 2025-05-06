@@ -1,11 +1,15 @@
 package com.example.gastrolab.ui.screens.LoginScreens
 
+import android.content.Context
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -30,23 +34,27 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import com.example.gastrolab.data.model.LoginModel
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import com.example.clasetrabajo.data.viewmodel.LoginViewModel
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginInterface(navController: NavHostController) {
+fun LoginInterface(navController: NavHostController, ViewModel: LoginViewModel = viewModel()) {
+    val context = LocalContext.current
     val primaryColor = MaterialTheme.colorScheme.primary
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
     var isPasswordVisible by remember { mutableStateOf(false) }
     var isConfirmPasswordVisible by remember { mutableStateOf(false) }
-
 
     Column(
         modifier = Modifier
@@ -89,42 +97,15 @@ fun LoginInterface(navController: NavHostController) {
 
         Spacer(modifier = Modifier.height(25.dp))
 
-        LoginButton(
-            text = "Inicia sesión con Google",
-            backgroundColor = MaterialTheme.colorScheme.primaryContainer,
-            borderColor = MaterialTheme.colorScheme.background
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-
-        LoginButton(
-            text = "Inicia sesión con Apple",
-            backgroundColor = MaterialTheme.colorScheme.secondaryContainer,
-            borderColor = MaterialTheme.colorScheme.secondary
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-
-        LoginButton(
-            text = "Inicia sesión con Facebook",
-            backgroundColor = MaterialTheme.colorScheme.tertiaryContainer,
-            borderColor = MaterialTheme.colorScheme.tertiary
-        )
-        Spacer(modifier = Modifier.height(24.dp))
-
-
-        Divider(color = Color.White)
-        Spacer(modifier = Modifier.height(24.dp))
-
         var email by remember { mutableStateOf("") }
         var password by remember { mutableStateOf("") }
-        var rememberPass by remember { mutableStateOf(false) }
 
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
-            label = { Text("Email o teléfono") },
+            label = { Text("Email / teléfono") },
             modifier = Modifier.fillMaxWidth(),
-
-            )
+        )
 
         Spacer(modifier = Modifier.height(8.dp))
 
@@ -142,14 +123,24 @@ fun LoginInterface(navController: NavHostController) {
                 )
             },
         )
+        Spacer(modifier = Modifier.height(40.dp))
 
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Checkbox(checked = rememberPass, onCheckedChange = { rememberPass = it })
-            Text("Recordarme", color = Color.Black, modifier = Modifier.padding(start = 8.dp))
-            Spacer(modifier = Modifier.width(8.dp))
-            Text("Más información", color = Color.Red, fontSize = 12.sp)
+        OutlinedButton(
+            onClick = { TryLogin(email, password, context, ViewModel, navController) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(48.dp),
+            colors = ButtonDefaults.outlinedButtonColors(
+                containerColor = MaterialTheme.colorScheme.secondary,
+                contentColor = MaterialTheme.colorScheme.onSecondary
+            ),
+            border = BorderStroke(2.dp, Color.Red)
+        ) {
+            Text(
+                text = "Iniciar sesión",
+                fontWeight = FontWeight.Bold,
+                fontSize = 16.sp
+            )
         }
         Spacer(modifier = Modifier.height(8.dp))
 
@@ -166,38 +157,70 @@ fun LoginInterface(navController: NavHostController) {
         Spacer(modifier = Modifier.height(24.dp))
 
         Button(
+            modifier = Modifier.fillMaxWidth(),
             onClick = { navController.navigate("loginPasswordScreen") }
         )
         {
             Text("Contraseña olvidada")
 
         }
+
         Button(
+            modifier = Modifier.fillMaxWidth(),
             onClick = { navController.navigate("signUpScreen") }
-        )
-        {
+        ) {
             Text("Registrarse")
         }
 
+
+        OutlinedButton(
+            onClick = { navController.navigate("mainScreen") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(48.dp),
+            colors = ButtonDefaults.outlinedButtonColors(
+                containerColor = MaterialTheme.colorScheme.onPrimary,
+                contentColor = MaterialTheme.colorScheme.primary
+            ),
+            border = BorderStroke(2.dp, Color.Red)
+        ) {
+            Text(
+                text = "Modo invitado/sin conexión",
+                fontWeight = FontWeight.Bold,
+                fontSize = 16.sp
+            )
+        }
     }
 }
 
-@Composable
-fun LoginButton(text: String, backgroundColor: Color, borderColor: Color) {
-    OutlinedButton(
-        onClick = { },
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(48.dp),
-        colors = ButtonDefaults.outlinedButtonColors(
-            containerColor = backgroundColor
-        ),
-        border = BorderStroke(2.dp, borderColor)
-    ) {
-        Text(
-            text = text,
-            fontWeight = FontWeight.Bold,
-            fontSize = 16.sp
-        )
+fun TryLogin(
+    email:String,
+    password:String,
+    context: Context,
+    viewModel: LoginViewModel,
+    navController: NavController
+){
+    if(email == "" || password == ""){
+        Toast.makeText(
+            context,
+            "email or password cannot be empty",
+            Toast.LENGTH_SHORT
+        ).show()
+    } else {
+        val login_model = LoginModel(email = email, password = password)
+        viewModel.loginAPI(login_model){ jsonResponse ->
+            val loginStatus = jsonResponse?.get("login")?.asString
+            Log.d("debug", "LOGIN STATUS: $loginStatus")
+            if(loginStatus == "success"){
+                Toast.makeText(context, "Login successful", Toast.LENGTH_SHORT).show()
+                navController.navigate("mainScreen")
+            } else {
+                Toast.makeText(
+                    context,
+                    "Failed login, check your credentials",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
     }
 }
