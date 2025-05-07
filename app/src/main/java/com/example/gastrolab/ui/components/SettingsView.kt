@@ -25,7 +25,6 @@ import androidx.navigation.NavHostController
 @Composable
 fun SettingsList(id: Int, title: String, text: String, icon: ImageVector, navController: NavHostController) {
     val navArray = arrayOf(
-        "userMenuScreen",
         "privacyScreen",
         "supportScreen",
         "reportProblem"

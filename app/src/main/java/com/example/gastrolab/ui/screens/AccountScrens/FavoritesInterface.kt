@@ -18,8 +18,14 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.DeleteForever
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -54,7 +60,6 @@ import com.example.clasetrabajo.data.viewmodel.RecipeViewModel
 import com.example.gastrolab.R
 import com.example.gastrolab.data.model.RecipeEntity
 import com.example.gastrolab.data.model.RecipeModel
-import com.example.gastrolab.ui.screens.MainScreens.Bars
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -65,51 +70,64 @@ import kotlinx.coroutines.withContext
 fun FavoritesInterface(navController: NavHostController) {
     val windowInfo = currentWindowAdaptiveInfo().windowSizeClass
     val db: AppDatabase = DatabaseProvider.getDatabase(LocalContext.current)
-    val recipeDao = db.recipeDao()
+    var recipeDao = db.recipeDao()
     var recipesdb by remember { mutableStateOf<List<RecipeEntity>>(emptyList()) }
 
     LaunchedEffect(Unit) {
         recipesdb = withContext(Dispatchers.IO) { recipeDao.getAll() }
     }
+    val refreshList: suspend () -> Unit = {
+        val updated = withContext(Dispatchers.IO) { recipeDao.getAll() }
+        recipesdb = updated
+    }
 
     Scaffold(
-        topBar = { TopAppBar(title = { Text("Favoritos") }) },
-        bottomBar = { Bars(navController) }
+        topBar = {
+            TopAppBar(
+                title = { Text("Favoritos") },
+                actions = {
+                    IconButton(onClick = { navController.navigate("accountScreen") }) {
+                        Icon(Icons.Default.AccountCircle, contentDescription = "Account")
+                    }
+                }
+            )
+        },
+        bottomBar = {
+            BottomAppBar(
+                modifier = Modifier.height(50.dp),
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary
+            ) {
+                IconButton(
+                    modifier = Modifier.weight(1f),
+                    onClick = { navController.navigate("mainScreen") }
+                ) {
+                    Icon(imageVector = Icons.Filled.Home, contentDescription = "")
+                }
+                IconButton(
+                    modifier = Modifier.weight(1f),
+                    onClick = { navController.navigate("searchScreen") }
+                ) {
+                    Icon(imageVector = Icons.Filled.Search, contentDescription = "")
+                }
+                IconButton(
+                    modifier = Modifier.weight(1f),
+                    onClick = { navController.navigate("notifScreen") }
+                ) {
+                    Icon(imageVector = Icons.Filled.Notifications, contentDescription = "")
+                }
+                IconButton(
+                    modifier = Modifier.weight(1f),
+                    onClick = { navController.navigate("settingsScreen") }
+                ) {
+                    Icon(imageVector = Icons.Filled.Menu, contentDescription = "")
+                }
+            }
+        }
     ) { paddingValues ->
         when (windowInfo.windowHeightSizeClass) {
-            WindowHeightSizeClass.COMPACT -> LandscapeLayout(navController, recipesdb, recipeDao)
-            else -> PortraitLayout(navController, recipesdb, recipeDao, paddingValues)
-        }
-    }
-}
-
-@Composable
-private fun FavoritesListContent(
-    recipesdb: List<RecipeEntity>,
-    recipeDao: RecipeDao,
-    navController: NavHostController
-) {
-    if (recipesdb.isEmpty()) {
-        EmptyFavoritesMessage()
-    } else {
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            items(recipesdb) { recipedb ->
-                FavoriteRecipesList(
-                    id = recipedb.id,
-                    title = recipedb.title ?: "",
-                    preparetime = recipedb.preparetime ?: "",
-                    imageURL = recipedb.imageURL ?: "",
-                    onItemClick = { navController.navigate("localRecipeScreen/${recipedb.id}") },
-                    onDeleteClick = {
-                        CoroutineScope(Dispatchers.IO).launch {
-                            recipeDao.delete(recipedb)
-                        }
-                    }
-                )
-            }
+            WindowHeightSizeClass.COMPACT -> LandscapeLayout(navController, recipesdb, recipeDao, refreshList)
+            else -> PortraitLayout(navController, recipesdb, recipeDao, paddingValues, refreshList)
         }
     }
 }
@@ -288,7 +306,8 @@ private fun PortraitLayout(
     navController: NavHostController,
     recipesdb: List<RecipeEntity>,
     recipeDao: RecipeDao,
-    paddingValues: PaddingValues
+    paddingValues: PaddingValues,
+    refreshList: suspend () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -313,6 +332,7 @@ private fun PortraitLayout(
                             onDeleteClick = {
                                 CoroutineScope(Dispatchers.IO).launch {
                                     recipeDao.delete(recipedb)
+                                    refreshList()
                                 }
                             }
                         )
@@ -334,7 +354,8 @@ private fun PortraitLayout(
 private fun LandscapeLayout(
     navController: NavHostController,
     recipesdb: List<RecipeEntity>,
-    recipeDao: RecipeDao
+    recipeDao: RecipeDao,
+    refreshList: suspend () -> Unit
 ) {
     Row(
         modifier = Modifier.fillMaxSize(),
@@ -363,6 +384,7 @@ private fun LandscapeLayout(
                             onDeleteClick = {
                                 CoroutineScope(Dispatchers.IO).launch {
                                     recipeDao.delete(recipedb)
+                                    refreshList()
                                 }
                             }
                         )
@@ -466,5 +488,3 @@ private fun EmptyFavoritesMessage() {
         )
     }
 }
-
-// Resto de componentes (FavoriteRecipesList, SuggestedRecipeItem, LandscapeSuggestedItem) se mantienen igual que en tu código original

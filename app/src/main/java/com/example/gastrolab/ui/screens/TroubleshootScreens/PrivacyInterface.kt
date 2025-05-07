@@ -48,7 +48,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
@@ -99,11 +98,16 @@ fun Privacy(navController: NavHostController) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Sección de cuenta
         SectionCard(title = "Cuenta") {
-            AccountOption("Cambiar contraseña")
-            AccountOption("Borrar cuenta")
-            AccountOption("Verificar correo")
+            AccountOption("Cambiar contraseña") {
+                navController.navigate("updateCredentialsScreen")
+            }
+//            AccountOption("Borrar cuenta"){
+//                navController
+//            }
+//            AccountOption("Verificar correo"){
+//                navController
+//            }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -117,13 +121,13 @@ fun Privacy(navController: NavHostController) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Aviso de privacidad
-        Text(
-            text = "Aviso de privacidad",
-            color = MaterialTheme.colorScheme.onBackground,
-            fontSize = 14.sp,
-            modifier = Modifier.clickable { }
-        )
+//        Aviso de privacidad
+//        Text(
+//            text = "Aviso de privacidad",
+//            color = MaterialTheme.colorScheme.onBackground,
+//            fontSize = 14.sp,
+//            modifier = Modifier.clickable { }
+//        )
 
     }
 }
@@ -157,11 +161,11 @@ fun SectionCard(title: String, content: @Composable ColumnScope.() -> Unit) {
 }
 
 @Composable
-fun AccountOption(text: String) {
+fun AccountOption(text: String, onClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { }
+            .clickable(onClick = onClick)
             .padding(vertical = 8.dp, horizontal = 16.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
