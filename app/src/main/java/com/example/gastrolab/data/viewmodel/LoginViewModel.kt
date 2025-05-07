@@ -11,40 +11,42 @@ import kotlinx.coroutines.launch
 //this class communicates with the API and receives a response
 class LoginViewModel: ViewModel() {
     val api = RetrofitClient.api
+
     //the question mark indicates that the function may receive a JsonObject or may not
     //the lack of it could result in the program having critical problems for not receiving the expected
     //object
-    fun loginAPI(login_model: LoginModel, onResult: (JsonObject?) -> Unit){
-        viewModelScope.launch{
+    fun loginAPI(login_model: LoginModel, onResult: (JsonObject?) -> Unit) {
+        viewModelScope.launch {
             try {
                 val response = api.login(login_model)
-                if(response.isSuccessful){
+                if (response.isSuccessful) {
                     val jsonResponse = response.body()
                     Log.d("debug", "${response.body()}" /* or jsonResponse.toString()*/)
                     onResult(jsonResponse)
-                }else{
+                } else {
                     Log.d("debug", "ERROR: ${response.body()}")
                     onResult(null)
                 }
-            }catch (exception: Exception){
+            } catch (exception: Exception) {
                 Log.d("debug", "API CALL FAILED: $exception")
                 onResult(null)
             }
         }
     }
-    fun createUser(login_model: LoginModel, onResult: (Response:JsonObject?) -> Unit){
-        viewModelScope.launch{
+
+    fun createUser(login_model: LoginModel, onResult: (Response: JsonObject?) -> Unit) {
+        viewModelScope.launch {
             try {
                 val response = api.loginCreate(login_model)
-                if(response.isSuccessful){
+                if (response.isSuccessful) {
                     val jsonResponse = response.body()
                     Log.d("debug", "$jsonResponse" /* or jsonResponse.toString()*/)
                     onResult(jsonResponse)
-                }else{
+                } else {
                     Log.d("debug", "ERROR: ${response.errorBody()?.string()}")
                     onResult(null)
                 }
-            }catch (exception: Exception){
+            } catch (exception: Exception) {
                 Log.d("debug", "API CALL FAILED: $exception")
                 onResult(null)
             }

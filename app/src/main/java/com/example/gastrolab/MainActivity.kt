@@ -32,6 +32,7 @@ import com.example.gastrolab.ui.screens.RecipeSearchScreens.SearchInterface
 import com.example.gastrolab.ui.screens.TroubleshootScreens.PrivacyInterface
 import com.example.gastrolab.ui.screens.TroubleshootScreens.ReportarProblemaInterface
 import com.example.gastrolab.ui.screens.TroubleshootScreens.SupportInterface
+import com.example.gastrolab.ui.screens.TroubleshootScreens.UpdateCredentialsInterface
 
 class MainActivity : ComponentActivity() {
     lateinit var database: AppDatabase
@@ -88,6 +89,9 @@ fun SetupNavGraph(navController: NavHostController){
         composable("privacyScreen"){ PrivacyInterface(navController) }
         composable("reportProblem"){ ReportarProblemaInterface(navController) }
         composable("accountScreen"){ AccountInterface(navController) }
+        composable("updateCredentialsScreen") {
+            UpdateCredentialsInterface(navController)
+        }
         composable("favoritesScreen"){ FavoritesInterface(navController) }
         composable("savedScreen"){ SavedInterface(navController) }
         composable("localRecipeScreen/{id}") { backStackEntry ->

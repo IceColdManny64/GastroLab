@@ -23,4 +23,13 @@ interface ApiService {
     @GET("recipe.php")//get one recipe
     suspend fun getRecipe(@Query("id") id: Int): Response<RecipeModel>
 
+    @POST("updateCredentials.php")
+    suspend fun verifyEmail(@Body request: JsonObject): Response<JsonObject>
+
+    @POST("updateCredentials.php")
+    suspend fun updateCredentials(@Body request: JsonObject): Response<JsonObject>
+
+    @POST("updateCredentials.php")
+    suspend fun verifyCurrentPassword(@Body request: JsonObject): Response<JsonObject>
+
 }
