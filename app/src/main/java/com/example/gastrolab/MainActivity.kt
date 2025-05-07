@@ -61,7 +61,7 @@ fun ComposeMultiScreenApp(){
 @Composable
 fun SetupNavGraph(navController: NavHostController){
     //startDestinations marks which screen is going to open at launch
-    NavHost(navController = navController, startDestination = "mainScreen"){
+    NavHost(navController = navController, startDestination = "loginScreen"){
         //add route name for every screen
         composable("loginScreen"){ LoginInterface(navController) }
         composable("signUpScreen"){ SignUpInterface(navController) }
