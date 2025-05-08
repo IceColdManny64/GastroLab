@@ -126,9 +126,10 @@ fun Report(navController: NavHostController){
             )
             Button(
                 onClick = { },
-                modifier = Modifier.width(180.dp)
+                modifier = Modifier.width(180.dp),
+
             ) {
-                Text("Seleccionar archivo", fontSize = 14.sp)
+                Text("Seleccionar archivo", fontSize = 14.sp, color = MaterialTheme.colorScheme.onSecondary)
             }
         }
 
@@ -138,7 +139,7 @@ fun Report(navController: NavHostController){
             onClick = { },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Enviar")
+            Text("Enviar", color = MaterialTheme.colorScheme.onSecondary)
         }
 
         Spacer(modifier = Modifier.height(50.dp))

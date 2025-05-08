@@ -2,6 +2,7 @@ package com.example.gastrolab.ui.screens.LoginScreens
 
 import android.content.Context
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -53,6 +54,7 @@ fun SignUpInterface(navController: NavHostController, ViewModel: LoginViewModel 
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
             .padding(16.dp)
     ) {
 
@@ -73,7 +75,7 @@ fun SignUpInterface(navController: NavHostController, ViewModel: LoginViewModel 
 
             Text(
                 text = "Regresar a opciones de inicio de sesión",
-                color = Color.Black,
+                color = MaterialTheme.colorScheme.onBackground,
                 fontSize = 16.sp
             )
         }
@@ -83,7 +85,7 @@ fun SignUpInterface(navController: NavHostController, ViewModel: LoginViewModel 
 
         Text(
             text = "Registrarse",
-            color = Color.Black,
+            color = MaterialTheme.colorScheme.onBackground,
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold
         )
@@ -92,7 +94,7 @@ fun SignUpInterface(navController: NavHostController, ViewModel: LoginViewModel 
 
         Text(
             text = "Correo electrónico",
-            color = Color.Black,
+            color = MaterialTheme.colorScheme.onBackground,
             fontSize = 16.sp
         )
 
@@ -109,7 +111,7 @@ fun SignUpInterface(navController: NavHostController, ViewModel: LoginViewModel 
 
         Text(
             text = "Contraseña",
-            color = Color.Black,
+            color = MaterialTheme.colorScheme.onBackground,
             fontSize = 16.sp
         )
 
@@ -142,7 +144,7 @@ fun SignUpInterface(navController: NavHostController, ViewModel: LoginViewModel 
             modifier = Modifier.fillMaxWidth(),
             colors = androidx.compose.material3.ButtonDefaults.buttonColors(containerColor = primaryColor)
         ) {
-            Text("Registrarse", color = Color.White)
+            Text("Registrarse", color = MaterialTheme.colorScheme.onSecondary)
         }
 
         Spacer(modifier = Modifier.height(32.dp))

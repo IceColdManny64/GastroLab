@@ -174,11 +174,12 @@ fun SuggestedRecipesH(
                 .fillMaxWidth()
                 .background(MaterialTheme.colorScheme.background)
                 .padding(vertical = 5.dp)
+
         ) {
             Text(
                 text = "Recetas sugeridas",
                 style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.tertiary,
+                color = MaterialTheme.colorScheme.onBackground,
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
 
@@ -443,7 +444,7 @@ fun SuggestedRecipesH(
         ) {
             Text(
                 text = "Recetas sugeridas",
-                color = MaterialTheme.colorScheme.onPrimary,
+                color = MaterialTheme.colorScheme.onBackground,
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(horizontal = 16.dp)
             )

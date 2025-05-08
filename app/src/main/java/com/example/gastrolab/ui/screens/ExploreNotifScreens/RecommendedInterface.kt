@@ -149,12 +149,13 @@ fun RecipeCard(recipe: RecipeModel, onRecipeClick: () -> Unit) {
             // Nombre de la receta
             Text(
                 text = recipe.title,
-                style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
+                style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                color = MaterialTheme.colorScheme.onSecondary
             )
             Text(
                 text = "Categoría: ${recipe.category}",
                 style = MaterialTheme.typography.bodyMedium,
-                color = Color.Gray
+                color = MaterialTheme.colorScheme.onSecondary
             )
 
             // Detalles: Tiempo de preparación y calificación
@@ -167,12 +168,13 @@ fun RecipeCard(recipe: RecipeModel, onRecipeClick: () -> Unit) {
                     Icon(
                         imageVector = Icons.Filled.Info,
                         contentDescription = "Tiempo",
-                        modifier = Modifier.size(18.dp)
+                        modifier = Modifier.size(18.dp),
+                        tint = MaterialTheme.colorScheme.onSecondary
                     )
                     Text(
                         text = recipe.preparetime,
                         style = MaterialTheme.typography.bodySmall,
-                        color = Color.Gray
+                        color = MaterialTheme.colorScheme.onSecondary
                     )
                 }
 
@@ -181,12 +183,13 @@ fun RecipeCard(recipe: RecipeModel, onRecipeClick: () -> Unit) {
                     Icon(
                         imageVector = Icons.Filled.ThumbUp,
                         contentDescription = "Calificación",
-                        modifier = Modifier.size(18.dp)
+                        modifier = Modifier.size(18.dp),
+                        tint = MaterialTheme.colorScheme.onSecondary
                     )
                     Text(
                         text = "${recipe.likerate}%",
                         style = MaterialTheme.typography.bodySmall,
-                        color = Color.Gray
+                        color = MaterialTheme.colorScheme.onSecondary
                     )
                 }
             }

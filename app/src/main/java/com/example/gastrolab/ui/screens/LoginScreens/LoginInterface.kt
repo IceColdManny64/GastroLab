@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -59,6 +60,7 @@ fun LoginInterface(navController: NavHostController, ViewModel: LoginViewModel =
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
             .padding(16.dp)
             .verticalScroll(rememberScrollState())
     ) {
@@ -68,9 +70,9 @@ fun LoginInterface(navController: NavHostController, ViewModel: LoginViewModel =
             style = TextStyle(
                 brush = Brush.verticalGradient(
                     colors = listOf(
-                        MaterialTheme.colorScheme.tertiary,
-                        MaterialTheme.colorScheme.surface,
-                        MaterialTheme.colorScheme.tertiary
+                        MaterialTheme.colorScheme.onBackground,
+                        MaterialTheme.colorScheme.onBackground,
+                        MaterialTheme.colorScheme.onBackground
                     )
                 ),
                 fontStyle = FontStyle.Italic,
@@ -85,14 +87,14 @@ fun LoginInterface(navController: NavHostController, ViewModel: LoginViewModel =
         Text(
             "Inicia Sesión",
             fontSize = 26.sp,
-            color = Color.Black
+            color = MaterialTheme.colorScheme.onBackground
         )
         Spacer(modifier = Modifier.height(12.dp))
 
         Text(
             "o únete a",
             fontSize = 20.sp,
-            color = Color.Black.copy(alpha = 0.8f)
+            color = MaterialTheme.colorScheme.onBackground
         )
 
         Spacer(modifier = Modifier.height(25.dp))
@@ -147,7 +149,7 @@ fun LoginInterface(navController: NavHostController, ViewModel: LoginViewModel =
 
         Text(
             text = "¿Has olvidado tu contraseña?",
-            color = Color.Black,
+            color = MaterialTheme.colorScheme.onBackground,
             fontSize = 14.sp,
             modifier = Modifier
                 .clickable { navController.navigate("loginPasswordScreen") }
@@ -158,7 +160,11 @@ fun LoginInterface(navController: NavHostController, ViewModel: LoginViewModel =
 
         Button(
             modifier = Modifier.fillMaxWidth(),
-            onClick = { navController.navigate("loginPasswordScreen") }
+            onClick = { navController.navigate("loginPasswordScreen") },
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onSecondary
+            )
         )
         {
             Text("Contraseña olvidada")
@@ -167,7 +173,11 @@ fun LoginInterface(navController: NavHostController, ViewModel: LoginViewModel =
 
         Button(
             modifier = Modifier.fillMaxWidth(),
-            onClick = { navController.navigate("signUpScreen") }
+            onClick = { navController.navigate("signUpScreen") },
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onSecondary
+            )
         ) {
             Text("Registrarse")
         }
