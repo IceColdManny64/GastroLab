@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
@@ -23,16 +24,19 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import androidx.window.layout.WindowMetricsCalculator
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.example.clasetrabajo.data.viewmodel.RecipeViewModel
@@ -181,7 +185,32 @@ fun AccountInterface(navController: NavHostController) {
     }
 
     Scaffold(
-        topBar = { TopAppBar(title = { Text("Cuenta") }) },
+        topBar = {         TopAppBar(
+            modifier = Modifier.height(50.dp),
+            colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = MaterialTheme.colorScheme.primary,
+                titleContentColor = MaterialTheme.colorScheme.secondary
+            ),
+            title = {
+                val gastroGradient = listOf(
+                    MaterialTheme.colorScheme.tertiary,
+                    MaterialTheme.colorScheme.surface,
+                    MaterialTheme.colorScheme.tertiary
+                )
+                Text(
+                    text = stringResource(R.string.app_name),
+                    style = TextStyle(brush = Brush.verticalGradient(colors = gastroGradient)),
+                    fontStyle = FontStyle.Italic,
+                    fontWeight = FontWeight.ExtraBold,
+                    fontSize = 25.sp
+                )
+            },
+            actions = {
+                IconButton(onClick = { navController.navigate("accountScreen") }) {
+                    Icon(imageVector = Icons.Filled.AccountCircle, contentDescription = "Account icon")
+                }
+            }
+        ) },
         bottomBar = { BottomBar(navController) }
     ) { paddingValues ->
         if (isLoading) {

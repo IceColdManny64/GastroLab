@@ -55,7 +55,7 @@ fun SettingsList(id: Int, title: String, text: String, icon: ImageVector, navCon
             Icon(
                 imageVector = icon,
                 contentDescription = "icon",
-                tint = MaterialTheme.colorScheme.onBackground,
+                tint = MaterialTheme.colorScheme.secondary,
                 modifier = Modifier
                     .padding(8.dp)
                     .size(40.dp)

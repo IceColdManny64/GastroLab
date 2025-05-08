@@ -18,11 +18,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.BookmarkAdded
-import androidx.compose.material.icons.filled.Bookmarks
-import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
@@ -212,7 +208,7 @@ fun CommentSection(
                 Icon(
                     imageVector = Icons.Filled.Star,
                     contentDescription = "Estrella llena",
-                    tint = Color.Yellow,
+                    tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(32.dp)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
@@ -299,13 +295,13 @@ fun CommentWithReplies() {
                 text = "Mario Vargas",
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onTertiary
+                color = MaterialTheme.colorScheme.secondary
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = "El mejor platillo del mundo, se lo recomendé a mi primo y dijo que estaba a todo dar.",
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurface
+                color = MaterialTheme.colorScheme.surface
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
@@ -363,7 +359,9 @@ fun AddCommentField() {
             Spacer(modifier = Modifier.height(8.dp))
             Button(
                 onClick = { /* */ },
-                modifier = Modifier.align(Alignment.End)
+                modifier = Modifier
+                    .align(Alignment.End)
+                    .fillMaxWidth()
             ) {
                 Text("Publicar")
             }
@@ -385,7 +383,7 @@ fun RecipeDetailComponent(
                 .clickable{onSaveClick()},
             imageVector = Icons.Filled.Favorite, // Ícono de favoritos
             contentDescription = "Favoritos",
-            tint = MaterialTheme.colorScheme.onBackground,
+            tint = MaterialTheme.colorScheme.secondary,
         )
         Spacer(modifier = Modifier.height(4.dp))
         Text(
@@ -395,22 +393,22 @@ fun RecipeDetailComponent(
         )
     }
     // Botón de guardar con texto
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.clickable { /* Acción para guardar */ }
-    ) {
-        Icon(
-            imageVector = Icons.Filled.Bookmarks, // Ícono de guardar
-            contentDescription = "Guardar",
-            tint = MaterialTheme.colorScheme.onBackground
-        )
-        Spacer(modifier = Modifier.height(4.dp))
-        Text(
-            text = "Guardar",
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onBackground
-        )
-    }
+//    Column(
+//        horizontalAlignment = Alignment.CenterHorizontally,
+//        modifier = Modifier.clickable { /* Acción para guardar */ }
+//    ) {
+//        Icon(
+//            imageVector = Icons.Filled.Bookmarks, // Ícono de guardar
+//            contentDescription = "Guardar",
+//            tint = MaterialTheme.colorScheme.secondary
+//        )
+//        Spacer(modifier = Modifier.height(4.dp))
+//        Text(
+//            text = "Guardar",
+//            style = MaterialTheme.typography.bodySmall,
+//            color = MaterialTheme.colorScheme.onBackground
+//        )
+//    }
 
     // Botón de compartir con texto
     Column(
@@ -420,7 +418,7 @@ fun RecipeDetailComponent(
         Icon(
             imageVector = Icons.Filled.Send, // Ícono de compartir
             contentDescription = "Compartir",
-            tint = MaterialTheme.colorScheme.onBackground
+            tint = MaterialTheme.colorScheme.secondary
         )
         Spacer(modifier = Modifier.height(4.dp))
         Text(
