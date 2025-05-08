@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -201,7 +202,7 @@ fun Adaptive(navController: NavHostController, viewModel: RecipeViewModel = view
                     fontWeight = FontWeight.ExtraBold,
                     fontSize = 25.sp
                 )
-                Icon(Icons.Filled.KeyboardArrowRight, contentDescription = "", tint = MaterialTheme.colorScheme.onPrimary)
+                Icon(Icons.Filled.KeyboardArrowRight, contentDescription = "", tint = MaterialTheme.colorScheme.onBackground)
             }
 
             LazyHorizontalGrid(
@@ -215,7 +216,7 @@ fun Adaptive(navController: NavHostController, viewModel: RecipeViewModel = view
                                 if(response.isSuccessful){
                                     recipeDetail = response.body()
                                 }
-                            }
+                                }
                             navController.navigate("articleScreen/${item.id}")
                         }
                     )
@@ -229,7 +230,7 @@ fun Adaptive(navController: NavHostController, viewModel: RecipeViewModel = view
                     fontWeight = FontWeight.ExtraBold,
                     fontSize = 25.sp
                 )
-                Icon(Icons.Filled.KeyboardArrowRight, contentDescription = "", tint = MaterialTheme.colorScheme.onPrimary)
+                Icon(Icons.Filled.KeyboardArrowRight, contentDescription = "", tint = MaterialTheme.colorScheme.onBackground)
             }
 
             LazyRow(
@@ -255,7 +256,7 @@ fun Adaptive(navController: NavHostController, viewModel: RecipeViewModel = view
                     fontWeight = FontWeight.ExtraBold,
                     fontSize = 25.sp
                 )
-                Icon(Icons.Filled.KeyboardArrowRight, contentDescription = "", tint = MaterialTheme.colorScheme.onPrimary)
+                Icon(Icons.Filled.KeyboardArrowRight, contentDescription = "", tint = MaterialTheme.colorScheme.onBackground)
             }
 
             LazyHorizontalGrid(
@@ -286,9 +287,12 @@ fun Adaptive(navController: NavHostController, viewModel: RecipeViewModel = view
                             fontWeight = FontWeight.ExtraBold,
                             fontSize = 25.sp
                         )
-                        Icon(Icons.Filled.KeyboardArrowRight, contentDescription = "", tint = MaterialTheme.colorScheme.onPrimary)
+                        Icon(Icons.Filled.KeyboardArrowRight, contentDescription = "", tint = MaterialTheme.colorScheme.onBackground)
                     }
-                    LazyColumn(modifier = Modifier.fillMaxSize(), state = listState) {
+                    LazyColumn(modifier = Modifier
+                        .width(350.dp) // o el ancho que necesites
+                        .fillMaxHeight(), // o altura deseada
+                        state = listState) {
                         items(recipes.take(4)) { item ->
                             MainViewExCardCompact(item.id, item.title, item.description, item.imageURL,                         onButtonClick = {
                                 viewModel.getRecipe(item.id){ response ->
@@ -310,11 +314,16 @@ fun Adaptive(navController: NavHostController, viewModel: RecipeViewModel = view
                             fontWeight = FontWeight.ExtraBold,
                             fontSize = 25.sp
                         )
-                        Icon(Icons.Filled.KeyboardArrowRight, contentDescription = "", tint = MaterialTheme.colorScheme.onPrimary)
+                        Icon(Icons.Filled.KeyboardArrowRight, contentDescription = "", tint = MaterialTheme.colorScheme.onBackground)
                     }
-                    LazyColumn(modifier = Modifier.fillMaxWidth().height(500.dp)) {
+                    LazyColumn(
+                        modifier = Modifier
+                            .width(350.dp) // o el ancho que necesites
+                            .fillMaxHeight(),
+                    ) {
                         items(recipes.drop(4).take(4)) { item ->
-                            MainViewCompact(item.id, item.title, item.description, item.imageURL,                         onButtonClick = {
+                            MainViewCompact(item.id, item.title, item.description, item.imageURL,
+                                onButtonClick = {
                                 viewModel.getRecipe(item.id){ response ->
                                     if(response.isSuccessful){
                                         recipeDetail = response.body()
@@ -335,11 +344,13 @@ fun Adaptive(navController: NavHostController, viewModel: RecipeViewModel = view
                             fontWeight = FontWeight.ExtraBold,
                             fontSize = 25.sp
                         )
-                        Icon(Icons.Filled.KeyboardArrowRight, contentDescription = "", tint = MaterialTheme.colorScheme.onPrimary)
+                        Icon(Icons.Filled.KeyboardArrowRight, contentDescription = "", tint = MaterialTheme.colorScheme.onBackground)
                     }
-                    LazyColumn(modifier = Modifier.fillMaxWidth().height(500.dp)) {
+                    LazyColumn(modifier = Modifier.width(350.dp) // o el ancho que necesites
+                        .fillMaxHeight(),) {
                         items(recipes.drop(8).take(6)) { item ->
-                            MainViewSideCardCompact(item.id, item.title, item.description, item.imageURL,                         onButtonClick = {
+                            MainViewSideCardCompact(item.id, item.title, item.description, item.imageURL,
+                                onButtonClick = {
                                 viewModel.getRecipe(item.id){ response ->
                                     if(response.isSuccessful){
                                         recipeDetail = response.body()
