@@ -261,14 +261,14 @@ fun ArticleInterface(id: Int, navController: NavController) {
                                 }
                             },
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = MaterialTheme.colorScheme.tertiary
+                                containerColor = MaterialTheme.colorScheme.primary
                             ),
                             modifier = Modifier.weight(1f).padding(start = 4.dp)
                         ) {
                             Text(
                                 text = stringResource(R.string.view_recipe),
                                 fontSize = 14.sp,
-                                color = MaterialTheme.colorScheme.onTertiary
+                                color = MaterialTheme.colorScheme.onSecondary
                             )
                         }
                     }

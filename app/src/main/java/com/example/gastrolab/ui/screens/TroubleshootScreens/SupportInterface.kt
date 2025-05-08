@@ -60,7 +60,7 @@ fun Support(navController: NavHostController) {
         // Título
 
         Text(
-            color = MaterialTheme.colorScheme.onPrimary,
+            color = MaterialTheme.colorScheme.onBackground,
             text = "Ayuda y Soporte",
             fontSize = 22.sp,
             fontWeight = FontWeight.Bold,
@@ -69,7 +69,7 @@ fun Support(navController: NavHostController) {
 
         // Pregunta inicial
         Text(
-            color = MaterialTheme.colorScheme.onPrimary,
+            color = MaterialTheme.colorScheme.onBackground,
             text = "¿En qué necesitas que te ayudemos?",
             fontSize = 18.sp,
             modifier = Modifier.padding(bottom = 16.dp)
@@ -92,12 +92,12 @@ fun Support(navController: NavHostController) {
                 TextField(
                     value = message,
                     onValueChange = { message = it },
-                    label = { Text("Escríbenos...", color = MaterialTheme.colorScheme.onPrimary) }, // Texto negro
+                    label = { Text("Escríbenos...", color = MaterialTheme.colorScheme.onBackground) }, // Texto negro
                     leadingIcon = {
                         Icon(
                             imageVector = Icons.Default.MailOutline,
                             contentDescription = "",
-                            tint = MaterialTheme.colorScheme.onPrimary
+                            tint = MaterialTheme.colorScheme.onBackground
                         )
                     },
                     colors = TextFieldDefaults.colors(

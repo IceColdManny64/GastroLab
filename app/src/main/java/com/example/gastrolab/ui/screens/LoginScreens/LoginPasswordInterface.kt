@@ -1,5 +1,6 @@
 package com.example.gastrolab.ui.screens.LoginScreens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -46,6 +47,7 @@ fun LoginPasswordInterface(navController: NavHostController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
             .padding(16.dp)
     ) {
         // Logo con degradado
@@ -53,7 +55,7 @@ fun LoginPasswordInterface(navController: NavHostController) {
             text = "GastroLab",
             style = TextStyle(
                 brush = Brush.verticalGradient(
-                    listOf(FreshGreen, LightSalmon)
+                    listOf(FreshGreen, FreshGreen)
                 ),
                 fontStyle = FontStyle.Italic,
                 fontWeight = FontWeight.ExtraBold,
@@ -83,14 +85,14 @@ fun LoginPasswordInterface(navController: NavHostController) {
 
         Text(
             text = "Contraseña olvidada",
-            style = MaterialTheme.typography.headlineSmall.copy(color = Color.Black)
+            style = MaterialTheme.typography.headlineSmall.copy(color = MaterialTheme.colorScheme.onBackground)
         )
 
         Spacer(modifier = Modifier.height(20.dp))
 
         Text(
             text = "Ingresa tu nombre de usuario o correo electrónico aquí y te enviaremos instrucciones sobre cómo restablecerla.",
-            color = Color.Black,
+            color = MaterialTheme.colorScheme.onBackground,
             fontSize = 14.sp
         )
 
@@ -99,7 +101,7 @@ fun LoginPasswordInterface(navController: NavHostController) {
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
-            label = { Text("Email", color = Color.Black) },
+            label = { Text("Email", color = MaterialTheme.colorScheme.primary) },
             modifier = Modifier.fillMaxWidth(),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = LightSalmon,
@@ -119,7 +121,7 @@ fun LoginPasswordInterface(navController: NavHostController) {
                 .fillMaxWidth(0.7f),
             colors = ButtonDefaults.buttonColors(
                 containerColor = FreshGreen,
-                contentColor = Color.Black
+                contentColor = MaterialTheme.colorScheme.onSecondary
             )
         ) {
             Text("Enviar")
@@ -129,7 +131,7 @@ fun LoginPasswordInterface(navController: NavHostController) {
 
         Text(
             text = "¿Ya tienes cuenta? Conectarse",
-            color = Color.Black,
+            color = MaterialTheme.colorScheme.onBackground,
             fontSize = 15.sp,
             modifier = Modifier
                 .clickable { navController.navigate("loginScreen") }

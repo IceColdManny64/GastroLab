@@ -91,9 +91,11 @@ fun ProfileSection() {
 
 @Composable
 fun SearchBar() {
+    var searchText by remember { mutableStateOf("") }
+
     TextField(
-        value = "",
-        onValueChange = {},
+        value = searchText,
+        onValueChange = { searchText = it },
         leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Search Icon") },
         placeholder = { Text("En Tu Colección") },
         modifier = Modifier.fillMaxWidth()

@@ -216,14 +216,14 @@ fun ShowRecipe(
             Icon(
                 imageVector = Icons.Filled.Face,
                 contentDescription = "Reloj",
-                tint = Color.White // Color del ícono blanco
+                tint = MaterialTheme.colorScheme.onSecondary
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = "Tiempo de preparación: " + preparetime,
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onBackground // Color de texto blanco
+                color = MaterialTheme.colorScheme.onSecondary // Color de texto blanco
             )
         }
     }
@@ -249,7 +249,7 @@ fun ShowRecipe(
         text = "Dificultad: " + difficulty,
         fontWeight = FontWeight.Bold,
         fontSize = 15.sp,
-        color = MaterialTheme.colorScheme.onSecondary,
+        color = MaterialTheme.colorScheme.onBackground,
         modifier = Modifier.padding(horizontal = 16.dp)
     )
     Spacer(modifier = Modifier.height(24.dp))

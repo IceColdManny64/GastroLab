@@ -136,10 +136,7 @@ fun SearchInterface(
                     onDismissRequest = { expanded = false }
                 ) {
                     DropdownMenuItem(text = { Text("Ingredientes") }, onClick = { expanded = false })
-                    DropdownMenuItem(text = { Text("Receta") }, onClick = {
-                        navController.navigate("recipeScreen")
-                        expanded = false
-                    })
+                    DropdownMenuItem(text = { Text("Receta") }, onClick = { expanded = false })
                 }
             }
         }
@@ -184,7 +181,7 @@ fun SearchInterface(
                     Icon(
                         imageVector = Icons.Default.MoreVert,
                         contentDescription = "Ver más",
-                        tint = MaterialTheme.colorScheme.onPrimary,
+                        tint = MaterialTheme.colorScheme.onBackground,
                         modifier = Modifier
                             .clickable { navController.navigate("recipeScreen/${recipe.id}") }
                             .padding(8.dp)

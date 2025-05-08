@@ -79,7 +79,7 @@ fun Privacy(navController: NavHostController) {
             fontSize = 22.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(top = 16.dp, bottom = 16.dp),
-            color = MaterialTheme.colorScheme.onPrimary
+            color = MaterialTheme.colorScheme.onBackground
         )
 
         // Icono de usuario
@@ -90,7 +90,7 @@ fun Privacy(navController: NavHostController) {
             Icon(
                 imageVector = Icons.Default.AccountCircle,
                 contentDescription = "Perfil",
-                tint = MaterialTheme.colorScheme.onPrimary,
+                tint = MaterialTheme.colorScheme.onBackground,
                 modifier = Modifier
                     .size(40.dp)
             )
@@ -230,7 +230,7 @@ fun PrivacyOption(label: String, options: List<String>) {
                         text = {
                             Text(
                                 text = option,
-                                color = MaterialTheme.colorScheme.onPrimary
+                                color = MaterialTheme.colorScheme.onBackground
                             )
                         },
                         onClick = {
