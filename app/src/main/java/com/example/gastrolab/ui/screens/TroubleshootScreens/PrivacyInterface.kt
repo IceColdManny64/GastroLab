@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -79,22 +78,22 @@ fun Privacy(navController: NavHostController) {
             fontSize = 22.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(top = 16.dp, bottom = 16.dp),
-            color = MaterialTheme.colorScheme.onBackground
+            color = MaterialTheme.colorScheme.secondary
         )
 
-        // Icono de usuario
-        Box(
-            modifier = Modifier.fillMaxWidth(),
-            contentAlignment = Alignment.CenterEnd
-        ) {
-            Icon(
-                imageVector = Icons.Default.AccountCircle,
-                contentDescription = "Perfil",
-                tint = MaterialTheme.colorScheme.onBackground,
-                modifier = Modifier
-                    .size(40.dp)
-            )
-        }
+//        // Icono de usuario
+//        Box(
+//            modifier = Modifier.fillMaxWidth(),
+//            contentAlignment = Alignment.CenterEnd
+//        ) {
+//            Icon(
+//                imageVector = Icons.Default.AccountCircle,
+//                contentDescription = "Perfil",
+//                tint = MaterialTheme.colorScheme.onBackground,
+//                modifier = Modifier
+//                    .size(40.dp)
+//            )
+//        }
 
         Spacer(modifier = Modifier.height(16.dp))
 

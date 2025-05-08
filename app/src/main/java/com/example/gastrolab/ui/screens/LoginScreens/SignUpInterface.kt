@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
@@ -27,13 +29,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
@@ -56,6 +56,7 @@ fun SignUpInterface(navController: NavHostController, ViewModel: LoginViewModel 
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
             .padding(16.dp)
+            .verticalScroll(rememberScrollState()),
     ) {
 
 
@@ -85,7 +86,7 @@ fun SignUpInterface(navController: NavHostController, ViewModel: LoginViewModel 
 
         Text(
             text = "Registrarse",
-            color = MaterialTheme.colorScheme.onBackground,
+            color = MaterialTheme.colorScheme.secondary,
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold
         )
@@ -142,7 +143,7 @@ fun SignUpInterface(navController: NavHostController, ViewModel: LoginViewModel 
                 println("Email/Username: $email, Password: $password")
             },
             modifier = Modifier.fillMaxWidth(),
-            colors = androidx.compose.material3.ButtonDefaults.buttonColors(containerColor = primaryColor)
+            colors = androidx.compose.material3.ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
         ) {
             Text("Registrarse", color = MaterialTheme.colorScheme.onSecondary)
         }

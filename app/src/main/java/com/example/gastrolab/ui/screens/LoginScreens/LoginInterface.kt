@@ -3,26 +3,19 @@ package com.example.gastrolab.ui.screens.LoginScreens
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -33,19 +26,20 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavController
-import androidx.navigation.NavHostController
-import com.example.gastrolab.data.model.LoginModel
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalContext
-import com.example.clasetrabajo.data.viewmodel.LoginViewModel
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import com.example.clasetrabajo.data.viewmodel.LoginViewModel
+import com.example.gastrolab.data.model.LoginModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -135,8 +129,7 @@ fun LoginInterface(navController: NavHostController, ViewModel: LoginViewModel =
             colors = ButtonDefaults.outlinedButtonColors(
                 containerColor = MaterialTheme.colorScheme.secondary,
                 contentColor = MaterialTheme.colorScheme.onSecondary
-            ),
-            border = BorderStroke(2.dp, Color.Red)
+            )
         ) {
             Text(
                 text = "Iniciar sesión",
@@ -144,7 +137,7 @@ fun LoginInterface(navController: NavHostController, ViewModel: LoginViewModel =
                 fontSize = 16.sp
             )
         }
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(24.dp))
 
 
         Text(
@@ -156,28 +149,29 @@ fun LoginInterface(navController: NavHostController, ViewModel: LoginViewModel =
                 .padding(8.dp)
         )
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(8.dp))
 
-        Button(
-            modifier = Modifier.fillMaxWidth(),
-            onClick = { navController.navigate("loginPasswordScreen") },
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onSecondary
-            )
-        )
-        {
-            Text("Contraseña olvidada")
-
-        }
+//        Button(
+//            modifier = Modifier.fillMaxWidth(),
+//            onClick = { navController.navigate("loginPasswordScreen") },
+//            colors = ButtonDefaults.buttonColors(
+//                containerColor = MaterialTheme.colorScheme.primary,
+//                contentColor = MaterialTheme.colorScheme.onSecondary
+//            )
+//        )
+//        {
+//            Text("Contraseña olvidada")
+//
+//        }
 
         Button(
             modifier = Modifier.fillMaxWidth(),
             onClick = { navController.navigate("signUpScreen") },
             colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onSecondary
-            )
+                containerColor = MaterialTheme.colorScheme.onSecondary,
+                contentColor = MaterialTheme.colorScheme.secondary
+            ),
+            border = BorderStroke(2.dp, MaterialTheme.colorScheme.secondary)
         ) {
             Text("Registrarse")
         }
@@ -189,10 +183,9 @@ fun LoginInterface(navController: NavHostController, ViewModel: LoginViewModel =
                 .fillMaxWidth()
                 .height(48.dp),
             colors = ButtonDefaults.outlinedButtonColors(
-                containerColor = MaterialTheme.colorScheme.onPrimary,
-                contentColor = MaterialTheme.colorScheme.primary
-            ),
-            border = BorderStroke(2.dp, Color.Red)
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary
+            )
         ) {
             Text(
                 text = "Modo invitado/sin conexión",

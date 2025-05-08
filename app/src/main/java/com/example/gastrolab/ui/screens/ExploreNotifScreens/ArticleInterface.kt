@@ -87,20 +87,16 @@ fun ArticleInterface(id: Int, navController: NavController) {
                             MaterialTheme.colorScheme.tertiary
                         )
                         Text(
-                            text = recipe?.title ?: stringResource(R.string.app_name),
+                            text = stringResource(R.string.app_name),
                             style = TextStyle(brush = Brush.verticalGradient(colors = gastroGradient)),
                             fontStyle = FontStyle.Italic,
                             fontWeight = FontWeight.ExtraBold,
-                            fontSize = 25.sp,
-                            maxLines = 1
+                            fontSize = 25.sp
                         )
                     },
                     actions = {
                         IconButton(onClick = { navController.navigate("accountScreen") }) {
-                            Icon(
-                                imageVector = Icons.Filled.AccountCircle,
-                                contentDescription = "Account icon"
-                            )
+                            Icon(imageVector = Icons.Filled.AccountCircle, contentDescription = "Account icon")
                         }
                     }
                 )
@@ -140,7 +136,7 @@ fun ArticleInterface(id: Int, navController: NavController) {
                 item {
                     Text(
                         text = recipe?.title ?: "Artículo sobre recetas",
-                        color = MaterialTheme.colorScheme.onBackground,
+                        color = MaterialTheme.colorScheme.secondary,
                         style = MaterialTheme.typography.titleLarge,
                         modifier = Modifier.padding(bottom = 8.dp)
                     )

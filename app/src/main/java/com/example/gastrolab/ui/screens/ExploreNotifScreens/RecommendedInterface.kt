@@ -177,7 +177,7 @@ fun RecipeCard(recipe: RecipeModel, onRecipeClick: () -> Unit) {
             Text(
                 text = recipe.title,
                 style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
-                color = MaterialTheme.colorScheme.onSecondary
+                color = MaterialTheme.colorScheme.secondary
             )
             Text(
                 text = "Categoría: ${recipe.category}",

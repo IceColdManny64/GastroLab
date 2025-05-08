@@ -7,11 +7,16 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -33,6 +38,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -43,9 +49,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -60,6 +70,7 @@ import com.example.clasetrabajo.data.viewmodel.RecipeViewModel
 import com.example.gastrolab.R
 import com.example.gastrolab.data.model.RecipeEntity
 import com.example.gastrolab.data.model.RecipeModel
+import com.example.gastrolab.ui.screens.RecipeSearchScreens.RecipeDetailComponent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -84,10 +95,28 @@ fun FavoritesInterface(navController: NavHostController) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Favoritos") },
+                modifier = Modifier.height(50.dp),
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    titleContentColor = MaterialTheme.colorScheme.secondary
+                ),
+                title = {
+                    val gastroGradient = listOf(
+                        MaterialTheme.colorScheme.tertiary,
+                        MaterialTheme.colorScheme.surface,
+                        MaterialTheme.colorScheme.tertiary
+                    )
+                    Text(
+                        text = stringResource(R.string.app_name),
+                        style = TextStyle(brush = Brush.verticalGradient(colors = gastroGradient)),
+                        fontStyle = FontStyle.Italic,
+                        fontWeight = FontWeight.ExtraBold,
+                        fontSize = 25.sp
+                    )
+                },
                 actions = {
                     IconButton(onClick = { navController.navigate("accountScreen") }) {
-                        Icon(Icons.Default.AccountCircle, contentDescription = "Account")
+                        Icon(imageVector = Icons.Filled.AccountCircle, contentDescription = "Account icon")
                     }
                 }
             )
@@ -151,14 +180,8 @@ fun SuggestedRecipesH(
             modifier = Modifier
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.background)
-                .padding(16.dp)
         ) {
-            Text(
-                text = "Sugerencias",
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.tertiary,
-                modifier = Modifier.padding(bottom = 2.dp)
-            )
+
 
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -173,8 +196,6 @@ fun SuggestedRecipesH(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(MaterialTheme.colorScheme.background)
-                .padding(vertical = 5.dp)
-
         ) {
             Text(
                 text = "Recetas sugeridas",
@@ -184,8 +205,7 @@ fun SuggestedRecipesH(
             )
 
             LazyRow(
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 items(suggestedRecipes) { recipe ->
                     SuggestedRecipeItem(recipe, navController)
@@ -201,7 +221,7 @@ fun LandscapeSuggestedItem(recipe: RecipeModel, navController: NavHostController
         modifier = Modifier
             .fillMaxWidth()
             .clickable { navController.navigate("recipeScreen/${recipe.id}") }
-            .padding(8.dp),
+            .padding(12.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         AsyncImage(
@@ -289,13 +309,13 @@ fun SuggestedRecipeItem(recipe: RecipeModel, navController: NavHostController) {
             text = recipe.title,
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
-            maxLines = 1,
-            modifier = Modifier.padding(top = 4.dp)
+            maxLines = 1
         )
         Text(
             text = recipe.preparetime,
             style = MaterialTheme.typography.labelSmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(4.dp)
         )
     }
 }
@@ -351,6 +371,7 @@ private fun PortraitLayout(
     }
 }
 
+
 @Composable
 private fun LandscapeLayout(
     navController: NavHostController,
@@ -358,58 +379,82 @@ private fun LandscapeLayout(
     recipeDao: RecipeDao,
     refreshList: suspend () -> Unit
 ) {
-    Row(
-        modifier = Modifier.fillMaxSize(),
-        horizontalArrangement = Arrangement.spacedBy(16.dp)
+    var selected by remember { mutableStateOf(false) }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(
+                WindowInsets.systemBars
+                    .only(WindowInsetsSides.Vertical)
+                    .asPaddingValues()
+            ),
+        verticalArrangement = Arrangement.Center
     ) {
-        // Columna de favoritos
-        Column(
+        Row(
             modifier = Modifier
-                .weight(1f)
-                .padding(horizontal = 8.dp)
+                .fillMaxWidth()
+                .weight(1f),
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            if (recipesdb.isEmpty()) {
-                EmptyFavoritesMessage()
-            } else {
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    items(recipesdb) { recipedb ->
-                        FavoriteRecipesList(
-                            id = recipedb.id,
-                            title = recipedb.title ?: "",
-                            preparetime = recipedb.preparetime ?: "",
-                            imageURL = recipedb.imageURL ?: "",
-                            onItemClick = { navController.navigate("localRecipeScreen/${recipedb.id}") },
-                            onDeleteClick = {
-                                CoroutineScope(Dispatchers.IO).launch {
-                                    recipeDao.delete(recipedb)
-                                    refreshList()
-                                }
+            // Columna de favoritos
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(horizontal = 8.dp)
+            ) {
+                if (!selected) {
+                    if (recipesdb.isEmpty()) {
+                        EmptyFavoritesMessage()
+                    } else {
+                        LazyColumn(
+                            modifier = Modifier.fillMaxSize().padding(20.dp),
+                            verticalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            items(recipesdb) { recipedb ->
+                                FavoriteRecipesList(
+                                    id = recipedb.id,
+                                    title = recipedb.title ?: "",
+                                    preparetime = recipedb.preparetime ?: "",
+                                    imageURL = recipedb.imageURL ?: "",
+                                    onItemClick = { selected = true },
+                                    onDeleteClick = {
+                                        CoroutineScope(Dispatchers.IO).launch {
+                                            recipeDao.delete(recipedb)
+                                            refreshList()
+                                        }
+                                    }
+                                )
                             }
-                        )
+                        }
+                    }
+                } else {
+                    // Mostrar botones cuando se selecciona algo
+                    RecipeDetailComponent {
+                        selected = false
                     }
                 }
             }
-        }
 
-        // Columna de sugerencias
-        Column(
-            modifier = Modifier
-                .weight(1f)
-                .background(MaterialTheme.colorScheme.surfaceVariant)
-                .padding(8.dp)
-        ) {
-            Text(
-                text = "Sugerencias",
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(bottom = 2.dp)
-            )
-            SuggestedRecipesH(navController = navController, isLandscape = true)
+            // Columna de sugerencias
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .background(MaterialTheme.colorScheme.surfaceVariant)
+                    .padding(8.dp)
+            ) {
+                Text(
+                    text = "Sugerencias",
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier.padding(bottom = 2.dp)
+                )
+                SuggestedRecipesH(navController = navController, isLandscape = true)
+            }
         }
     }
 }
+
+
 
 @Composable
 fun SuggestedRecipesH(

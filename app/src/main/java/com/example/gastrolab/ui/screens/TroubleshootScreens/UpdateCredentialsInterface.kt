@@ -6,19 +6,26 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.clasetrabajo.data.viewmodel.LoginViewModel
+import com.example.gastrolab.R
 import com.google.gson.JsonObject
 import kotlinx.coroutines.launch
 
@@ -147,18 +154,28 @@ fun UpdateCredentialsInterface(
     Scaffold(
         topBar = {
             TopAppBar(
+                modifier = Modifier.height(50.dp),
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    titleContentColor = MaterialTheme.colorScheme.secondary
+                ),
                 title = {
+                    val gastroGradient = listOf(
+                        MaterialTheme.colorScheme.tertiary,
+                        MaterialTheme.colorScheme.surface,
+                        MaterialTheme.colorScheme.tertiary
+                    )
                     Text(
-                        when {
-                            !emailVerified -> "Verificar Email"
-                            !passwordVerified -> "Verificar Contraseña"
-                            else -> "Actualizar Credenciales"
-                        }
+                        text = stringResource(R.string.app_name),
+                        style = TextStyle(brush = Brush.verticalGradient(colors = gastroGradient)),
+                        fontStyle = FontStyle.Italic,
+                        fontWeight = FontWeight.ExtraBold,
+                        fontSize = 25.sp
                     )
                 },
-                navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Default.ArrowBack, "Volver")
+                actions = {
+                    IconButton(onClick = { navController.navigate("accountScreen") }) {
+                        Icon(imageVector = Icons.Filled.AccountCircle, contentDescription = "Account icon")
                     }
                 }
             )
