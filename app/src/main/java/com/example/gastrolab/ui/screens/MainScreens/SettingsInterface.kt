@@ -13,6 +13,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.LockPerson
+import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.ReportProblem
@@ -144,7 +145,8 @@ fun SettingsAdaptive(navController: NavHostController) {
             SettingsModel(2, "Soporte técnico", "Entra a un chat automático, o contacta a un experto para" +
                     "resolver un problema en la app", Icons.Filled.SupportAgent),
             SettingsModel(3, "Reporta un problema", "Reporta un error o problema general en la aplicacion." +
-                    "Nos ayuda a mejorar!", Icons.Filled.ReportProblem)
+                    "Nos ayuda a mejorar!", Icons.Filled.ReportProblem),
+            SettingsModel(4, "Cerrar sesión/salir", "Te vamos a extrañar!", Icons.Filled.Logout)
         )
 
         if (width == WindowWidthSizeClass.COMPACT) {

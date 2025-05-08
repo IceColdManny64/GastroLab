@@ -27,7 +27,8 @@ fun SettingsList(id: Int, title: String, text: String, icon: ImageVector, navCon
     val navArray = arrayOf(
         "privacyScreen",
         "supportScreen",
-        "reportProblem"
+        "reportProblem",
+        "loginScreen"
     )
 
     // Verifica que el ID sea válido dentro del array
@@ -72,7 +73,7 @@ fun SettingsList(id: Int, title: String, text: String, icon: ImageVector, navCon
                 )
                 Text(
                     text = text,
-                    fontSize = 15.sp,
+                    fontSize = 12.sp,
                     color = MaterialTheme.colorScheme.onBackground
                 )
             }
