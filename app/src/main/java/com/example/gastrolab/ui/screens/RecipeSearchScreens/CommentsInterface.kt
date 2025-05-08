@@ -1,6 +1,6 @@
 package com.example.gastrolab.ui.screens.RecipeSearchScreens
 
-import androidx.compose.foundation.Image
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -18,10 +18,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.Face
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Notifications
@@ -43,6 +41,7 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -52,15 +51,44 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import coil.compose.AsyncImage
+import com.example.clasetrabajo.data.database.AppDatabase
+import com.example.clasetrabajo.data.database.DatabaseProvider
+import com.example.clasetrabajo.data.viewmodel.RecipeViewModel
 import com.example.gastrolab.R
+import com.example.gastrolab.data.model.RecipeModel
+import com.example.gastrolab.data.model.toRecipeEntity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CommentsInterface(navController: NavHostController) {
+fun CommentsInterface(
+    id: Int,
+    navController: NavController,
+    viewModel: RecipeViewModel = viewModel()) {
+    var recipeDetail by remember { mutableStateOf<RecipeModel?>(null) }
+    val db: AppDatabase = DatabaseProvider.getDatabase(LocalContext.current)
+    val recipeDao = db.recipeDao()
+
+    LaunchedEffect(id) {
+        viewModel.getRecipes { response ->
+            if (response.isSuccessful) {
+                val allRecipes = response.body() ?: emptyList()
+                recipeDetail = allRecipes.find { it.id == id }
+            } else {
+                Log.d("debug", "Failed to load recipes: ${response.code()}")
+            }
+        }
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -108,6 +136,7 @@ fun CommentsInterface(navController: NavHostController) {
             }
         },
         content = { paddingValues ->
+
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -115,152 +144,143 @@ fun CommentsInterface(navController: NavHostController) {
                     .padding(paddingValues)
                     .verticalScroll(rememberScrollState())
             ) {
-                // Imagen de la receta
-                Image(
-                    painter = painterResource(id = R.drawable.enchis), // Cambia esto por tu recurso de imagen
-                    contentDescription = "Enchiladas Verdes",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .heightIn(max = 300.dp)
-                        .clip(RoundedCornerShape(8.dp)),
-                    contentScale = ContentScale.Crop
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                // Calificación con estrellas más grandes y texto
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    // Estrellas más grandes
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        // Estrellas llenas
-                        repeat(5) {
-                            Icon(
-                                imageVector = Icons.Filled.Star,
-                                contentDescription = "Estrella llena",
-                                tint = Color.Yellow,
-                                modifier = Modifier.size(32.dp)
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-
-                    Text(
-                        text = "Calificación: 5",
-                        style = MaterialTheme.typography.bodyLarge,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onBackground
+                recipeDetail?.let { recipe ->
+                    CommentSection(
+                        id,
+                        recipe
                     )
-                }
-
-                Spacer(modifier = Modifier.height(16.dp))
-                // Título de la receta
-                Text(
-                    text = "Enchiladas Verdes",
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onBackground,
-                    modifier = Modifier.padding(horizontal = 16.dp)
+                } ?: Text(
+                    text = "Cargando receta...",
+                    modifier = Modifier.padding(16.dp)
                 )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                // Iconos de favoritos, guardar y compartir con texto
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    // Botón de favoritos con texto
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.clickable { /* Acción para favoritos */ }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.Add, // Ícono de favoritos
-                            contentDescription = "Favoritos",
-                            tint = MaterialTheme.colorScheme.onBackground
-                        )
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Text(
-                            text = "Favorito",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onBackground
-                        )
-                    }
-
-                    // Botón de guardar con texto
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.clickable { /* Acción para guardar */ }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.CheckCircle, // Ícono de guardar
-                            contentDescription = "Guardar",
-                            tint = MaterialTheme.colorScheme.onBackground
-                        )
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Text(
-                            text = "Guardar",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onBackground
-                        )
-                    }
-
-                    // Botón de compartir con texto
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.clickable { /* Acción para compartir */ }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.Send, // Ícono de compartir
-                            contentDescription = "Compartir",
-                            tint = MaterialTheme.colorScheme.onBackground
-                        )
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Text(
-                            text = "Compartir",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onBackground
-                        )
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                // Número de comentarios
-                Text(
-                    text = "788 comentarios",
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onBackground,
-                    modifier = Modifier.padding(horizontal = 16.dp)
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                // Comentario de ejemplo
-                CommentWithReplies()
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                // Campo para agregar un nuevo comentario
-                AddCommentField()
             }
         }
     )
 }
 
+
+@Composable
+fun CommentSection(
+    id: Int,
+    recipe: RecipeModel,
+    viewModel: RecipeViewModel = viewModel()){
+    var id = recipe.id
+    var recipeDetail by remember { mutableStateOf<RecipeModel?>(null) }
+    val db: AppDatabase = DatabaseProvider.getDatabase(LocalContext.current)
+    val recipeDao = db.recipeDao()
+    var recipes by remember { mutableStateOf<List<RecipeModel>>(emptyList()) }
+    LaunchedEffect(Unit) {
+        viewModel.getRecipe(id) { response ->
+            if (response.isSuccessful) {
+                recipeDetail = response.body()
+            } else {
+                Log.d("debug", "Error al cargar la receta: ${response.code()}")
+            }
+        }
+    }
+        // Imagen de la receta
+    AsyncImage(
+        modifier = Modifier
+            .fillMaxWidth()
+            .heightIn(max = 300.dp)
+            .clip(RoundedCornerShape(8.dp)),
+        contentScale = ContentScale.Crop,
+        model = recipe.imageURL,
+        contentDescription = "",
+        error = painterResource(R.drawable.generic),
+)
+
+    Spacer(modifier = Modifier.height(16.dp))
+
+    // Calificación con estrellas más grandes y texto
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        // Estrellas más grandes
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            // Estrellas llenas
+            repeat(5) {
+                Icon(
+                    imageVector = Icons.Filled.Star,
+                    contentDescription = "Estrella llena",
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(32.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+            }
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+
+        Text(
+            text = "Calificación: " + recipe.likerate.toString(),
+            style = MaterialTheme.typography.bodyLarge,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onBackground
+        )
+    }
+    Spacer(modifier = Modifier.height(16.dp))
+    // Título de la receta
+    Text(
+        text = recipe.title,
+        style = MaterialTheme.typography.titleLarge,
+        fontWeight = FontWeight.Bold,
+        color = MaterialTheme.colorScheme.onBackground,
+        modifier = Modifier.padding(horizontal = 16.dp)
+    )
+
+    Spacer(modifier = Modifier.height(16.dp))
+
+    // Iconos de favoritos, guardar y compartir con texto
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp),
+        horizontalArrangement = Arrangement.SpaceEvenly
+    ) {
+        RecipeDetailComponent(
+            onSaveClick = {
+                CoroutineScope(Dispatchers.IO).launch {
+                    try {
+                        recipeDetail?.let { recipe ->
+                            recipeDao.insert(recipe.toRecipeEntity())
+                            Log.d("debug-db", "Receta guardada: ${recipe.title}")
+                        }
+                    } catch (e: Exception) {
+                        Log.e("debug-db", "Error al guardar: $e")
+                    }
+                }
+            }
+        )
+    }
+
+    Spacer(modifier = Modifier.height(24.dp))
+
+    // Número de comentarios
+    Text(
+        text = "188 comentarios",
+        style = MaterialTheme.typography.titleLarge,
+        fontWeight = FontWeight.Bold,
+        color = MaterialTheme.colorScheme.onBackground,
+        modifier = Modifier.padding(horizontal = 16.dp)
+    )
+
+    Spacer(modifier = Modifier.height(16.dp))
+
+    // Comentario de ejemplo
+    CommentWithReplies()
+
+    Spacer(modifier = Modifier.height(16.dp))
+
+    // Campo para agregar un nuevo comentario
+    AddCommentField()
+}
 @Composable
 fun CommentWithReplies() {
     Card(
@@ -275,13 +295,13 @@ fun CommentWithReplies() {
                 text = "Mario Vargas",
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onTertiary
+                color = MaterialTheme.colorScheme.secondary
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = "El mejor platillo del mundo, se lo recomendé a mi primo y dijo que estaba a todo dar.",
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurface
+                color = MaterialTheme.colorScheme.surface
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
@@ -339,10 +359,73 @@ fun AddCommentField() {
             Spacer(modifier = Modifier.height(8.dp))
             Button(
                 onClick = { /* */ },
-                modifier = Modifier.align(Alignment.End)
+                modifier = Modifier
+                    .align(Alignment.End)
+                    .fillMaxWidth()
             ) {
                 Text("Publicar")
             }
         }
     }
 }
+
+@Composable
+fun RecipeDetailComponent(
+    onSaveClick: () -> Unit
+) {
+        // Botón de favoritos con texto
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.clickable { /* Acción para guardar */ }
+    ) {
+        Icon(
+            modifier = Modifier
+                .clickable{onSaveClick()},
+            imageVector = Icons.Filled.Favorite, // Ícono de favoritos
+            contentDescription = "Favoritos",
+            tint = MaterialTheme.colorScheme.secondary,
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        Text(
+            text = "Favorito",
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onBackground
+        )
+    }
+    // Botón de guardar con texto
+//    Column(
+//        horizontalAlignment = Alignment.CenterHorizontally,
+//        modifier = Modifier.clickable { /* Acción para guardar */ }
+//    ) {
+//        Icon(
+//            imageVector = Icons.Filled.Bookmarks, // Ícono de guardar
+//            contentDescription = "Guardar",
+//            tint = MaterialTheme.colorScheme.secondary
+//        )
+//        Spacer(modifier = Modifier.height(4.dp))
+//        Text(
+//            text = "Guardar",
+//            style = MaterialTheme.typography.bodySmall,
+//            color = MaterialTheme.colorScheme.onBackground
+//        )
+//    }
+
+    // Botón de compartir con texto
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.clickable { /* Acción para compartir */ }
+    ) {
+        Icon(
+            imageVector = Icons.Filled.Send, // Ícono de compartir
+            contentDescription = "Compartir",
+            tint = MaterialTheme.colorScheme.secondary
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        Text(
+            text = "Compartir",
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onBackground
+        )
+    }
+}
+

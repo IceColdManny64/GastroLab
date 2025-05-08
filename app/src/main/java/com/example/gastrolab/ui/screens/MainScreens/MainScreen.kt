@@ -1,5 +1,6 @@
 package com.example.gastrolab.ui.screens.MainScreens
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
@@ -10,15 +11,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Home
@@ -40,8 +41,11 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -52,11 +56,13 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.window.core.layout.WindowHeightSizeClass
 import androidx.window.core.layout.WindowWidthSizeClass
-import com.example.clasetrabajo.data.model.MenuModel
+import com.example.clasetrabajo.data.viewmodel.RecipeViewModel
 import com.example.gastrolab.R
+import com.example.gastrolab.data.model.RecipeModel
 import com.example.gastrolab.ui.components.MainView
 import com.example.gastrolab.ui.components.MainViewCompact
 import com.example.gastrolab.ui.components.MainViewExCard
@@ -67,7 +73,6 @@ import com.example.gastrolab.ui.screens.ExploreNotifScreens.RecommendedInterface
 
 @Composable
 fun MainScreen(navController: NavHostController) {
-
     Bars(navController)
 }
 
@@ -80,7 +85,6 @@ fun Bars(navController: NavHostController) {
         { Adaptive(navController) },
         { RecommendedInterface(navController) }
     )
-
     Column(modifier = Modifier.fillMaxSize()) {
         TopAppBar(
             modifier = Modifier.height(50.dp),
@@ -169,119 +173,113 @@ fun Bars(navController: NavHostController) {
 
 
 @Composable
-fun Adaptive(navController: NavHostController) {
-    var height = currentWindowAdaptiveInfo().windowSizeClass.windowHeightSizeClass
-    var width = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass
+fun Adaptive(navController: NavHostController, viewModel: RecipeViewModel = viewModel()) {
+    val height = currentWindowAdaptiveInfo().windowSizeClass.windowHeightSizeClass
+    val width = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass
+    var recipes by remember { mutableStateOf<List<RecipeModel>>(emptyList()) }
+    var recipeDetail by remember { mutableStateOf<RecipeModel?>(null) }
+    LaunchedEffect(Unit) {
+        viewModel.getRecipes { response ->
+            if (response.isSuccessful) {
+                recipes = response.body() ?: emptyList()
+            } else {
+                Log.d("debug", "Failed to load recipes: ${response.code()}")
+            }
+        }
+    }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-    ) {
-        val arrayCard = arrayOf(
-            MenuModel(1,"Un manjar de Italia: La Pizza",
-                "Descubre algo más sobre\neste manjar y lleva el" +
-                        "\nsabor de italia a tu horno 🇮🇹! ",
-                R.drawable.pizza),
-            MenuModel(2,"El kebab: brocheta al estilo Europeo ",
-                "Tiene muchos estilos, y el sabor \n" +
-                        " es delicioso en todos ellos! ",
-                R.drawable.kebab,),
-        )
-        val arrayView = arrayOf(
-            MenuModel(1, "Enchiladas verdes", "Disfruta la pura tradición mexicana! 🇲🇽", R.drawable.enchis),
-            MenuModel(2, "Mole poblano", "Un manjar de muchos ingredientes", R.drawable.mole),
-            MenuModel(3, "Enchiladas verdes", "Disfruta la pura tradición mexicana! 🇲🇽", R.drawable.enchis),
-            MenuModel(4, "Mole poblano", "Un manjar de muchos ingredientes", R.drawable.mole)
+    val listState = rememberLazyListState()
 
-        )
-        val arraySide = arrayOf(
-            MenuModel(1, "Tamales oaxaqueños", "Llega el sabor de Oaxaca a tu mesa!", R.drawable.tamal,  ),
-            MenuModel(2, "Tacos al pastor", "Un manjar galardonado globalmente", R.drawable.pastor),
-            MenuModel(3, "Hamburguesas de pollo", "¿Sin res en casa? ¿Con ganas de algo nuevo?", R.drawable.hamburg),
-            MenuModel(4, "Sincronizadas", "¿Hoy traes prisa? Lo más simple nunca falla!", R.drawable.sincro),
-            MenuModel(5, "Caldo de pollo", "¿Con frío? Esto te lo quitará!", R.drawable.caldo),
-            MenuModel(6, "Huevos a la mexicana", "Con todo el estilo mexicano", R.drawable.huevmx)
-        )
+
+
+    Column(modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
 
         if (width == WindowWidthSizeClass.COMPACT) {
-
-
-            TextButton(
-                onClick = {}
-
-            ){
-                Text(stringResource(R.string.popular_header),
+            TextButton(onClick = {}) {
+                Text(
+                    stringResource(R.string.popular_header),
                     color = MaterialTheme.colorScheme.onBackground,
                     fontWeight = FontWeight.ExtraBold,
-                    fontSize = 25.sp)
-                Icon(Icons.Filled.KeyboardArrowRight, contentDescription = "", tint = MaterialTheme.colorScheme.onPrimary)
-
+                    fontSize = 25.sp
+                )
+                Icon(Icons.Filled.KeyboardArrowRight, contentDescription = "", tint = MaterialTheme.colorScheme.onBackground)
             }
+
             LazyHorizontalGrid(
                 rows = GridCells.Adaptive(minSize = 110.dp),
-                modifier = Modifier
-                    .fillMaxSize()
-                    .weight(1.1f)
+                modifier = Modifier.fillMaxSize().weight(1.1f)
             ) {
-                items(arrayCard) { item ->
-                    MainViewExCard(item.id, item.title, item.text, item.image, navController)
+                items(recipes.take(4)) { item ->
+                    MainViewExCard(item.id, item.title, item.description, item.imageURL,
+                        onButtonClick = {
+                            viewModel.getRecipe(item.id){ response ->
+                                if(response.isSuccessful){
+                                    recipeDetail = response.body()
+                                }
+                                }
+                            navController.navigate("articleScreen/${item.id}")
+                        }
+                    )
                 }
             }
-            TextButton(
-                onClick = {},
 
-                ){
-                Text(stringResource(R.string.featured_header),
+            TextButton(onClick = {}) {
+                Text(
+                    stringResource(R.string.featured_header),
                     color = MaterialTheme.colorScheme.onBackground,
                     fontWeight = FontWeight.ExtraBold,
-                    fontSize = 25.sp)
-                Icon(Icons.Filled.KeyboardArrowRight, contentDescription = "", tint = MaterialTheme.colorScheme.onPrimary)
-
+                    fontSize = 25.sp
+                )
+                Icon(Icons.Filled.KeyboardArrowRight, contentDescription = "", tint = MaterialTheme.colorScheme.onBackground)
             }
+
             LazyRow(
-                modifier = Modifier
-                    .padding(8.dp)
-                    .weight(1.1f)
-                    .height(20.dp)
+                modifier = Modifier.padding(8.dp).weight(1.3f).height(25.dp)
             ) {
-                items(arrayView) { item ->
-                    MainView(item.id, item.title, item.text, item.image, navController)
+                items(recipes.drop(6).take(6)) { item ->
+                    MainView(item.id, item.title, item.description, item.imageURL,
+                        onButtonClick = {
+                            viewModel.getRecipe(item.id){ response ->
+                                if(response.isSuccessful){
+                                    recipeDetail = response.body()
+                                }
+                            }
+                            navController.navigate("recipeScreen/${item.id}")
+                        })
                 }
             }
 
-            TextButton(
-                onClick = {},
-
-                ){
-                Text(stringResource(R.string.seasonal_header),
+            TextButton(onClick = {}) {
+                Text(
+                    stringResource(R.string.seasonal_header),
                     color = MaterialTheme.colorScheme.onBackground,
                     fontWeight = FontWeight.ExtraBold,
-                    fontSize = 25.sp)
-                Icon(Icons.Filled.KeyboardArrowRight, contentDescription = "", tint = MaterialTheme.colorScheme.onPrimary)
-
+                    fontSize = 25.sp
+                )
+                Icon(Icons.Filled.KeyboardArrowRight, contentDescription = "", tint = MaterialTheme.colorScheme.onBackground)
             }
+
             LazyHorizontalGrid(
-                rows = GridCells.Adaptive(minSize =65.dp),
-                modifier = Modifier
-                    .fillMaxSize()
-                    .weight(1f)
+                rows = GridCells.Adaptive(minSize = 65.dp),
+                modifier = Modifier.fillMaxSize().weight(1f)
             ) {
-                items(arraySide) { item ->
-                    MainViewSideCard(item.id, item.title, item.text, item.image, navController)
+                items(recipes.drop(8).take(6)) { item ->
+                    MainViewSideCard(item.id, item.title, item.description, item.imageURL,                         onButtonClick = {
+                        viewModel.getRecipe(item.id){ response ->
+                            if(response.isSuccessful){
+                                recipeDetail = response.body()
+                            }
+                        }
+                        navController.navigate("recipeScreen/${item.id}")
+                    })
                 }
             }
+
         } else if (height == WindowHeightSizeClass.COMPACT) {
             Row(
-                modifier = Modifier
-                    .horizontalScroll(rememberScrollState())
-                    .fillMaxWidth()
+                modifier = Modifier.horizontalScroll(rememberScrollState()).fillMaxWidth()
             ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .padding(horizontal = 8.dp)
-                ) {
+                Column(modifier = Modifier.fillMaxHeight().padding(horizontal = 8.dp)) {
                     TextButton(onClick = {}) {
                         Text(
                             stringResource(R.string.popular_header),
@@ -289,34 +287,26 @@ fun Adaptive(navController: NavHostController) {
                             fontWeight = FontWeight.ExtraBold,
                             fontSize = 25.sp
                         )
-                        Icon(
-                            Icons.Filled.KeyboardArrowRight,
-                            contentDescription = "",
-                            tint = MaterialTheme.colorScheme.onPrimary
-                        )
+                        Icon(Icons.Filled.KeyboardArrowRight, contentDescription = "", tint = MaterialTheme.colorScheme.onBackground)
                     }
-                    LazyColumn(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(500.dp) // Ajusta la altura según necesites
-                    ) {
-                        items(arrayCard) { item ->
-                            MainViewExCardCompact(
-                                item.id,
-                                item.title,
-                                item.text,
-                                item.image,
-                                navController
-                            )
+                    LazyColumn(modifier = Modifier
+                        .width(350.dp) // o el ancho que necesites
+                        .fillMaxHeight(), // o altura deseada
+                        state = listState) {
+                        items(recipes.take(4)) { item ->
+                            MainViewExCardCompact(item.id, item.title, item.description, item.imageURL,                         onButtonClick = {
+                                viewModel.getRecipe(item.id){ response ->
+                                    if(response.isSuccessful){
+                                        recipeDetail = response.body()
+                                    }
+                                }
+                                navController.navigate("articleScreen/${item.id}")
+                            })
                         }
                     }
                 }
 
-                Column(
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .padding(horizontal = 8.dp)
-                ) {
+                Column(modifier = Modifier.fillMaxHeight().padding(horizontal = 8.dp)) {
                     TextButton(onClick = {}) {
                         Text(
                             stringResource(R.string.featured_header),
@@ -324,34 +314,29 @@ fun Adaptive(navController: NavHostController) {
                             fontWeight = FontWeight.ExtraBold,
                             fontSize = 25.sp
                         )
-                        Icon(
-                            Icons.Filled.KeyboardArrowRight,
-                            contentDescription = "",
-                            tint = MaterialTheme.colorScheme.onPrimary
-                        )
+                        Icon(Icons.Filled.KeyboardArrowRight, contentDescription = "", tint = MaterialTheme.colorScheme.onBackground)
                     }
                     LazyColumn(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .height(500.dp)
+                            .width(350.dp) // o el ancho que necesites
+                            .fillMaxHeight(),
                     ) {
-                        items(arrayView) { item ->
-                            MainViewCompact(
-                                item.id,
-                                item.title,
-                                item.text,
-                                item.image,
-                                navController
+                        items(recipes.drop(4).take(4)) { item ->
+                            MainViewCompact(item.id, item.title, item.description, item.imageURL,
+                                onButtonClick = {
+                                viewModel.getRecipe(item.id){ response ->
+                                    if(response.isSuccessful){
+                                        recipeDetail = response.body()
+                                    }
+                                }
+                                navController.navigate("recipeScreen/${item.id}")
+                            }
                             )
                         }
                     }
                 }
 
-                Column(
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .padding(horizontal = 8.dp)
-                ) {
+                Column(modifier = Modifier.fillMaxHeight().padding(horizontal = 8.dp)) {
                     TextButton(onClick = {}) {
                         Text(
                             stringResource(R.string.seasonal_header),
@@ -359,32 +344,29 @@ fun Adaptive(navController: NavHostController) {
                             fontWeight = FontWeight.ExtraBold,
                             fontSize = 25.sp
                         )
-                        Icon(
-                            Icons.Filled.KeyboardArrowRight,
-                            contentDescription = "",
-                            tint = MaterialTheme.colorScheme.onPrimary
-                        )
+                        Icon(Icons.Filled.KeyboardArrowRight, contentDescription = "", tint = MaterialTheme.colorScheme.onBackground)
                     }
-                    LazyColumn(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(500.dp)
-                    ) {
-                        items(arraySide) { item ->
-                            MainViewSideCardCompact(
-                                item.id,
-                                item.title,
-                                item.text,
-                                item.image,
-                                navController
-                            )
+                    LazyColumn(modifier = Modifier.width(350.dp) // o el ancho que necesites
+                        .fillMaxHeight(),) {
+                        items(recipes.drop(8).take(6)) { item ->
+                            MainViewSideCardCompact(item.id, item.title, item.description, item.imageURL,
+                                onButtonClick = {
+                                viewModel.getRecipe(item.id){ response ->
+                                    if(response.isSuccessful){
+                                        recipeDetail = response.body()
+                                    }
+                                }
+                                navController.navigate("recipeScreen/${item.id}")
+                            })
                         }
                     }
                 }
             }
         }
-
     }
 }
+
+
+
 
 

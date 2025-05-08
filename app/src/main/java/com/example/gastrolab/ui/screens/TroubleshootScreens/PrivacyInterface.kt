@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -48,7 +47,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
@@ -80,30 +78,35 @@ fun Privacy(navController: NavHostController) {
             fontSize = 22.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(top = 16.dp, bottom = 16.dp),
-            color = MaterialTheme.colorScheme.onPrimary
+            color = MaterialTheme.colorScheme.secondary
         )
 
-        // Icono de usuario
-        Box(
-            modifier = Modifier.fillMaxWidth(),
-            contentAlignment = Alignment.CenterEnd
-        ) {
-            Icon(
-                imageVector = Icons.Default.AccountCircle,
-                contentDescription = "Perfil",
-                tint = MaterialTheme.colorScheme.onPrimary,
-                modifier = Modifier
-                    .size(40.dp)
-            )
-        }
+//        // Icono de usuario
+//        Box(
+//            modifier = Modifier.fillMaxWidth(),
+//            contentAlignment = Alignment.CenterEnd
+//        ) {
+//            Icon(
+//                imageVector = Icons.Default.AccountCircle,
+//                contentDescription = "Perfil",
+//                tint = MaterialTheme.colorScheme.onBackground,
+//                modifier = Modifier
+//                    .size(40.dp)
+//            )
+//        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Sección de cuenta
         SectionCard(title = "Cuenta") {
-            AccountOption("Cambiar contraseña")
-            AccountOption("Borrar cuenta")
-            AccountOption("Verificar correo")
+            AccountOption("Cambiar contraseña") {
+                navController.navigate("updateCredentialsScreen")
+            }
+//            AccountOption("Borrar cuenta"){
+//                navController
+//            }
+//            AccountOption("Verificar correo"){
+//                navController
+//            }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -117,13 +120,13 @@ fun Privacy(navController: NavHostController) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Aviso de privacidad
-        Text(
-            text = "Aviso de privacidad",
-            color = MaterialTheme.colorScheme.onBackground,
-            fontSize = 14.sp,
-            modifier = Modifier.clickable { }
-        )
+//        Aviso de privacidad
+//        Text(
+//            text = "Aviso de privacidad",
+//            color = MaterialTheme.colorScheme.onBackground,
+//            fontSize = 14.sp,
+//            modifier = Modifier.clickable { }
+//        )
 
     }
 }
@@ -157,11 +160,11 @@ fun SectionCard(title: String, content: @Composable ColumnScope.() -> Unit) {
 }
 
 @Composable
-fun AccountOption(text: String) {
+fun AccountOption(text: String, onClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { }
+            .clickable(onClick = onClick)
             .padding(vertical = 8.dp, horizontal = 16.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
@@ -226,7 +229,7 @@ fun PrivacyOption(label: String, options: List<String>) {
                         text = {
                             Text(
                                 text = option,
-                                color = MaterialTheme.colorScheme.onPrimary
+                                color = MaterialTheme.colorScheme.onBackground
                             )
                         },
                         onClick = {
