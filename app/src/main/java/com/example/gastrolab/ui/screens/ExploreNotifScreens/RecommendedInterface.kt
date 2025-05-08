@@ -88,21 +88,48 @@ fun RecommendedInterface(navController: NavHostController) {
                 Text(text = error!!, color = MaterialTheme.colorScheme.error)
             }
         } else {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(10.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                items(recipes) { recipe ->
-                    RecipeCard(
-                        recipe = recipe,
-                        onRecipeClick = {
-                            navController.navigate("recipeScreen/${recipe.id}")
+            val isLandscape = LocalContext.current.resources.configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE
+
+            if (isLandscape) {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(10.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    items(recipes.chunked(2)) { rowItems ->
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            rowItems.forEach { recipe ->
+                                Column(modifier = Modifier.weight(1f)) {
+                                    RecipeCard(recipe = recipe) {
+                                        navController.navigate("recipeScreen/${recipe.id}")
+                                    }
+                                }
+                            }
                         }
-                    )
+                    }
+                }
+            } else {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(10.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    items(recipes) { recipe ->
+                        RecipeCard(
+                            recipe = recipe,
+                            onRecipeClick = {
+                                navController.navigate("recipeScreen/${recipe.id}")
+                            }
+                        )
+                    }
                 }
             }
+
         }
     }
 }
