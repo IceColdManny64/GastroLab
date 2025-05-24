@@ -11,6 +11,10 @@ import retrofit2.http.Query
 
 interface ApiService {
 
+    @GET("recipe.php")
+    suspend fun searchRecipes(@Query("search") query: String): Response<List<RecipeModel>>
+
+
     @POST("login.php") //POST login
     suspend fun login(@Body user: LoginModel): Response<JsonObject>
 
