@@ -186,7 +186,7 @@ fun AccountInterface(navController: NavHostController) {
 
     Scaffold(
         topBar = {         TopAppBar(
-            modifier = Modifier.height(50.dp),
+            modifier = Modifier.height(80.dp),
             colors = TopAppBarDefaults.topAppBarColors(
                 containerColor = MaterialTheme.colorScheme.primary,
                 titleContentColor = MaterialTheme.colorScheme.secondary
@@ -264,7 +264,7 @@ fun BottomBar(navController: NavHostController) {
     BottomAppBar(
         modifier = Modifier
             .fillMaxWidth()
-            .height(50.dp),
+            .height(80.dp),
         containerColor = MaterialTheme.colorScheme.primary,
         contentColor = MaterialTheme.colorScheme.onPrimary
     ) {

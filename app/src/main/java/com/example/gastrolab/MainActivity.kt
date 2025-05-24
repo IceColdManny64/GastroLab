@@ -25,7 +25,6 @@ import com.example.gastrolab.ui.screens.LoginScreens.SignUpInterface
 import com.example.gastrolab.ui.screens.MainScreens.MainScreen
 import com.example.gastrolab.ui.screens.MainScreens.SettingsInterface
 import com.example.gastrolab.ui.screens.MainScreens.UserMenuInterface
-import com.example.gastrolab.ui.screens.RecipeSearchScreens.CommentsInterface
 import com.example.gastrolab.ui.screens.RecipeSearchScreens.LocalRecipeInterface
 import com.example.gastrolab.ui.screens.RecipeSearchScreens.RecipeInterface
 import com.example.gastrolab.ui.screens.RecipeSearchScreens.SearchInterface
@@ -71,10 +70,6 @@ fun SetupNavGraph(navController: NavHostController){
         composable("recipeScreen/{id}") { backStackEntry ->
             val id = backStackEntry.arguments?.getString("id")?.toIntOrNull() ?: 0
             RecipeInterface(id = id, navController = navController)
-        }
-        composable("commentsScreen/{id}") { backStackEntry ->
-            val id = backStackEntry.arguments?.getString("id")?.toIntOrNull() ?: 0
-            CommentsInterface(id = id, navController = navController)
         }
         composable("exploreScreen"){ ExploreInterface(navController) }
         composable("notifScreen"){ NotifInterface(navController) }

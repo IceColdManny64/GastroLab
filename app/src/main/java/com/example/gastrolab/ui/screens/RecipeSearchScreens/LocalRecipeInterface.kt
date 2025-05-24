@@ -67,6 +67,7 @@ fun LocalRecipeInterface(id: Int, navController: NavHostController) {
     Scaffold(
         topBar = {
             TopAppBar(
+                modifier = Modifier.height(80.dp),
                 title = { Text("Receta Guardada") },
                 navigationIcon = {
                     IconButton(onClick = { navController.navigateUp() }) {
@@ -90,7 +91,8 @@ fun LocalRecipeInterface(id: Int, navController: NavHostController) {
                         description = entity.description,
                         imageURL = entity.imageURL,
                         preparetime = entity.preparetime,
-                        difficulty = entity.difficulty
+                        difficulty = entity.difficulty,
+                        likerate = entity.likerate
                     )
                 } ?: Text("Cargando...", modifier = Modifier.padding(16.dp))
             }
@@ -106,7 +108,8 @@ fun ShowLocalRecipe(
     description: String,
     imageURL: String,
     preparetime: String,
-    difficulty: String
+    difficulty: String,
+    likerate: Int
 ) {
     // Reutiliza la misma UI de ShowRecipe pero con datos locales
     AsyncImage(
@@ -175,7 +178,15 @@ fun ShowLocalRecipe(
         text = "Dificultad: " + difficulty,
         fontWeight = FontWeight.Bold,
         fontSize = 15.sp,
-        color = MaterialTheme.colorScheme.onSecondary,
+        color = MaterialTheme.colorScheme.onBackground,
+        modifier = Modifier.padding(horizontal = 16.dp)
+    )
+    Spacer(modifier = Modifier.height(10.dp))
+    Text(
+        text = "Calificacion: " + likerate,
+        fontWeight = FontWeight.Bold,
+        fontSize = 15.sp,
+        color = MaterialTheme.colorScheme.onBackground,
         modifier = Modifier.padding(horizontal = 16.dp)
     )
     Spacer(modifier = Modifier.height(24.dp))
