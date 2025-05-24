@@ -26,6 +26,17 @@ class RecipeViewModel: ViewModel() {
             }
         }
     }
+    fun searchRecipes(query: String, onResult: (Response<List<RecipeModel>>) -> Unit) {
+        viewModelScope.launch {
+            try {
+                val response = api.searchRecipes(query)
+                onResult(response)
+            } catch (e: Exception) {
+                Log.d("debug", "Search error: $e")
+            }
+        }
+    }
+
     fun getRecipe(id: Int, onResult:(Response<RecipeModel>) -> Unit ) {
         viewModelScope.launch {
 
