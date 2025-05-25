@@ -71,6 +71,7 @@ import com.example.clasetrabajo.data.viewmodel.RecipeViewModel
 import com.example.gastrolab.R
 import com.example.gastrolab.data.model.RecipeModel
 import com.example.gastrolab.data.model.toRecipeEntity
+import com.example.gastrolab.utils.NotificationHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -193,6 +194,7 @@ fun ShowRecipe(
     difficulty: String,
     likerate: Int,
     viewModel: RecipeViewModel = viewModel()){
+    val composeContext = LocalContext.current
     var id = recipe.id
     var recipeDetail by remember { mutableStateOf<RecipeModel?>(null) }
     val db: AppDatabase = DatabaseProvider.getDatabase(LocalContext.current)
@@ -239,6 +241,13 @@ fun ShowRecipe(
                         try {
                             recipeDao.insert(recipe.toRecipeEntity())
                             Log.d("debug-db", "Receta guardada: ${recipe.title}")
+
+                            NotificationHelper.showAddedToFavoritesNotification(
+                                composeContext,
+                                recipe.title
+                            )
+
+
                         } catch (e: Exception) {
                             Log.e("debug-db", "Error al guardar: $e")
                         }

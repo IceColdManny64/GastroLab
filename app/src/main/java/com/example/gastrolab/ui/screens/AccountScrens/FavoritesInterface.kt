@@ -71,6 +71,7 @@ import com.example.gastrolab.R
 import com.example.gastrolab.data.model.RecipeEntity
 import com.example.gastrolab.data.model.RecipeModel
 import com.example.gastrolab.ui.screens.RecipeSearchScreens.RecipeDetailComponent
+import com.example.gastrolab.utils.NotificationHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -79,6 +80,7 @@ import kotlinx.coroutines.withContext
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FavoritesInterface(navController: NavHostController) {
+    val context = LocalContext.current
     val windowInfo = currentWindowAdaptiveInfo().windowSizeClass
     val db: AppDatabase = DatabaseProvider.getDatabase(LocalContext.current)
     var recipeDao = db.recipeDao()
@@ -86,6 +88,13 @@ fun FavoritesInterface(navController: NavHostController) {
 
     LaunchedEffect(Unit) {
         recipesdb = withContext(Dispatchers.IO) { recipeDao.getAll() }
+
+        if (recipesdb.isNotEmpty()) {
+            NotificationHelper.showAddedToFavoritesNotification(
+                context = context,
+                recipeTitle = recipesdb.last().title ?: "Nueva receta Favorita"
+            )
+        }
     }
     val refreshList: suspend () -> Unit = {
         val updated = withContext(Dispatchers.IO) { recipeDao.getAll() }
