@@ -142,8 +142,6 @@ fun SettingsAdaptive(navController: NavHostController) {
 //                    "revisa opciones de notificaciones y accesibilidad", Icons.Filled.Apps),
             SettingsModel(1, "Privacidad y seguridad", "Cambia tu contraseña, borra tu cuenta o" +
                     " gestiona tu información", Icons.Filled.LockPerson),
-            SettingsModel(2, "Soporte técnico", "Entra a un chat automático, o contacta a un experto para" +
-                    "resolver un problema en la app", Icons.Filled.SupportAgent),
             SettingsModel(3, "Reporta un problema", "Reporta un error o problema general en la aplicacion." +
                     "Nos ayuda a mejorar!", Icons.Filled.ReportProblem),
             SettingsModel(4, "Cerrar sesión/salir", "Te vamos a extrañar!", Icons.Filled.Logout)
