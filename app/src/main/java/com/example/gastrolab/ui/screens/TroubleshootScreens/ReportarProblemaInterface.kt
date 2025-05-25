@@ -48,6 +48,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.gastrolab.R
+import android.content.Intent
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.platform.LocalContext
+import android.content.ActivityNotFoundException
+import android.net.Uri
+import android.widget.Toast
+
 
 @Composable
 fun ReportarProblemaInterface(navController: NavHostController) {
@@ -57,48 +64,44 @@ fun ReportarProblemaInterface(navController: NavHostController) {
 
 }
 
-
 @Composable
-fun Report(navController: NavHostController){
-    var shortDescription by remember { mutableStateOf("") }
-    var detailedDescription by remember { mutableStateOf("") }
+fun Report(navController: NavHostController) {
+    var shortDescription by rememberSaveable { mutableStateOf("") }
+    var detailedDescription by rememberSaveable { mutableStateOf("") }
+    val context = LocalContext.current
 
     Column(
         modifier = Modifier
             .padding(start = 16.dp, end = 16.dp)
             .verticalScroll(rememberScrollState())
             .imePadding()
-
-
     ) {
         Text(
             text = "Reportar problema.",
             color = MaterialTheme.colorScheme.onBackground,
             style = MaterialTheme.typography.titleLarge,
-            modifier = Modifier
-                .padding(top = 20.dp)
+            modifier = Modifier.padding(top = 20.dp)
         )
-
 
         Spacer(modifier = Modifier.height(20.dp))
 
         // Descripción breve
         Text(
-            color = MaterialTheme.colorScheme.onBackground,
             text = buildAnnotatedString {
                 append("Descripción breve del problema:")
                 withStyle(style = TextStyle(color = Color.Red).toSpanStyle()) {
                     append("*")
                 }
             },
+            color = MaterialTheme.colorScheme.onBackground
         )
         TextField(
             value = shortDescription,
             onValueChange = { shortDescription = it },
             label = { Text("Ejemplo: problema iniciando sesión") },
             colors = TextFieldDefaults.colors(
-                focusedTextColor = MaterialTheme.colorScheme.onPrimary,
-                unfocusedTextColor = MaterialTheme.colorScheme.onPrimary
+                focusedTextColor = MaterialTheme.colorScheme.onBackground,
+                unfocusedTextColor = MaterialTheme.colorScheme.onTertiary
             ),
             modifier = Modifier.fillMaxWidth()
         )
@@ -107,21 +110,21 @@ fun Report(navController: NavHostController){
 
         // Descripción detallada
         Text(
-            color = MaterialTheme.colorScheme.onBackground,
             text = buildAnnotatedString {
                 append("Descripción detallada del problema:")
                 withStyle(style = TextStyle(color = Color.Red).toSpanStyle()) {
                     append("*")
                 }
             },
+            color = MaterialTheme.colorScheme.onBackground
         )
         TextField(
             value = detailedDescription,
             onValueChange = { detailedDescription = it },
             label = { Text("Detalles del problema") },
             colors = TextFieldDefaults.colors(
-                focusedTextColor = MaterialTheme.colorScheme.onPrimary,
-                unfocusedTextColor = MaterialTheme.colorScheme.onPrimary
+                focusedTextColor = MaterialTheme.colorScheme.onBackground,
+                unfocusedTextColor = MaterialTheme.colorScheme.onTertiary
             ),
             modifier = Modifier
                 .fillMaxWidth()
@@ -130,37 +133,43 @@ fun Report(navController: NavHostController){
 
         Spacer(modifier = Modifier.height(50.dp))
 
-        // Adjuntar archivo con botón a la derecha
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(
-                color = MaterialTheme.colorScheme.onBackground,
-                text = "Adjuntar video o imagen del problema (opcional):",
-                modifier = Modifier.weight(1f),
-            )
-            Button(
-                onClick = { },
-                modifier = Modifier.width(180.dp),
-
-            ) {
-                Text("Seleccionar archivo", fontSize = 14.sp, color = MaterialTheme.colorScheme.onSecondary)
-            }
-        }
-
-        Spacer(modifier = Modifier.height(46.dp))
-
         Button(
-            onClick = { },
+            onClick = {
+                // Validar campos no vacíos
+                if (shortDescription.isBlank() || detailedDescription.isBlank()) {
+                    Toast.makeText(
+                        context,
+                        "Todos los campos deben estar completos",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    return@Button
+                }
+
+                // Preparar Intent para Gmail
+                val emailIntent = Intent(Intent.ACTION_SEND).apply {
+                    type = "message/rfc822"
+                    putExtra(Intent.EXTRA_EMAIL, arrayOf("soporte@tuempresa.com"))
+                    putExtra(Intent.EXTRA_SUBJECT, "Problema: $shortDescription")
+                    putExtra(Intent.EXTRA_TEXT, detailedDescription)
+                    `package` = "com.google.android.gm"
+                }
+
+                try {
+                    context.startActivity(emailIntent)
+                } catch (e: ActivityNotFoundException) {
+                    Toast.makeText(
+                        context,
+                        "No está instalada la app de Gmail",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("Enviar", color = MaterialTheme.colorScheme.onSecondary)
         }
 
         Spacer(modifier = Modifier.height(50.dp))
-
-
     }
 }
 
