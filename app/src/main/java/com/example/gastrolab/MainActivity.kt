@@ -1,10 +1,18 @@
 package com.example.gastrolab
 
+import android.Manifest
+import android.app.Activity
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.platform.LocalContext
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.example.gastrolab.ui.theme.GastroLabTheme
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -32,11 +40,20 @@ import com.example.gastrolab.ui.screens.TroubleshootScreens.PrivacyInterface
 import com.example.gastrolab.ui.screens.TroubleshootScreens.ReportarProblemaInterface
 import com.example.gastrolab.ui.screens.TroubleshootScreens.SupportInterface
 import com.example.gastrolab.ui.screens.TroubleshootScreens.UpdateCredentialsInterface
+import com.example.gastrolab.utils.NotificationHelper
 
 class MainActivity : ComponentActivity() {
     lateinit var database: AppDatabase
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        NotificationHelper.createChannel(this)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            requestPermissions(
+                arrayOf(android.Manifest.permission.POST_NOTIFICATIONS),
+                0
+            )
+        }
 
         try{
             database = DatabaseProvider.getDatabase(this)
@@ -55,12 +72,28 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun ComposeMultiScreenApp(){
     val navController = rememberNavController()
+    val context = LocalContext
+
+    LaunchedEffect(Unit) {
+        (context as? Activity)?.intent?.let { intent ->
+            if (intent.getStringExtra("destination") == "favoritesScreen") {
+                navController.navigate("favoritesScreen") {
+                    popUpTo(navController.graph.findStartDestination().id) {
+                        saveState = true
+                    }
+                    launchSingleTop = true
+                    restoreState = true
+                }
+            }
+        }
+    }
+
     SetupNavGraph(navController = navController)
 }
 @Composable
 fun SetupNavGraph(navController: NavHostController){
     //startDestinations marks which screen is going to open at launch
-    NavHost(navController = navController, startDestination = "loginScreen"){
+    NavHost(navController = navController, startDestination = "mainScreen"){
         //add route name for every screen
         composable("loginScreen"){ LoginInterface(navController) }
         composable("signUpScreen"){ SignUpInterface(navController) }
