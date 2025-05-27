@@ -30,6 +30,7 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Stars
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -228,12 +229,21 @@ fun ShowRecipe(
             fontWeight = FontWeight.Bold,
             fontSize = 20.sp
         )
-        Row(
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Row(modifier = Modifier.padding(5.dp)){
+            repeat(5) {
+                Icon(
+                    imageVector = Icons.Filled.Stars,
+                    contentDescription = "",
+                    tint = MaterialTheme.colorScheme.secondary
+                )
+            }
+            }
             RecipeDetailComponent(
                 onSaveClick = {
                     // Aquí insertamos el recipe que ya tenemos, no recipeDetail

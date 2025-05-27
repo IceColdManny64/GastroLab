@@ -112,11 +112,11 @@ fun Privacy(navController: NavHostController) {
         Spacer(modifier = Modifier.height(16.dp))
 
         // Sección de control de datos
-        SectionCard(title = "Control de datos") {
-            PrivacyOption("Privacidad de elementos guardados", listOf("Privado", "Público"))
-            PrivacyOption("Privacidad de perfil", listOf("Privado", "Público"))
-            PrivacyOption("Privacidad de colecciones", listOf("Privado", "Público"))
-        }
+//        SectionCard(title = "Control de datos") {
+//            PrivacyOption("Privacidad de elementos guardados", listOf("Privado", "Público"))
+//            PrivacyOption("Privacidad de perfil", listOf("Privado", "Público"))
+//            PrivacyOption("Privacidad de colecciones", listOf("Privado", "Público"))
+//        }
 
         Spacer(modifier = Modifier.height(16.dp))
 

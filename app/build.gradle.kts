@@ -49,7 +49,10 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended:1.5.4")
     implementation("androidx.compose.material:material-icons-core:1.5.4")
     implementation("androidx.compose.material3:material3-adaptive-navigation-suite:1.4.0-alpha10")
+    implementation ("com.google.accompanist:accompanist-systemuicontroller:0.32.0")
 
+
+    implementation ("androidx.biometric:biometric:1.2.0-alpha05")
     implementation("androidx.compose.foundation:foundation:1.5.4")
     implementation("androidx.compose.foundation:foundation-layout:1.5.4")
     implementation("androidx.compose.foundation:foundation-layout-android:1.5.4")

@@ -1,19 +1,17 @@
 package com.example.gastrolab
 
-import android.Manifest
 import android.app.Activity
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.rememberLauncherForActivityResult
+import android.widget.Toast
 import androidx.activity.compose.setContent
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
+import androidx.core.view.WindowCompat
+import androidx.fragment.app.FragmentActivity
 import androidx.navigation.NavGraph.Companion.findStartDestination
-import com.example.gastrolab.ui.theme.GastroLabTheme
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -40,13 +38,15 @@ import com.example.gastrolab.ui.screens.TroubleshootScreens.PrivacyInterface
 import com.example.gastrolab.ui.screens.TroubleshootScreens.ReportarProblemaInterface
 import com.example.gastrolab.ui.screens.TroubleshootScreens.SupportInterface
 import com.example.gastrolab.ui.screens.TroubleshootScreens.UpdateCredentialsInterface
+import com.example.gastrolab.ui.theme.GastroLabTheme
 import com.example.gastrolab.utils.NotificationHelper
 
-class MainActivity : ComponentActivity() {
+class MainActivity : FragmentActivity() {
     lateinit var database: AppDatabase
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        window.statusBarColor = android.graphics.Color.TRANSPARENT
         NotificationHelper.createChannel(this)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             requestPermissions(
@@ -93,7 +93,7 @@ fun ComposeMultiScreenApp(){
 @Composable
 fun SetupNavGraph(navController: NavHostController){
     //startDestinations marks which screen is going to open at launch
-    NavHost(navController = navController, startDestination = "mainScreen"){
+    NavHost(navController = navController, startDestination = "loginScreen"){
         //add route name for every screen
         composable("loginScreen"){ LoginInterface(navController) }
         composable("signUpScreen"){ SignUpInterface(navController) }
@@ -118,7 +118,10 @@ fun SetupNavGraph(navController: NavHostController){
         composable("reportProblem"){ ReportarProblemaInterface(navController) }
         composable("accountScreen"){ AccountInterface(navController) }
         composable("updateCredentialsScreen") {
-            UpdateCredentialsInterface(navController)
+            val context = LocalContext.current
+            UpdateCredentialsInterface(navController, onAuthSuccess = {
+                Toast.makeText(context, "¡Listo para cambiar tus credenciales!", Toast.LENGTH_SHORT).show()
+        })
         }
         composable("favoritesScreen"){ FavoritesInterface(navController) }
         composable("savedScreen"){ SavedInterface(navController) }
@@ -127,5 +130,4 @@ fun SetupNavGraph(navController: NavHostController){
             LocalRecipeInterface(id = id, navController = navController)
         }
     }
-
 }
