@@ -218,13 +218,19 @@ fun AccountInterface(navController: NavHostController) {
                     MaterialTheme.colorScheme.surface,
                     MaterialTheme.colorScheme.tertiary
                 )
-                Text(
-                    text = stringResource(R.string.app_name),
-                    style = TextStyle(brush = Brush.verticalGradient(colors = gastroGradient)),
-                    fontStyle = FontStyle.Italic,
-                    fontWeight = FontWeight.ExtraBold,
-                    fontSize = 25.sp
-                )
+                Row() {
+                    Image(
+                        painter = painterResource(R.drawable.gastrolab),
+                        contentDescription = ""
+                    )
+                    Text(
+                        text = stringResource(R.string.app_name),
+                        style = TextStyle(brush = Brush.verticalGradient(colors = gastroGradient)),
+                        fontStyle = FontStyle.Italic,
+                        fontWeight = FontWeight.ExtraBold,
+                        fontSize = 25.sp
+                    )
+                }
             },
             actions = {
                 IconButton(onClick = { navController.navigate("accountScreen") }) {

@@ -20,6 +20,7 @@ import com.example.clasetrabajo.data.database.AppDatabase
 import com.example.clasetrabajo.data.database.DatabaseProvider
 import com.example.gastrolab.ui.screens.AccountScrens.AccountInterface
 import com.example.gastrolab.ui.screens.AccountScrens.FavoritesInterface
+import com.example.gastrolab.ui.screens.AccountScrens.OfflineInterface
 import com.example.gastrolab.ui.screens.AccountScrens.SavedInterface
 import com.example.gastrolab.ui.screens.ExploreNotifScreens.ArticleInterface
 import com.example.gastrolab.ui.screens.ExploreNotifScreens.ExploreInterface
@@ -99,6 +100,7 @@ fun SetupNavGraph(navController: NavHostController){
         composable("signUpScreen"){ SignUpInterface(navController) }
         composable("loginPasswordScreen"){ LoginPasswordInterface(navController) }
         composable("mainScreen"){ MainScreen(navController) }
+        composable("offScreen"){ OfflineInterface(navController) }
         composable("searchScreen") { SearchInterface(navController) }
         composable("recipeScreen/{id}") { backStackEntry ->
             val id = backStackEntry.arguments?.getString("id")?.toIntOrNull() ?: 0
