@@ -1,8 +1,10 @@
 package com.example.gastrolab.ui.screens.MainScreens
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -18,7 +20,6 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.ReportProblem
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.SupportAgent
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -31,6 +32,7 @@ import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
@@ -65,7 +67,7 @@ fun BarsSettings(navController: NavHostController) {
 //can use MediumTopAppBar and other similar components to change the top bar size.
 
         TopAppBar(
-            modifier = Modifier.height(50.dp),
+            modifier = Modifier.height(80.dp),
             colors = TopAppBarDefaults.topAppBarColors(
                 containerColor = MaterialTheme.colorScheme.primary,
                 titleContentColor = MaterialTheme.colorScheme.secondary
@@ -76,13 +78,19 @@ fun BarsSettings(navController: NavHostController) {
                     MaterialTheme.colorScheme.surface,
                     MaterialTheme.colorScheme.tertiary
                 )
-                Text(
-                    text = stringResource(R.string.settings_header),
-                    style = TextStyle(brush = Brush.verticalGradient(colors = gastroGradient)),
-                    fontStyle = FontStyle.Italic,
-                    fontWeight = FontWeight.ExtraBold,
-                    fontSize = 25.sp
-                )
+                Row() {
+                    Image(
+                        painter = painterResource(R.drawable.gastrolab),
+                        contentDescription = ""
+                    )
+                    Text(
+                        text = stringResource(R.string.settings_header),
+                        style = TextStyle(brush = Brush.verticalGradient(colors = gastroGradient)),
+                        fontStyle = FontStyle.Italic,
+                        fontWeight = FontWeight.ExtraBold,
+                        fontSize = 25.sp
+                    )
+                }
             },
             actions = {
                 IconButton(onClick = { navController.navigate("accountScreen") }) {
@@ -104,7 +112,7 @@ fun BarsSettings(navController: NavHostController) {
         BottomAppBar(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(50.dp),
+                .height(80.dp),
             containerColor = MaterialTheme.colorScheme.primary,
             contentColor = MaterialTheme.colorScheme.onPrimary
         ) {
@@ -140,11 +148,8 @@ fun SettingsAdaptive(navController: NavHostController) {
         val settingsArray = arrayOf(
 //            SettingsModel(1, "Configuración de Aplicación", "Realiza cambios a tu cuenta, " +
 //                    "revisa opciones de notificaciones y accesibilidad", Icons.Filled.Apps),
-            SettingsModel(1, "Privacidad y seguridad", "Cambia tu contraseña, borra tu cuenta o" +
-                    " gestiona tu información", Icons.Filled.LockPerson),
-            SettingsModel(2, "Soporte técnico", "Entra a un chat automático, o contacta a un experto para" +
-                    "resolver un problema en la app", Icons.Filled.SupportAgent),
-            SettingsModel(3, "Reporta un problema", "Reporta un error o problema general en la aplicacion." +
+            SettingsModel(1, "Modificar credenciales", "Cambia tu contraseña o correo", Icons.Filled.LockPerson),
+            SettingsModel(3, "Reporta un problema", "Reporta un error o problema general en la aplicacion. " +
                     "Nos ayuda a mejorar!", Icons.Filled.ReportProblem),
             SettingsModel(4, "Cerrar sesión/salir", "Te vamos a extrañar!", Icons.Filled.Logout)
         )
@@ -164,6 +169,36 @@ fun SettingsAdaptive(navController: NavHostController) {
                 }
             }
     } else if (height == WindowHeightSizeClass.COMPACT) {
+            LazyVerticalGrid(
+                columns = GridCells.Adaptive(minSize = 400.dp),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(1.1f),
+
+                verticalArrangement = Arrangement.Center,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                items(settingsArray) { item ->
+                    SettingsList(item.id, item.title, item.text, item.icon, navController)
+                }
+            }
+        }
+        else if (height == WindowHeightSizeClass.EXPANDED) {
+            LazyVerticalGrid(
+                columns = GridCells.Adaptive(minSize = 400.dp),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(1.1f),
+
+                verticalArrangement = Arrangement.Center,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                items(settingsArray) { item ->
+                    SettingsList(item.id, item.title, item.text, item.icon, navController)
+                }
+            }
+        }
+        else if (width == WindowWidthSizeClass.EXPANDED) {
             LazyVerticalGrid(
                 columns = GridCells.Adaptive(minSize = 400.dp),
                 modifier = Modifier

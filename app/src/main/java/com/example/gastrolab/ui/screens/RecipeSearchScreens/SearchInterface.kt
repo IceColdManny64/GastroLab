@@ -1,47 +1,18 @@
 package com.example.gastrolab.ui.screens.RecipeSearchScreens
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.Button
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -60,17 +31,46 @@ import com.example.clasetrabajo.data.viewmodel.RecipeViewModel
 import com.example.gastrolab.R
 import com.example.gastrolab.data.model.RecipeModel
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun SearchInterface(
     navController: NavHostController,
     viewModel: RecipeViewModel = viewModel()
 ) {
     var searchText by remember { mutableStateOf("") }
-    var expanded by remember { mutableStateOf(false) }
+    var showBottomSheet by remember { mutableStateOf(false) }
     var recipes by remember { mutableStateOf<List<RecipeModel>>(emptyList()) }
 
-    // Cargar recetas desde la API
+    var selectedDifficulties by remember { mutableStateOf(setOf<String>()) }
+    var selectedCategories by remember { mutableStateOf(setOf<String>()) }
+    var selectedTimeLimits by remember { mutableStateOf(setOf<String>()) }
+    var selectedLikeRates by remember { mutableStateOf(setOf<Int>()) }
+
+
+
+    val filteredRecipes = recipes.filter { recipe ->
+        val matchesSearch = recipe.title.contains(searchText, ignoreCase = true) ||
+                recipe.description.contains(searchText, ignoreCase = true)
+
+        val matchesDifficulty = selectedDifficulties.isEmpty() || selectedDifficulties.contains(recipe.difficulty)
+        val matchesCategory = selectedCategories.isEmpty() || selectedCategories.contains(recipe.category)
+        val matchesLike = selectedLikeRates.isEmpty() || selectedLikeRates.any { recipe.likerate >= it }
+        val matchesTime = selectedTimeLimits.isEmpty() || selectedTimeLimits.any {
+            try {
+                val (h, m, s) = recipe.preparetime.split(":").map { it.toInt() }
+                val recipeSeconds = h * 3600 + m * 60 + s
+                val (fh, fm, fs) = it.split(":").map { it.toInt() }
+                val filterSeconds = fh * 3600 + fm * 60 + fs
+                recipeSeconds <= filterSeconds
+            } catch (e: Exception) {
+                true
+            }
+        }
+
+        matchesSearch && matchesDifficulty && matchesCategory && matchesLike && matchesTime
+    }
+
+
     LaunchedEffect(Unit) {
         viewModel.getRecipes { response ->
             if (response.isSuccessful) {
@@ -85,9 +85,8 @@ fun SearchInterface(
             .verticalScroll(rememberScrollState())
             .background(MaterialTheme.colorScheme.background)
     ) {
-        // Top App Bar con gradiente y estilo anterior
         TopAppBar(
-            modifier = Modifier.height(50.dp),
+            modifier = Modifier.height(80.dp),
             colors = TopAppBarDefaults.topAppBarColors(
                 containerColor = MaterialTheme.colorScheme.primary,
                 titleContentColor = MaterialTheme.colorScheme.secondary
@@ -98,13 +97,19 @@ fun SearchInterface(
                     MaterialTheme.colorScheme.surface,
                     MaterialTheme.colorScheme.tertiary
                 )
-                Text(
-                    text = stringResource(R.string.app_name),
-                    style = TextStyle(brush = Brush.verticalGradient(colors = gastroGradient)),
-                    fontStyle = androidx.compose.ui.text.font.FontStyle.Italic,
-                    fontWeight = FontWeight.ExtraBold,
-                    fontSize = 25.sp
-                )
+                Row() {
+                    Image(
+                        painter = painterResource(R.drawable.gastrolab),
+                        contentDescription = ""
+                    )
+                    Text(
+                        text = stringResource(R.string.app_name),
+                        style = TextStyle(brush = Brush.verticalGradient(colors = gastroGradient)),
+                        fontStyle = androidx.compose.ui.text.font.FontStyle.Italic,
+                        fontWeight = FontWeight.ExtraBold,
+                        fontSize = 25.sp
+                    )
+                }
             },
             actions = {
                 IconButton(onClick = { navController.navigate("accountScreen") }) {
@@ -113,7 +118,6 @@ fun SearchInterface(
             }
         )
 
-        // Barra de búsqueda y filtro
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -122,39 +126,36 @@ fun SearchInterface(
         ) {
             OutlinedTextField(
                 value = searchText,
-                onValueChange = { searchText = it },
+                onValueChange = {
+                    searchText = it
+                    viewModel.searchRecipes(it) { response ->
+                        if (response.isSuccessful) {
+                            recipes = response.body() ?: emptyList()
+                        }
+                    }
+                },
                 label = { Text("Buscar") },
                 modifier = Modifier.weight(1f)
             )
             Spacer(modifier = Modifier.width(8.dp))
-            Box {
-                Button(onClick = { expanded = true }) {
-                    Text("Filtrar por")
-                }
-                DropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = { expanded = false }
-                ) {
-                    DropdownMenuItem(text = { Text("Ingredientes") }, onClick = { expanded = false })
-                    DropdownMenuItem(text = { Text("Receta") }, onClick = { expanded = false })
-                }
+            Button(onClick = { showBottomSheet = true }) {
+                Text("Filtros")
             }
         }
 
         Text(
-            text = "Recomendaciones",
+            text = if (searchText.isBlank()) "Recomendaciones" else "Resultados",
             color = MaterialTheme.colorScheme.onBackground,
             style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
         )
 
-        // Lista dinámica de recetas (puede mostrar menos)
         LazyColumn(
             modifier = Modifier
                 .weight(1f)
                 .padding(horizontal = 16.dp)
         ) {
-            items(recipes.take(6)) { recipe ->  // limitar a 6 elementos para estética
+            items(filteredRecipes.take(6)) { recipe ->
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -190,11 +191,134 @@ fun SearchInterface(
             }
         }
 
-        // Bottom Bar
+        if (showBottomSheet) {
+            ModalBottomSheet(
+                onDismissRequest = { showBottomSheet = false }
+            ) {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxHeight(0.85f)
+                        .padding(16.dp)
+                ) {
+                    item {
+                        Text("Filtrar por dificultad", style = MaterialTheme.typography.titleMedium)
+                        Spacer(Modifier.height(8.dp))
+                        FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            listOf("Muy facil", "Facil", "Medio", "Dificil").forEach { difficulty ->
+                                val selected = selectedDifficulties.contains(difficulty)
+                                FilterChip(
+                                    selected = selected,
+                                    onClick = {
+                                        selectedDifficulties = if (selected) {
+                                            selectedDifficulties - difficulty
+                                        } else {
+                                            selectedDifficulties + difficulty
+                                        }
+                                    },
+                                    label = { Text(difficulty) }
+                                )
+                            }
+                        }
+                        Spacer(modifier = Modifier.height(16.dp))
+                    }
+
+                    item {
+                        Text("Filtrar por categoría", style = MaterialTheme.typography.titleMedium)
+                        Spacer(Modifier.height(8.dp))
+                        FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            listOf("Mexicanas", "Italianas", "Orientales", "Saludables", "Estadounidenses", "Postres").forEach { category ->
+                                val selected = selectedCategories.contains(category)
+                                FilterChip(
+                                    selected = selected,
+                                    onClick = {
+                                        selectedCategories = if (selected) {
+                                            selectedCategories - category
+                                        } else {
+                                            selectedCategories + category
+                                        }
+                                    },
+                                    label = { Text(category) }
+                                )
+                            }
+                        }
+                        Spacer(modifier = Modifier.height(16.dp))
+                    }
+
+                    item {
+                        Text("Tiempo máximo de preparación", style = MaterialTheme.typography.titleMedium)
+                        Spacer(Modifier.height(8.dp))
+                        FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            listOf("00:15:00", "00:30:00", "01:00:00", "01:30:00", "02:00:00").forEach { time ->
+                                val selected = selectedTimeLimits.contains(time)
+                                FilterChip(
+                                    selected = selected,
+                                    onClick = {
+                                        selectedTimeLimits = if (selected) {
+                                            selectedTimeLimits - time
+                                        } else {
+                                            selectedTimeLimits + time
+                                        }
+                                    },
+                                    label = { Text("$time o menos") }
+                                )
+                            }
+                        }
+                        Spacer(modifier = Modifier.height(16.dp))
+                    }
+
+                    item {
+                        Text("Valoración mínima", style = MaterialTheme.typography.titleMedium)
+                        Spacer(Modifier.height(8.dp))
+                        FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            listOf(25, 50, 75, 90).forEach { rate ->
+                                val selected = selectedLikeRates.contains(rate)
+                                FilterChip(
+                                    selected = selected,
+                                    onClick = {
+                                        selectedLikeRates = if (selected) {
+                                            selectedLikeRates - rate
+                                        } else {
+                                            selectedLikeRates + rate
+                                        }
+                                    },
+                                    label = { Text("$rate+") }
+                                )
+                            }
+                        }
+                        Spacer(modifier = Modifier.height(24.dp))
+                    }
+
+                    item {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Button(
+                                onClick = {
+                                    selectedDifficulties = emptySet()
+                                    selectedCategories = emptySet()
+                                    selectedTimeLimits = emptySet()
+                                    selectedLikeRates = emptySet()
+                                }
+                            ) {
+                                Text("Limpiar filtros")
+                            }
+                            Button(onClick = { showBottomSheet = false }) {
+                                Text("Aplicar")
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+
+
+
         BottomAppBar(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(50.dp),
+                .height(80.dp),
             containerColor = MaterialTheme.colorScheme.primary,
             contentColor = MaterialTheme.colorScheme.onPrimary
         ) {

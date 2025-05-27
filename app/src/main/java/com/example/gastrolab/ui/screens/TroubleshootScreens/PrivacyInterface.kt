@@ -112,11 +112,11 @@ fun Privacy(navController: NavHostController) {
         Spacer(modifier = Modifier.height(16.dp))
 
         // Sección de control de datos
-        SectionCard(title = "Control de datos") {
-            PrivacyOption("Privacidad de elementos guardados", listOf("Privado", "Público"))
-            PrivacyOption("Privacidad de perfil", listOf("Privado", "Público"))
-            PrivacyOption("Privacidad de colecciones", listOf("Privado", "Público"))
-        }
+//        SectionCard(title = "Control de datos") {
+//            PrivacyOption("Privacidad de elementos guardados", listOf("Privado", "Público"))
+//            PrivacyOption("Privacidad de perfil", listOf("Privado", "Público"))
+//            PrivacyOption("Privacidad de colecciones", listOf("Privado", "Público"))
+//        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -269,7 +269,7 @@ fun BarsPrivacy(navController: NavHostController) {
 //can use MediumTopAppBar and other similar components to change the top bar size.
 
         TopAppBar(
-            modifier = Modifier.height(50.dp),
+            modifier = Modifier.height(80.dp),
             colors = TopAppBarDefaults.topAppBarColors(
                 containerColor = MaterialTheme.colorScheme.primary,
                 titleContentColor = MaterialTheme.colorScheme.secondary
@@ -312,7 +312,7 @@ fun BarsPrivacy(navController: NavHostController) {
         BottomAppBar(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(50.dp),
+                .height(80.dp),
             containerColor = MaterialTheme.colorScheme.primary,
             contentColor = MaterialTheme.colorScheme.onPrimary
         ) {

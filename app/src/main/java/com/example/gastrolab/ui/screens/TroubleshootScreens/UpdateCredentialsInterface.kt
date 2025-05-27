@@ -1,31 +1,25 @@
 package com.example.gastrolab.ui.screens.TroubleshootScreens
 
-import android.util.Log
 import android.widget.Toast
+import androidx.biometric.BiometricManager
+import androidx.biometric.BiometricPrompt
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.clasetrabajo.data.viewmodel.LoginViewModel
-import com.example.gastrolab.R
+import com.example.gastrolab.data.model.SessionManager
 import com.google.gson.JsonObject
 import kotlinx.coroutines.launch
 
@@ -33,120 +27,122 @@ import kotlinx.coroutines.launch
 @Composable
 fun UpdateCredentialsInterface(
     navController: NavHostController,
-    viewModel: LoginViewModel = viewModel()
+    viewModel: LoginViewModel = viewModel(),
+    onAuthSuccess: () -> Unit
 ) {
     val context = LocalContext.current
-    val coroutineScope = rememberCoroutineScope()
+    val activity = context as FragmentActivity
+    val executor = remember { ContextCompat.getMainExecutor(context) }
 
-    var currentEmail by remember { mutableStateOf("") }
-    var currentPassword by remember { mutableStateOf("") }
+    var authError by remember { mutableStateOf<String?>(null) }
+    var isAuthenticated by remember { mutableStateOf(false) }
+
+    // Datos para actualizar credenciales
+    val session = remember { SessionManager(context) }
+    val userId = session.getUserId()
     var newEmail by remember { mutableStateOf("") }
     var newPassword by remember { mutableStateOf("") }
-    var isCurrentPasswordVisible by remember { mutableStateOf(false) }
     var isNewPasswordVisible by remember { mutableStateOf(false) }
-    var userId by remember { mutableStateOf<Int?>(null) }
-    var emailVerified by remember { mutableStateOf(false) }
-    var passwordVerified by remember { mutableStateOf(false) }
+    val coroutineScope = rememberCoroutineScope()
 
-    fun showToast(msg: String) {
-        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+    // Configurar prompt de autenticación biométrica o device credential
+    val promptInfo = remember {
+        BiometricPrompt.PromptInfo.Builder()
+            .setTitle("Autenticación requerida")
+            .setSubtitle("Por favor autentícate para actualizar credenciales")
+            // Permite biometría o PIN/contraseña del dispositivo (fallback)
+            .setAllowedAuthenticators(
+                BiometricManager.Authenticators.BIOMETRIC_STRONG or
+                        BiometricManager.Authenticators.DEVICE_CREDENTIAL
+            )
+            .build()
     }
 
-    fun verifyEmail() {
-        if (currentEmail.isBlank()) {
-            showToast("Ingresa tu email actual")
-            return
-        }
-
-        coroutineScope.launch {
-            val request = JsonObject().apply {
-                addProperty("action", "verify_email")
-                addProperty("current_email", currentEmail.trim())
-            }
-
-            try {
-                val response = viewModel.api.verifyEmail(request)
-                val body = response.body()
-                if (response.isSuccessful && body?.get("exists")?.asBoolean == true) {
-                    userId = body.get("id")?.asInt
-                    emailVerified = true
-                    showToast("Email verificado")
-                } else {
-                    showToast("Email no encontrado")
+    // Crear objeto BiometricPrompt con callbacks
+    val biometricPrompt = remember {
+        BiometricPrompt(
+            activity,
+            executor,
+            object : BiometricPrompt.AuthenticationCallback() {
+                override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                    super.onAuthenticationSucceeded(result)
+                    isAuthenticated = true
                 }
-            } catch (e: Exception) {
-                showToast("Error al verificar email")
-                Log.e("UpdateCred", "Email error", e)
-            }
-        }
-    }
 
-    fun verifyCurrentPassword() {
-        if (currentPassword.isBlank()) {
-            showToast("Ingresa tu contraseña actual")
-            return
-        }
-
-        if (userId == null) {
-            showToast("ID de usuario inválido")
-            return
-        }
-
-        coroutineScope.launch {
-            val request = JsonObject().apply {
-                addProperty("action", "verify_password")
-                addProperty("id", userId!!)
-                addProperty("current_password", currentPassword)
-            }
-
-            try {
-                val response = viewModel.api.verifyCurrentPassword(request)
-                val body = response.body()
-                if (response.isSuccessful && body != null && body.get("valid")?.asBoolean == true) {
-                    passwordVerified = true
-                    showToast("Contraseña correcta")
-                } else {
-                    showToast("Contraseña incorrecta")
+                override fun onAuthenticationFailed() {
+                    super.onAuthenticationFailed()
+                    authError = "Autenticación fallida. Intenta de nuevo."
                 }
-            } catch (e: Exception) {
-                showToast("Error verificando contraseña")
-                Log.e("UpdateCred", "Password error", e)
+
+                override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+                    super.onAuthenticationError(errorCode, errString)
+                    authError = "Error: $errString"
+                }
             }
+        )
+    }
+
+    // Lanzar prompt de autenticación al cargar la pantalla
+    LaunchedEffect(Unit) {
+        val biometricManager = BiometricManager.from(context)
+        val canAuthenticate = biometricManager.canAuthenticate(
+            BiometricManager.Authenticators.BIOMETRIC_STRONG or
+                    BiometricManager.Authenticators.DEVICE_CREDENTIAL
+        )
+
+        if (canAuthenticate == BiometricManager.BIOMETRIC_SUCCESS) {
+            biometricPrompt.authenticate(promptInfo)
+        } else {
+            authError = "Tu dispositivo no soporta autenticación biométrica ni PIN"
         }
     }
 
+    if (!isAuthenticated) {
+        // Mostrar UI de autenticación
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(32.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text("Autenticando...")
+            authError?.let {
+                Spacer(modifier = Modifier.height(12.dp))
+                Text(it, color = MaterialTheme.colorScheme.error)
+            }
+        }
+        return // Salir para no mostrar el formulario hasta autenticar
+    }
+
+    // Si autenticación exitosa, mostrar formulario para actualizar credenciales
     fun updateCredentials() {
         if (newEmail.isBlank() || newPassword.isBlank()) {
-            showToast("Completa los campos")
+            Toast.makeText(context, "Completa todos los campos", Toast.LENGTH_SHORT).show()
             return
         }
-
-        if (userId == null) {
-            showToast("ID de usuario inválido")
+        if (userId == -1) {
+            Toast.makeText(context, "Sesión inválida. Inicia sesión de nuevo.", Toast.LENGTH_SHORT).show()
             return
         }
-
         coroutineScope.launch {
-            val request = JsonObject().apply {
+            val req = JsonObject().apply {
                 addProperty("action", "update_credentials")
-                addProperty("id", userId!!)
+                addProperty("id", userId)
                 addProperty("new_email", newEmail.trim())
                 addProperty("new_password", newPassword)
             }
-
             try {
-                val response = viewModel.api.updateCredentials(request)
-                val body = response.body()
-                if (response.isSuccessful && body?.get("status")?.asString == "success") {
-                    showToast("Credenciales actualizadas")
+                val resp = viewModel.api.updateCredentials(req).body()
+                if (resp?.get("status")?.asString == "success") {
+                    session.saveSession(userId, newEmail.trim())
+                    Toast.makeText(context, "Credenciales actualizadas", Toast.LENGTH_SHORT).show()
                     navController.popBackStack()
                 } else {
-                    val msg = body?.get("message")?.asString ?: "Error desconocido"
-                    showToast("Error: $msg")
+                    Toast.makeText(context, "Error: ${resp?.get("message")?.asString ?: "Desconocido"}", Toast.LENGTH_SHORT).show()
                 }
             } catch (e: Exception) {
-                showToast("Error de conexión")
-                Log.e("UpdateCred", "Update error", e)
+                Toast.makeText(context, "Error de red", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -154,114 +150,81 @@ fun UpdateCredentialsInterface(
     Scaffold(
         topBar = {
             TopAppBar(
-                modifier = Modifier.height(50.dp),
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    titleContentColor = MaterialTheme.colorScheme.secondary
-                ),
-                title = {
-                    val gastroGradient = listOf(
-                        MaterialTheme.colorScheme.tertiary,
-                        MaterialTheme.colorScheme.surface,
-                        MaterialTheme.colorScheme.tertiary
-                    )
-                    Text(
-                        text = stringResource(R.string.app_name),
-                        style = TextStyle(brush = Brush.verticalGradient(colors = gastroGradient)),
-                        fontStyle = FontStyle.Italic,
-                        fontWeight = FontWeight.ExtraBold,
-                        fontSize = 25.sp
-                    )
-                },
-                actions = {
-                    IconButton(onClick = { navController.navigate("accountScreen") }) {
-                        Icon(imageVector = Icons.Filled.AccountCircle, contentDescription = "Account icon")
+                title = { Text("Actualizar credenciales") },
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Volver")
                     }
                 }
             )
+        },
+        bottomBar = {
+            BottomAppBar(
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary
+            ) {
+                IconButton(
+                    modifier = Modifier.weight(1f),
+                    onClick = { navController.navigate("mainScreen") }
+                ) {
+                    Icon(Icons.Default.Home, contentDescription = "Inicio")
+                }
+                IconButton(
+                    modifier = Modifier.weight(1f),
+                    onClick = { navController.navigate("searchScreen") }
+                ) {
+                    Icon(Icons.Default.Search, contentDescription = "Buscar")
+                }
+                IconButton(
+                    modifier = Modifier.weight(1f),
+                    onClick = { navController.navigate("notifScreen") }
+                ) {
+                    Icon(Icons.Default.Notifications, contentDescription = "Notificaciones")
+                }
+                IconButton(
+                    modifier = Modifier.weight(1f),
+                    onClick = { navController.navigate("settingsScreen") }
+                ) {
+                    Icon(Icons.Default.Menu, contentDescription = "Menú")
+                }
+            }
         }
     ) { padding ->
         Column(
             modifier = Modifier
-                .fillMaxSize()
                 .padding(padding)
                 .padding(16.dp)
-                .verticalScroll(rememberScrollState())
         ) {
-            when {
-                !emailVerified -> {
-                    OutlinedTextField(
-                        value = currentEmail,
-                        onValueChange = { currentEmail = it },
-                        label = { Text("Email actual") },
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    Spacer(Modifier.height(16.dp))
-                    Button(
-                        onClick = { verifyEmail() },
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text("Verificar Email")
+            OutlinedTextField(
+                value = newEmail,
+                onValueChange = { newEmail = it },
+                label = { Text("Nuevo email") },
+                modifier = Modifier.fillMaxWidth()
+            )
+            Spacer(Modifier.height(8.dp))
+            OutlinedTextField(
+                value = newPassword,
+                onValueChange = { newPassword = it },
+                label = { Text("Nueva contraseña") },
+                visualTransformation = if (isNewPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                trailingIcon = {
+                    IconButton(onClick = { isNewPasswordVisible = !isNewPasswordVisible }) {
+                        Icon(
+                            imageVector = if (isNewPasswordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                            contentDescription = "Visibilidad"
+                        )
                     }
-                }
-
-                !passwordVerified -> {
-                    OutlinedTextField(
-                        value = currentPassword,
-                        onValueChange = { currentPassword = it },
-                        label = { Text("Contraseña actual") },
-                        visualTransformation = if (isCurrentPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                        trailingIcon = {
-                            IconButton(onClick = { isCurrentPasswordVisible = !isCurrentPasswordVisible }) {
-                                Icon(
-                                    imageVector = if (isCurrentPasswordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
-                                    contentDescription = "Visibilidad"
-                                )
-                            }
-                        },
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    Spacer(Modifier.height(16.dp))
-                    Button(
-                        onClick = { verifyCurrentPassword() },
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text("Verificar Contraseña")
-                    }
-                }
-
-                else -> {
-                    OutlinedTextField(
-                        value = newEmail,
-                        onValueChange = { newEmail = it },
-                        label = { Text("Nuevo email") },
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    Spacer(Modifier.height(8.dp))
-                    OutlinedTextField(
-                        value = newPassword,
-                        onValueChange = { newPassword = it },
-                        label = { Text("Nueva contraseña") },
-                        visualTransformation = if (isNewPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                        trailingIcon = {
-                            IconButton(onClick = { isNewPasswordVisible = !isNewPasswordVisible }) {
-                                Icon(
-                                    imageVector = if (isNewPasswordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
-                                    contentDescription = "Visibilidad"
-                                )
-                            }
-                        },
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    Spacer(Modifier.height(16.dp))
-                    Button(
-                        onClick = { updateCredentials() },
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text("Actualizar Credenciales")
-                    }
-                }
+                },
+                modifier = Modifier.fillMaxWidth()
+            )
+            Spacer(Modifier.height(16.dp))
+            Button(
+                onClick = { updateCredentials() },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Actualizar Credenciales")
             }
         }
     }
 }
+

@@ -6,6 +6,7 @@ import android.net.Uri
 import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,23 +24,26 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Face
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Stars
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CheckboxDefaults.colors
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -48,7 +52,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -63,16 +66,24 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
+import com.example.clasetrabajo.data.database.AppDatabase
+import com.example.clasetrabajo.data.database.DatabaseProvider
 import com.example.clasetrabajo.data.viewmodel.RecipeViewModel
 import com.example.gastrolab.R
 import com.example.gastrolab.data.model.RecipeModel
+import com.example.gastrolab.data.model.toRecipeEntity
+import com.example.gastrolab.utils.NotificationHelper
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RecipeInterface(id: Int, navController: NavHostController,
                     viewModel: RecipeViewModel = viewModel()) {
+    val db: AppDatabase = DatabaseProvider.getDatabase(LocalContext.current)
+    val recipeDao = db.recipeDao()
     var recipeDetail by remember { mutableStateOf<RecipeModel?>(null) }
-
     LaunchedEffect(id) {
         viewModel.getRecipe(id) { response -> // Cambio crítico aquí
             if (response.isSuccessful) {
@@ -82,11 +93,22 @@ fun RecipeInterface(id: Int, navController: NavHostController,
             }
         }
     }
+    LaunchedEffect(id) {
+        viewModel.getRecipes { response ->
+            if (response.isSuccessful) {
+                val allRecipes = response.body() ?: emptyList()
+                recipeDetail = allRecipes.find { it.id == id }
+            } else {
+                Log.d("debug", "Failed to load recipes: ${response.code()}")
+            }
+        }
+    }
 
 
     Scaffold(
         topBar = {
             TopAppBar(
+                modifier = Modifier.height(80.dp),
                 title = {
                     Text(
                         text = "Receta",
@@ -113,7 +135,7 @@ fun RecipeInterface(id: Int, navController: NavHostController,
             BottomAppBar(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(50.dp),
+                    .height(80.dp),
                 containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.onPrimary
             ) {
@@ -142,12 +164,14 @@ fun RecipeInterface(id: Int, navController: NavHostController,
                 recipeDetail?.let { recipe ->
                     ShowRecipe(
                         navController,
+                        recipe,
                         recipe.id,
                         recipe.title,
                         recipe.description,
                         recipe.imageURL,
                         recipe.preparetime,
-                        recipe.difficulty
+                        recipe.difficulty,
+                        recipe.likerate
                     )
                 } ?: Text(
                     text = "Cargando receta...",
@@ -162,13 +186,21 @@ fun RecipeInterface(id: Int, navController: NavHostController,
 @Composable
 fun ShowRecipe(
     navController: NavController,
+    recipe: RecipeModel,
     id: Int,
     title: String,
     description: String,
     imageURL: String,
     preparetime: String,
     difficulty: String,
+    likerate: Int,
     viewModel: RecipeViewModel = viewModel()){
+    val composeContext = LocalContext.current
+    var id = recipe.id
+    var recipeDetail by remember { mutableStateOf<RecipeModel?>(null) }
+    val db: AppDatabase = DatabaseProvider.getDatabase(LocalContext.current)
+    val recipeDao = db.recipeDao()
+    var recipes by remember { mutableStateOf<List<RecipeModel>>(emptyList()) }
     // Imagen de la receta
     AsyncImage(
         contentDescription = "",
@@ -180,7 +212,6 @@ fun ShowRecipe(
         model = imageURL,
         error = painterResource(R.drawable.generic)
     )
-
     Spacer(modifier = Modifier.height(16.dp))
     Column(
         verticalArrangement = Arrangement.Center,
@@ -198,6 +229,42 @@ fun ShowRecipe(
             fontWeight = FontWeight.Bold,
             fontSize = 20.sp
         )
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Row(modifier = Modifier.padding(5.dp)){
+            repeat(5) {
+                Icon(
+                    imageVector = Icons.Filled.Stars,
+                    contentDescription = "",
+                    tint = MaterialTheme.colorScheme.secondary
+                )
+            }
+            }
+            RecipeDetailComponent(
+                onSaveClick = {
+                    // Aquí insertamos el recipe que ya tenemos, no recipeDetail
+                    CoroutineScope(Dispatchers.IO).launch {
+                        try {
+                            recipeDao.insert(recipe.toRecipeEntity())
+                            Log.d("debug-db", "Receta guardada: ${recipe.title}")
+
+                            NotificationHelper.showAddedToFavoritesNotification(
+                                composeContext,
+                                recipe.title
+                            )
+
+
+                        } catch (e: Exception) {
+                            Log.e("debug-db", "Error al guardar: $e")
+                        }
+                    }
+                }
+            )
+        }
     }
 
     Card(
@@ -230,23 +297,16 @@ fun ShowRecipe(
 
     Spacer(modifier = Modifier.height(10.dp))
 
-    LoadCommentButton(
-        id = id,
-        onButtonClick = {
-            viewModel.getRecipe(id) { response ->
-                if (response.isSuccessful) {
-
-                }
-            }
-            navController.navigate("commentsScreen/$id")
-        }
-    )
-
-
-    Spacer(modifier = Modifier.height(10.dp))
-
     Text(
         text = "Dificultad: " + difficulty,
+        fontWeight = FontWeight.Bold,
+        fontSize = 15.sp,
+        color = MaterialTheme.colorScheme.onBackground,
+        modifier = Modifier.padding(horizontal = 16.dp)
+    )
+    Spacer(modifier = Modifier.height(10.dp))
+    Text(
+        text = "Calificacion: " + likerate,
         fontWeight = FontWeight.Bold,
         fontSize = 15.sp,
         color = MaterialTheme.colorScheme.onBackground,
@@ -368,22 +428,144 @@ fun ShowRecipe(
         modifier = Modifier.padding(horizontal = 16.dp)
     )
 
+    Spacer(modifier = Modifier.height(24.dp))
+
+    // Número de comentarios
+    Text(
+        text = "188 comentarios",
+        style = MaterialTheme.typography.titleLarge,
+        fontWeight = FontWeight.Bold,
+        color = MaterialTheme.colorScheme.onBackground,
+        modifier = Modifier.padding(horizontal = 16.dp)
+    )
+
+    Spacer(modifier = Modifier.height(16.dp))
+
+    // Comentario de ejemplo
+    CommentWithReplies()
+
+    Spacer(modifier = Modifier.height(16.dp))
+
+    // Campo para agregar un nuevo comentario
+    AddCommentField()
+
 
     // Botón para ver comentarios (en la parte inferior)
     Spacer(modifier = Modifier.height(16.dp))
 
 }
 
-
 @Composable
-fun LoadCommentButton(id: Int, onButtonClick: () -> Unit){
-    Button(
-        onClick = { onButtonClick() },
+fun CommentWithReplies() {
+    Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        shape = RoundedCornerShape(8.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onBackground)
     ) {
-        Text("Ver Comentarios")
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(
+                text = "Mario Vargas",
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.secondary
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "El mejor platillo del mundo, se lo recomendé a mi primo y dijo que estaba a todo dar.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.surface
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "45 respuestas ✔",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.background,
+                modifier = Modifier.clickable { /* Acción para ver respuestas */ }
+            )
 
+            // Respuestas de ejemplo
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "Respuesta 1: ¡Totalmente de acuerdo!",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.background,
+                modifier = Modifier.padding(start = 16.dp)
+            )
+            Text(
+                text = "Respuesta 2: Las mejores enchiladas que he probado.",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.background,
+                modifier = Modifier.padding(start = 16.dp)
+            )
+        }
     }
 }
+
+@Composable
+fun AddCommentField() {
+    var commentText by remember { mutableStateOf("") }
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        shape = RoundedCornerShape(8.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onPrimary)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            TextField(
+                value = commentText,
+                onValueChange = { commentText = it },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(min = 100.dp), // Altura mínima para el campo de texto
+                placeholder = {
+                    Text(
+                        text= "Agrega un comentario...",
+                        color = MaterialTheme.colorScheme.onSurface) },
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Color.Transparent,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.onSecondary
+                )
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Button(
+                onClick = { /* */ },
+                modifier = Modifier
+                    .align(Alignment.End)
+                    .fillMaxWidth()
+            ) {
+                Text("Publicar")
+            }
+        }
+    }
+}
+
+@Composable
+fun RecipeDetailComponent(
+    onSaveClick: () -> Unit
+) {
+    // Botón de favoritos con texto
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.clickable { /* Acción para guardar */ }
+    ) {
+        Icon(
+            modifier = Modifier
+                .clickable{onSaveClick()},
+            imageVector = Icons.Filled.Favorite, // Ícono de favoritos
+            contentDescription = "Favoritos",
+            tint = MaterialTheme.colorScheme.secondary,
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        Text(
+            text = "Favorito",
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onBackground
+        )
+    }
+}
+
+

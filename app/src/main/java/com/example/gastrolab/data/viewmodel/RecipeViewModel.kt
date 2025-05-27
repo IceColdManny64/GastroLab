@@ -1,8 +1,5 @@
 package com.example.clasetrabajo.data.viewmodel
 
-import android.content.Context
-import android.content.Intent
-import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -26,6 +23,17 @@ class RecipeViewModel: ViewModel() {
             }
         }
     }
+    fun searchRecipes(query: String, onResult: (Response<List<RecipeModel>>) -> Unit) {
+        viewModelScope.launch {
+            try {
+                val response = api.searchRecipes(query)
+                onResult(response)
+            } catch (e: Exception) {
+                Log.d("debug", "Search error: $e")
+            }
+        }
+    }
+
     fun getRecipe(id: Int, onResult:(Response<RecipeModel>) -> Unit ) {
         viewModelScope.launch {
 
@@ -38,5 +46,4 @@ class RecipeViewModel: ViewModel() {
             }
         }
     }
-
 }
