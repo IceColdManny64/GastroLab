@@ -206,7 +206,7 @@ fun LoginInterface(navController: NavHostController, ViewModel: LoginViewModel =
         Spacer(modifier = Modifier.height(6.dp))
         // BOTÓN INVITADO
         OutlinedButton(
-            onClick = { navController.navigate("favoritesScreen") },
+            onClick = { navController.navigate("offScreen") },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(48.dp),

@@ -1,5 +1,6 @@
 package com.example.gastrolab.ui.screens.ExploreNotifScreens
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -38,6 +39,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -84,13 +86,19 @@ fun NotifInterface(navController: NavHostController, viewModel: RecipeViewModel 
                     titleContentColor = MaterialTheme.colorScheme.secondary
                 ),
                 title = {
-                    Text(
-                        text = "Notificaciones",
-                        style = MaterialTheme.typography.titleLarge.copy(
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onPrimary
+                    Row() {
+                        Image(
+                            painter = painterResource(R.drawable.gastrolab),
+                            contentDescription = ""
                         )
-                    )
+                        Text(
+                            text = "Notificaciones",
+                            style = MaterialTheme.typography.titleLarge.copy(
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onPrimary
+                            )
+                        )
+                    }
                 },
                 actions = {
                     IconButton(onClick = { navController.navigate("accountScreen") }) {

@@ -1,8 +1,10 @@
 package com.example.gastrolab.ui.screens.MainScreens
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -30,6 +32,7 @@ import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
@@ -75,13 +78,19 @@ fun BarsSettings(navController: NavHostController) {
                     MaterialTheme.colorScheme.surface,
                     MaterialTheme.colorScheme.tertiary
                 )
-                Text(
-                    text = stringResource(R.string.settings_header),
-                    style = TextStyle(brush = Brush.verticalGradient(colors = gastroGradient)),
-                    fontStyle = FontStyle.Italic,
-                    fontWeight = FontWeight.ExtraBold,
-                    fontSize = 25.sp
-                )
+                Row() {
+                    Image(
+                        painter = painterResource(R.drawable.gastrolab),
+                        contentDescription = ""
+                    )
+                    Text(
+                        text = stringResource(R.string.settings_header),
+                        style = TextStyle(brush = Brush.verticalGradient(colors = gastroGradient)),
+                        fontStyle = FontStyle.Italic,
+                        fontWeight = FontWeight.ExtraBold,
+                        fontSize = 25.sp
+                    )
+                }
             },
             actions = {
                 IconButton(onClick = { navController.navigate("accountScreen") }) {
@@ -160,6 +169,36 @@ fun SettingsAdaptive(navController: NavHostController) {
                 }
             }
     } else if (height == WindowHeightSizeClass.COMPACT) {
+            LazyVerticalGrid(
+                columns = GridCells.Adaptive(minSize = 400.dp),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(1.1f),
+
+                verticalArrangement = Arrangement.Center,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                items(settingsArray) { item ->
+                    SettingsList(item.id, item.title, item.text, item.icon, navController)
+                }
+            }
+        }
+        else if (height == WindowHeightSizeClass.EXPANDED) {
+            LazyVerticalGrid(
+                columns = GridCells.Adaptive(minSize = 400.dp),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(1.1f),
+
+                verticalArrangement = Arrangement.Center,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                items(settingsArray) { item ->
+                    SettingsList(item.id, item.title, item.text, item.icon, navController)
+                }
+            }
+        }
+        else if (width == WindowWidthSizeClass.EXPANDED) {
             LazyVerticalGrid(
                 columns = GridCells.Adaptive(minSize = 400.dp),
                 modifier = Modifier

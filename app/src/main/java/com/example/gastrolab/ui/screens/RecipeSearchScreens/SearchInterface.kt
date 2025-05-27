@@ -1,5 +1,6 @@
 package com.example.gastrolab.ui.screens.RecipeSearchScreens
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -96,13 +97,19 @@ fun SearchInterface(
                     MaterialTheme.colorScheme.surface,
                     MaterialTheme.colorScheme.tertiary
                 )
-                Text(
-                    text = stringResource(R.string.app_name),
-                    style = TextStyle(brush = Brush.verticalGradient(colors = gastroGradient)),
-                    fontStyle = androidx.compose.ui.text.font.FontStyle.Italic,
-                    fontWeight = FontWeight.ExtraBold,
-                    fontSize = 25.sp
-                )
+                Row() {
+                    Image(
+                        painter = painterResource(R.drawable.gastrolab),
+                        contentDescription = ""
+                    )
+                    Text(
+                        text = stringResource(R.string.app_name),
+                        style = TextStyle(brush = Brush.verticalGradient(colors = gastroGradient)),
+                        fontStyle = androidx.compose.ui.text.font.FontStyle.Italic,
+                        fontWeight = FontWeight.ExtraBold,
+                        fontSize = 25.sp
+                    )
+                }
             },
             actions = {
                 IconButton(onClick = { navController.navigate("accountScreen") }) {

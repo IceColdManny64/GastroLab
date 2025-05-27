@@ -42,6 +42,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
@@ -86,13 +87,19 @@ fun ArticleInterface(id: Int, navController: NavController) {
                             MaterialTheme.colorScheme.surface,
                             MaterialTheme.colorScheme.tertiary
                         )
-                        Text(
-                            text = stringResource(R.string.app_name),
-                            style = TextStyle(brush = Brush.verticalGradient(colors = gastroGradient)),
-                            fontStyle = FontStyle.Italic,
-                            fontWeight = FontWeight.ExtraBold,
-                            fontSize = 25.sp
-                        )
+                        Row() {
+                            Image(
+                                painter = painterResource(R.drawable.gastrolab),
+                                contentDescription = ""
+                            )
+                            Text(
+                                text = stringResource(R.string.app_name),
+                                style = TextStyle(brush = Brush.verticalGradient(colors = gastroGradient)),
+                                fontStyle = FontStyle.Italic,
+                                fontWeight = FontWeight.ExtraBold,
+                                fontSize = 25.sp
+                            )
+                        }
                     },
                     actions = {
                         IconButton(onClick = { navController.navigate("accountScreen") }) {
