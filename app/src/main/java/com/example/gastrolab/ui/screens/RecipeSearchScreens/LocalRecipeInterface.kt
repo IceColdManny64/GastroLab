@@ -170,20 +170,9 @@ fun ShowLocalRecipe(
         }
     }
 
-    Spacer(modifier = Modifier.height(10.dp))
-
-    Spacer(modifier = Modifier.height(10.dp))
-
+    Spacer(modifier = Modifier.height(20.dp))
     Text(
         text = "Dificultad: " + difficulty,
-        fontWeight = FontWeight.Bold,
-        fontSize = 15.sp,
-        color = MaterialTheme.colorScheme.onBackground,
-        modifier = Modifier.padding(horizontal = 16.dp)
-    )
-    Spacer(modifier = Modifier.height(10.dp))
-    Text(
-        text = "Calificacion: " + likerate,
         fontWeight = FontWeight.Bold,
         fontSize = 15.sp,
         color = MaterialTheme.colorScheme.onBackground,

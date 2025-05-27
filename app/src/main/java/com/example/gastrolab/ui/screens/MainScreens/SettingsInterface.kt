@@ -18,7 +18,6 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.ReportProblem
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.SupportAgent
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -140,9 +139,8 @@ fun SettingsAdaptive(navController: NavHostController) {
         val settingsArray = arrayOf(
 //            SettingsModel(1, "Configuración de Aplicación", "Realiza cambios a tu cuenta, " +
 //                    "revisa opciones de notificaciones y accesibilidad", Icons.Filled.Apps),
-            SettingsModel(1, "Privacidad y seguridad", "Cambia tu contraseña, borra tu cuenta o" +
-                    " gestiona tu información", Icons.Filled.LockPerson),
-            SettingsModel(3, "Reporta un problema", "Reporta un error o problema general en la aplicacion." +
+            SettingsModel(1, "Modificar credenciales", "Cambia tu contraseña o correo", Icons.Filled.LockPerson),
+            SettingsModel(3, "Reporta un problema", "Reporta un error o problema general en la aplicacion. " +
                     "Nos ayuda a mejorar!", Icons.Filled.ReportProblem),
             SettingsModel(4, "Cerrar sesión/salir", "Te vamos a extrañar!", Icons.Filled.Logout)
         )

@@ -235,24 +235,6 @@ fun ArticleInterface(id: Int, navController: NavController) {
                         Button(
                             onClick = {
                                 recipe?.id?.let {
-                                    navController.navigate("commentsScreen/$it")
-                                }
-                            },
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = MaterialTheme.colorScheme.secondary
-                            ),
-                            modifier = Modifier.weight(1f).padding(end = 4.dp)
-                        ) {
-                            Text(
-                                text = stringResource(R.string.view_comments),
-                                fontSize = 14.sp,
-                                color = MaterialTheme.colorScheme.onSecondary
-                            )
-                        }
-
-                        Button(
-                            onClick = {
-                                recipe?.id?.let {
                                     navController.navigate("recipeScreen/$it")
                                 }
                             },
