@@ -1,0 +1,27 @@
+Estos son nuestros endpoints, los tenemos en php y la URL es el nombre de la carpeta. 
+
+Son un poco distintos al estar hechos en php, por ejemplo para obtener una receta por id tendria que dar GET/ a apifake.mywebcommunity.org/recipe.php?id=1.
+
+Este backend está en un hosting que debería responder perfecto sin que tengan que levantar un servidor local.
+
+El body que espera login.php/register.php viene siendo asi por ejemplo
+
+{
+    "email": "user@gmail.com",
+    "password": "1234"
+}
+
+o para actualizar credenciales se usa apifake.mywebcommunity.org/updateCredentials.php con el body asi:
+
+{
+    "action": "update_credentials",
+    "id": "1",
+    "new_email": "user@gmail.com",
+    "new_password": "12345"
+}
+
+El archivo users.php lo agregamos para que puedan consultar nuestra tabla MySQL de usuarios y revisar los cambios que hagan, pues era algo que no teníamos originalmente.
+
+Realmente no necesitan tener estos archivos, pero se los dejamos sobre todo para que puedan entenderlos al auditarnos.
+
+Gracias!
